@@ -1,0 +1,460 @@
+% !TEX root = ../enac_project_fr.tex
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Chapter 4 - Implémentation dans Orekit
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\chapter{Implémentation dans Orekit}
+\label{implementation_orekit}
+
+\section{Architecture logicielle}
+
+L'ensemble des algorithmes développés au cours de ce stage a été implémenté
+en Java en s'appuyant sur la bibliothèque \textit{Orekit}. Celle-ci fournit
+des mécanismes génériques pour la représentation des états, la propagation,
+la modélisation des mesures et leur exploitation dans des processus
+d'estimation.
+
+L'objectif de l'implémentation n'est pas de reproduire indépendamment
+l'ensemble de ces mécanismes, mais de les adapter au problème spécifique du
+positionnement GNSS d'un récepteur au sol. L'architecture développée repose
+ainsi sur une séparation entre l'acquisition et la préparation des données,
+la construction des mesures, leur modélisation et leur résolution.
+
+La Figure~\ref{fig:architecture_logicielle} présente l'organisation
+générale de l'application.
+
+\begin{figure}[htbp]
+    \centering
+    \rule{0.9\linewidth}{6cm} % TODO : diagramme UML simplifié
+    \caption{Architecture générale du logiciel développé.}
+    \label{fig:architecture_logicielle}
+\end{figure}
+
+La chaîne de traitement peut être résumée par les étapes suivantes :
+
+\begin{enumerate}
+    \item lecture et préparation des données RINEX ;
+    \item sélection et regroupement des observations par époque et par
+    satellite ;
+    \item construction des objets de mesure Orekit ;
+    \item ajout des modèles de correction nécessaires ;
+    \item définition des paramètres susceptibles d'être estimés ;
+    \item résolution du problème par moindres carrés pondérés ou par filtre
+    de Kalman.
+\end{enumerate}
+
+Deux méthodes d'estimation ont été développées :
+
+\begin{itemize}
+    \item un solveur par moindres carrés pondérés
+    (\textit{Weighted Least Squares}, WLS), principalement utilisé pour le
+    calcul de solutions SPP ;
+    \item un solveur fondé sur un filtre de Kalman étendu (EKF), utilisé pour
+    l'estimation récursive des paramètres et constituant la base de
+    l'implémentation du PPP.
+\end{itemize}
+
+Cette organisation permet de modifier indépendamment les modèles physiques
+et la méthode d'estimation. Il est ainsi possible, par exemple, de modifier
+le modèle troposphérique ou le nombre de paramètres estimés sans avoir à
+reconstruire manuellement l'ensemble du système de résolution.
+
+\section{Construction des observations GNSS}
+
+Les données extraites des fichiers RINEX doivent être transformées en une
+représentation adaptée aux mécanismes d'estimation d'Orekit. Cette étape
+constitue l'interface entre les données GNSS et le modèle de mesure utilisé
+par les solveurs.
+
+Le traitement est réalisé indépendamment pour chaque époque d'observation.
+Les observations disponibles dans le fichier RINEX sont d'abord parcourues
+afin d'identifier les satellites observés et les mesures associées.
+
+Une première sélection permet d'éliminer les observations ne satisfaisant
+pas les critères définis pour l'expérience. Les principaux critères
+appliqués sont :
+
+\begin{itemize}
+    \item la constellation GNSS considérée ;
+    \item la disponibilité des observations nécessaires au traitement ;
+    \item l'élévation minimale du satellite ;
+    \item le rapport signal sur bruit minimal ;
+    \item l'état de santé du satellite.
+\end{itemize}
+
+Pour chaque satellite retenu, les éphémérides correspondantes sont ensuite
+recherchées dans les données de navigation. Elles permettent notamment de
+déterminer l'état du satellite à l'instant d'émission du signal.
+
+Les informations nécessaires au traitement sont alors regroupées dans une
+représentation intermédiaire comprenant notamment :
+
+\begin{itemize}
+    \item l'identifiant du satellite ;
+    \item sa constellation ;
+    \item les observations de code et de phase ;
+    \item sa position et sa vitesse ;
+    \item son biais d'horloge ;
+    \item les informations nécessaires aux modèles de correction.
+\end{itemize}
+
+Cette étape permet de dissocier la lecture des fichiers RINEX de la
+construction proprement dite des mesures. Les données nécessaires à une
+observation sont ainsi rassemblées avant leur transmission aux mécanismes
+d'estimation d'Orekit.
+
+\subsection{Création des objets de mesure}
+
+Les observations préparées précédemment sont finalement représentées par
+des objets de mesure Orekit. Deux classes principales sont utilisées :
+
+\begin{itemize}
+    \item \texttt{OneWayGNSSRange}, pour les observations de pseudo-distance ;
+    \item \texttt{OneWayGNSSPhase}, pour les observations de phase de la
+    porteuse.
+\end{itemize}
+
+Ces classes implémentent l'interface générique
+\texttt{ObservedMeasurement}, qui fournit notamment les mécanismes
+nécessaires pour associer une valeur observée à une valeur théorique calculée
+par un modèle de mesure. :contentReference[oaicite:1]{index=1}
+
+Les objets ainsi créés constituent donc le support commun utilisé par les
+deux méthodes de résolution développées dans ce travail.
+
+\section{Implémentation des modèles de correction}
+
+Une fois les objets de mesure créés, ceux-ci doivent être complétés par les
+différents modèles physiques intervenant dans les équations d'observation.
+Cette étape constitue une partie importante du développement réalisé au
+cours du stage.
+
+Orekit permet d'associer à une mesure différents composants chargés de
+modifier sa valeur théorique. Cette architecture permet de traiter
+séparément les différentes contributions physiques au modèle de mesure.
+
+Certaines corrections nécessaires au positionnement GNSS étaient déjà
+disponibles dans Orekit. Elles ont donc pu être directement réutilisées dans
+l'implémentation. D'autres, en revanche, n'étaient pas disponibles sous une
+forme adaptée au positionnement d'un récepteur au sol et ont nécessité le
+développement de nouveaux composants.
+
+\section{Adaptation et extension des modèles Orekit}
+\label{sec:adaptation_orekit}
+
+L'un des objectifs principaux du développement a consisté à exploiter au maximum
+les mécanismes de modélisation et d'estimation déjà disponibles dans Orekit,
+tout en les complétant lorsque ceux-ci ne répondaient pas directement aux
+besoins du positionnement GNSS considéré.
+
+Cette démarche repose sur une distinction entre deux catégories de
+fonctionnalités. Certaines corrections et certains mécanismes nécessaires au
+positionnement sont déjà implémentés dans Orekit et peuvent être directement
+réutilisés. D'autres nécessitent au contraire une adaptation ou un
+développement spécifique, notamment lorsqu'ils doivent être appliqués aux
+objets de mesure \texttt{OneWayGNSSRange} et \texttt{OneWayGNSSPhase} utilisés
+dans cette étude.
+
+Le tableau~\ref{tab:orekit_corrections} synthétise les principales corrections
+considérées et indique leur disponibilité initiale dans Orekit ainsi que, le
+cas échéant, le composant développé dans le cadre du stage.
+
+\begin{table}[H]
+\centering
+\caption{Disponibilité et extensions développées pour les modèles de correction.}
+\label{tab:orekit_corrections}
+\small
+\begin{tabular}{p{5.0cm} c p{6.0cm}}
+\hline
+\textbf{Correction / modèle} &
+\textbf{Disponible dans Orekit} &
+\textbf{Extension développée} \\
+\hline
+
+Horloge satellite &
+Oui &
+\texttt{AbstractSatelliteClockOneWayGNSSModifier},
+\texttt{SatelliteClockOneWayGNSSRangeModifier},
+\texttt{SatelliteClockOneWayGNSSPhaseModifier}
+\\
+
+Correction d'antenne L1 -- phase &
+Partiellement &
+\texttt{L1AntennaPhaseModifier}
+\\
+
+Correction d'antenne L1 -- pseudo-distance &
+Partiellement &
+\texttt{L1AntennaRangeModifier}
+\\
+
+Correction d'antenne bi-fréquence -- phase &
+Non directement adaptée &
+\texttt{IonosphereFreeAntennaPhaseModifier}
+\\
+
+Correction d'antenne bi-fréquence -- pseudo-distance &
+Non directement adaptée &
+\texttt{IonosphereFreeAntennaRangeModifier}
+\\
+
+Correction ionosphérique -- phase &
+Non pour le modèle utilisé &
+\texttt{IonosphericDelayOneWayGNSSPhaseModifier}
+\\
+
+Correction ionosphérique -- pseudo-distance &
+Non pour le modèle utilisé &
+\texttt{IonosphericDelayOneWayGNSSRangeModifier}
+\\
+
+Correction troposphérique -- phase &
+Non pour l'application considérée &
+\texttt{TroposphericDelayOneWayGNSSPhaseModifier}
+\\
+
+Correction troposphérique -- pseudo-distance &
+Non pour l'application considérée &
+\texttt{TroposphericDelayOneWayGNSSRangeModifier}
+\\
+
+Wind-up de phase &
+Non directement adapté &
+\texttt{WindUpOneWayGNSSPhaseModifier}
+\\
+
+Biais inter-systèmes Galileo &
+Partiellement &
+\texttt{GalileoIsbModifier}
+\\
+
+Détection des sauts de cycle &
+Non &
+\texttt{RtkSlipDetector}
+\\
+
+Filtrage des innovations &
+Non &
+\texttt{RtkMaxInnoFilter}
+\\
+
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{Corrections existantes réutilisées}
+
+Les mécanismes existants dans Orekit permettent notamment de prendre en
+compte certaines corrections géométriques, relativistes et liées aux
+antennes. Leur intégration sous forme de composants indépendants permet de
+conserver la structure modulaire du modèle de mesure.
+
+L'utilisation de ces mécanismes permet également d'éviter de reproduire dans
+le code applicatif des modèles physiques déjà implémentés et validés dans
+Orekit.
+
+\subsection{Développement des modèles atmosphériques}
+
+Les modèles atmosphériques constituent l'une des principales extensions
+réalisées au cours du stage.
+
+Les modèles nécessaires à la modélisation de la troposphère et de
+l'ionosphère n'étaient pas directement disponibles sous la forme requise
+pour le traitement développé. Il a donc été nécessaire de concevoir des
+composants permettant d'intégrer ces corrections directement aux mesures
+\texttt{OneWayGNSSRange} et \texttt{OneWayGNSSPhase}.
+
+Les modèles développés reprennent les formulations théoriques présentées au
+chapitre précédent. Leur implémentation permet notamment de considérer
+différentes configurations du modèle troposphérique, avec ou sans estimation
+de paramètres supplémentaires.
+
+Cette organisation permet ainsi de conserver une séparation claire entre le
+modèle physique de propagation et le mécanisme de résolution utilisé pour
+estimer les paramètres.
+
+\subsection{Paramètres estimables}
+
+Certaines grandeurs intervenant dans les équations d'observation ne sont pas
+considérées comme des corrections déterministes. Elles sont au contraire
+introduites comme des paramètres susceptibles d'être estimés avec les
+observations.
+
+Orekit fournit pour cela la classe \texttt{ParameterDriver}. Un
+\texttt{ParameterDriver} permet notamment de définir la valeur d'un
+paramètre, son échelle de normalisation, son caractère estimable et les
+informations nécessaires à son intégration dans le processus d'estimation.
+La documentation d'Orekit indique notamment que les paramètres estimés par
+le filtre de Kalman sont pilotés par ces objets, et distingue les paramètres
+orbitaux, de propagation et de mesure. :contentReference[oaicite:2]{index=2}
+
+Dans l'application développée, ce mécanisme est notamment utilisé pour
+représenter :
+
+\begin{itemize}
+    \item le biais d'horloge du récepteur ;
+    \item les ambiguïtés de phase ;
+    \item les paramètres troposphériques lorsque ceux-ci sont estimés ;
+    \item les autres paramètres de mesure sélectionnés selon la configuration
+    utilisée.
+\end{itemize}
+
+Cette architecture permet de modifier la dimension du problème d'estimation
+sans modifier explicitement les matrices utilisées par le solveur.
+
+\section{Résolution}
+\label{sec:resolution_orekit}
+
+Une fois les observations construites, les corrections appliquées et les
+paramètres estimables définis, l'ensemble peut être transmis au mécanisme
+de résolution.
+
+L'un des choix importants réalisés au cours du développement a consisté à
+réutiliser les mécanismes génériques d'estimation d'Orekit plutôt qu'à
+réimplémenter directement les algorithmes de moindres carrés et de Kalman.
+
+Cette approche présente deux avantages principaux. D'une part, elle permet
+de bénéficier des implémentations numériques existantes dans Orekit et dans
+la bibliothèque mathématique Hipparchus. D'autre part, elle évite de coder
+manuellement une structure matricielle différente pour chaque configuration
+du problème.
+
+En effet, la dimension du vecteur d'état et la structure des dérivées
+peuvent évoluer selon les paramètres sélectionnés pour l'estimation. Par
+exemple, l'ajout d'un paramètre troposphérique ou d'une ambiguïté de phase
+modifie directement le nombre d'inconnues du problème.
+
+Les objets de mesure et les \texttt{ParameterDriver} permettent de transmettre
+cette information au moteur d'estimation, qui peut alors construire
+dynamiquement les grandeurs nécessaires à la résolution.
+
+\begin{table}[htbp]
+\centering
+\caption{Principales classes Orekit utilisées dans l'implémentation.}
+\label{tab:orekit_classes_estimation}
+\begin{tabular}{ll}
+\hline
+\textbf{Classe / objet} & \textbf{Rôle dans l'implémentation} \\
+\hline
+\texttt{OneWayGNSSRange} & Représentation d'une mesure de pseudo-distance \\
+\texttt{OneWayGNSSPhase} & Représentation d'une mesure de phase \\
+\texttt{ParameterDriver} & Gestion des paramètres estimables \\
+\texttt{AmbiguityDriver} & Gestion des ambiguïtés de phase \\
+\texttt{EstimatedMeasurement} & Évaluation théorique d'une mesure \\
+\texttt{BatchLSEstimator} & Résolution par moindres carrés \\
+\texttt{KalmanEstimator} & Résolution séquentielle par filtre de Kalman \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{Résolution par moindres carrés pondérés}
+
+La résolution SPP repose sur une estimation par moindres carrés pondérés.
+Dans l'implémentation, les observations sont préalablement associées à leur
+modèle de mesure et à leurs incertitudes.
+
+Une fois cette configuration réalisée, la résolution est confiée au
+\texttt{BatchLSEstimator} d'Orekit. Celui-ci s'appuie sur les outils de
+résolution de problèmes de moindres carrés de la bibliothèque Hipparchus.
+L'architecture d'Orekit prévoit notamment un modèle de moindres carrés
+construit à partir des \texttt{ObservedMeasurement} et des paramètres
+estimés. :contentReference[oaicite:3]{index=3}
+
+Dans cette implémentation, l'appel au solveur est donc relativement simple :
+la complexité est principalement reportée en amont, lors de la construction
+des observations et de leur modèle.
+
+Cette organisation évite notamment de construire explicitement les matrices
+du système pour chaque configuration. Si le nombre de paramètres estimés
+évolue, la structure correspondante est automatiquement prise en compte par
+le mécanisme d'estimation.
+
+L'optimisation numérique utilisée repose sur
+\texttt{LevenbergMarquardtOptimizer} de Hipparchus :
+
+\begin{center}
+\texttt{org.hipparchus.optim.nonlinear.vector.leastsquares.}\\
+\texttt{LevenbergMarquardtOptimizer}.
+\end{center}
+
+Le développement porte ainsi principalement sur la définition correcte des
+mesures, des modèles physiques et des paramètres, plutôt que sur la
+réimplémentation de l'algorithme numérique de résolution.
+
+\subsection{Résolution par filtre de Kalman}
+
+Le second mode de résolution repose sur le filtre de Kalman étendu fourni
+par Orekit. Dans la bibliothèque, le \texttt{KalmanEstimator} est initialement
+destiné aux problèmes de détermination orbitale et utilise un
+\texttt{PropagatorBuilder} pour définir la trajectoire de référence. Les
+paramètres estimés sont pilotés par des \texttt{ParameterDriver}. :contentReference[oaicite:4]{index=4}
+
+L'application de ce mécanisme au positionnement d'un récepteur fixe nécessite
+cependant d'adapter la représentation de l'état et son évolution temporelle.
+En particulier, le mécanisme de filtrage repose sur un propagateur permettant
+de fournir l'état à l'époque suivante.
+
+Or, une station GNSS fixe ne suit pas une trajectoire orbitale et ne nécessite
+pas de propagation dynamique au sens classique de la détermination orbitale.
+Un propagateur spécifique, nommé \texttt{StaticReceiverPropagator}, a donc
+été développé afin de représenter l'état d'un récepteur stationnaire tout en
+fournissant à l'estimateur les informations nécessaires à son fonctionnement.
+
+Cette adaptation permet de réutiliser le mécanisme de Kalman d'Orekit pour
+un problème dont la formulation physique diffère de son application
+initiale. Le principe consiste à conserver l'architecture générique du moteur
+d'estimation tout en remplaçant la dynamique orbitale par une évolution
+adaptée à une station fixe.
+
+Le filtre exploite ensuite les observations construites précédemment ainsi
+que les paramètres sélectionnés pour l'estimation. Les incertitudes des
+mesures de code et de phase définissent leur pondération, tandis que les
+bruits de processus associés aux paramètres estimés permettent de définir
+leur évolution temporelle.
+
+La structure du filtre est ainsi déterminée par les paramètres effectivement
+sélectionnés. Une estimation comprenant uniquement la position et l'horloge
+ne possède pas la même dimension qu'une estimation incluant également les
+ambiguïtés de phase ou des paramètres troposphériques.
+
+Comme pour les moindres carrés, aucune construction manuelle des matrices
+du filtre n'est donc nécessaire dans le code applicatif. Les paramètres,
+leurs échelles et leurs incertitudes sont fournis au mécanisme d'estimation,
+qui assure ensuite la construction et la mise à jour des grandeurs
+nécessaires au filtrage. La documentation d'Orekit précise notamment que les
+états, covariances et matrices de mesure utilisés par le filtre sont
+manipulés par le moteur de Kalman et par Hipparchus, avec une normalisation
+associée aux paramètres estimés et aux incertitudes de mesure. :contentReference[oaicite:5]{index=5}
+
+\section{Synthèse de la chaîne d'implémentation}
+
+L'architecture finalement développée peut être résumée par la chaîne
+suivante :
+
+\begin{center}
+\textit{RINEX}
+$\rightarrow$
+\textit{sélection des observations}
+$\rightarrow$
+\textit{objets de mesure Orekit}
+$\rightarrow$
+\textit{modèles de correction}
+$\rightarrow$
+\textit{paramètres estimables}
+$\rightarrow$
+\textit{WLS ou EKF}
+$\rightarrow$
+\textit{solution GNSS}.
+\end{center}
+
+Cette architecture permet de distinguer clairement les trois niveaux du
+développement. Les données GNSS sont d'abord transformées en objets de mesure,
+les modèles physiques sont ensuite associés à ces mesures, puis le problème
+ainsi défini est transmis à un moteur d'estimation générique.
+
+L'essentiel du travail de développement a ainsi porté sur l'adaptation des
+mécanismes génériques d'Orekit au contexte spécifique du positionnement GNSS
+au sol, notamment par l'implémentation des modèles atmosphériques et du
+propagateur associé à une station fixe. Les mécanismes numériques de
+résolution sont quant à eux réutilisés à travers les outils d'estimation
+d'Orekit et de Hipparchus.

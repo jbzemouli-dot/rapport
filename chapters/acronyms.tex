@@ -1,0 +1,9 @@
+% !TEX root = ../enac_project_fr.tex
+\ifthenelse{\isundefined{\fr}}
+{\chapter*{Acronyms}}
+{\chapter*{Acronymes}}
+\label{acronyms}
+\addcontentsline{toc}{chapter}{\textmd{\nameref{acronyms}}}
+\thispagestyle{fancy}
+\markright{\nameref{acronyms}}
+\input{references/acronym}

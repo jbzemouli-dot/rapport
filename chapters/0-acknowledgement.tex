@@ -1,0 +1,12 @@
+% !TEX root = ../enac_project_fr.tex
+\ifthenelse{\isundefined{\fr}}
+{\chapter*{Acknowledgement}}
+{\chapter*{Remerciements}}
+
+\label{remerciements}
+\thispagestyle{fancy}
+\markright{\nameref{remerciements}}
+\gls{enac}
+\lipsum[1-3]
+
+\addcontentsline{toc}{chapter}{\nameref{remerciements}}

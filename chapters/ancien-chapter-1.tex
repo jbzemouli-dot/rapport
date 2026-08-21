@@ -1,0 +1,626 @@
+% !TEX root = ../enac_project_fr.tex
+ %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  % Chapter 1 - Principe du positionnement GNSS
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+  
+\chapter{Principe du positionnement GNSS}
+\label{principe_positionnement_gnss}
+\thispagestyle{fancy}
+\pagestyle{fancy}
+
+\section{Principe du positionnement GNSS}
+
+Le GNSS (Global Navigation Satellite System) est un système de positionnement par satellites. 
+Il permet de déterminer la position d'un récepteur GNSS à partir des signaux reçus par les satellites. 
+Le GNSS comprend plusieurs systèmes, dont le GPS (Global Positioning System) américain, le GLONASS russe, le Galileo européen et le BeiDou chinois. 
+Chaque système utilise une constellation de satellites pour fournir des services de positionnement, de navigation et de synchronisation.\\
+Le principe de fonctionnement repose sur la mesure du temps mis par le signal pour parcourir la distance entre le satellite et le récepteur. 
+En connaissant la position des satellites et en mesurant le temps de propagation du signal, il est possible de calculer la position du récepteur.\\
+Le signal électromagnétique émis par les satellites se propage dans le vide à la vitesse de la lumière c et parcourt 30 centimètres en 1 nanoseconde.
+
+\begin{align}
+0.3 \text{ m} \longleftrightarrow 1 \text{ ns}
+\end{align}
+
+\subsection{Trilatération}
+
+Supposons dans un premier temps un cas idéal où les positions des satellites $S_i$ sont connues à chaque instant.
+Un satellite $S_i$ émet un signal à l'instant $t_i$ et le récepteur le reçoit à l'instant $t_r$.
+Le récepteur peut alors calculer la distance
+
+\begin{align}
+\rho_i = c(t_r-t_i),
+\end{align}
+
+où $c$ désigne la vitesse de la lumière.
+
+En connaissant la distance entre le récepteur et trois satellites, il est possible de déterminer sa position par trilatération.
+En effet, chaque mesure définit une sphère centrée sur le satellite considéré, dont le rayon est égal à la distance mesurée.
+Le récepteur se situe alors à l'intersection de ces trois sphères.
+
+En pratique, deux phénomènes empêchent cette relation géométrique d'être exacte.
+D'une part, l'horloge du récepteur n'est pas parfaitement synchronisée avec le temps GNSS.
+D'autre part, les signaux subissent différents retards lors de leur propagation dans l'atmosphère.
+La distance mesurée, appelée pseudo-distance, s'écrit alors
+
+\begin{align}
+\rho_i
+=
+\|S_iP\|
++
+c\delta t_r
+-
+c\delta t_s
++
+I_{iono}
++
+\delta_{tropo}
++
+\delta_{Sagnac}
++
+\delta_{Shapiro}
+-
+k_{station}
+-
+k_{sat}.
+\label{eq:rho_i}
+\end{align}
+
+où
+
+\begin{itemize}
+\item $\rho_i$ est la pseudo-distance mesurée ;
+\item $\|S_iP\|$ est la distance géométrique entre le satellite et le récepteur ;
+\item $c\delta t_r$ est le biais d'horloge du récepteur ;
+\item $c\delta t_s$ est le biais d'horloge du satellite ;
+\item $I_{iono}$ est le retard ionosphérique ;
+\item $\delta_{tropo}$ est le retard troposphérique ;
+\item $\delta_{Sagnac}$ est la correction de Sagnac ;
+\item $\delta_{Shapiro}$ est la correction relativiste de Shapiro ;
+\item $k_{station}$ et $k_{sat}$ sont les corrections de centre de phase des antennes du récepteur et du satellite.
+\end{itemize}
+
+Les détails des termes de correction de $\rho_i$ seront étududiés plus tard dans la section \ref{correction}. Nous pouvons réécrire l'équation (\ref{eq:rho_i}) en distinguant les termes que l'on peut évualuer et les termes inconnus : \begin{align} \underbrace{\rho_i + c\delta t_s - I_{iono} - \delta_{tropo} - \delta_{Sagnac} - \delta_{Shapiro} + k_{station} + k_{sat}}_{\text{Pseudo-distance corrigée}} = \| S_i P \| + c\delta t_r \label{eq:termes_eval} \end{align} Le retard de l'horloge du récepteur $c\delta t_r$ étant inconnu, le jeu de paramètres à estimer est un quadriplet $(x, y, z, c\delta t_r)$, où $(x, y, z)$ sont les coordonnées du récepteur et $c\delta t_r$ est le retard de son horloge. Cela impose un minimum de 4 équations pour résoudre le système, ce qui correspond à la réception des signaux d'au moins 4 satellites.
+
+\subsection{Mesure de phase}
+
+Outre les pseudo-distances, les récepteurs GNSS sont également capables de mesurer la phase de l'onde porteuse émise par les satellites. Cette information est particulièrement intéressante car elle est beaucoup plus précise que la mesure de code. 
+
+Le récepteur mesure le déphasage $\Delta \varphi$ entre l'onde porteuse reçue et une réplique générée localement. Ce déphasage permet de déduire la distance parcourue par l'onde porteuse à centimètre près, à condition de connaître le nombre entier de cycles $N_i$ parcourus par l'onde entre le satellite $i$ et le récepteur.
+
+Cette inconnue, que l'on appelle ambiguïté entière, doit être estimée conjointement avec la position du récepteur.
+
+Par la suite on notera $L_i = \lambda \Delta \varphi_i $ la mesure de phase en mètres.
+
+L'équation d'observation associée à la mesure de phase s'écrit :
+
+\begin{align}
+L_i
+=
+\|S_iP\|
++
+c\delta t_r
+-
+c\delta t_s
+-
+I_{iono}
++
+\delta_{tropo}
++
+\delta_{Sagnac}
++
+\delta_{Shapiro}
++
+\delta_{wind-up}
+-
+k_{station}
+-
+k_{sat}
++
+\lambda N_i
++
+n_i^\phi,
+\label{eq:phase}
+\end{align}
+
+où
+
+\begin{itemize}
+\item $L_i$ est la mesure de phase exprimée en mètres ;
+\item $\lambda$ est la longueur d'onde du signal considéré ;
+\item $N_i$ est l'ambiguïté entière associée au satellite $i$ ;
+\item $\delta_{wind-up}$ est la correction d'enroulement de phase ;
+\item $n_i^\phi$ est le bruit de mesure de la phase.
+\end{itemize}
+
+Cette équation est très proche de celle des pseudo-distances. Les différences sont l'apparition du terme $\lambda N_i$, l'inversion du signe du retard ionosphérique, et l'apparition d'une correction d'enroulement de phase. En effet, l'ionosphère retarde la propagation du code (retard de groupe) mais provoque une avance de phase de l'onde porteuse (retard de phase).
+
+Comme précédemment, les différents termes de correction peuvent être évalués. En regroupant ces corrections, on obtient
+
+\begin{align}
+\underbrace{
+L_i
++
+c\delta t_s
++
+I_{iono}
+-
+\delta_{tropo}
+-
+\delta_{Sagnac}
+-
+\delta_{Shapiro}
+-
+\delta_{wind-up}
++
+k_{station}
++
+k_{sat}
+}_{\text{Phase corrigée}}
+=
+\|S_iP\|
++
+c\delta t_r
++
+\lambda N_i
++
+n_i^\phi.
+\label{eq:phase_corrigee}
+\end{align}
+
+Contrairement aux pseudo-distances, la mesure de phase ne permet pas à elle seule de déterminer la position du récepteur, en raison de la présence de l'ambiguïté entière $N_i$. En revanche, l'utilisation conjointe des mesures de code et de phase permettra d'exploiter la précision de la mesure de phase tout en résolvant les ambiguïtés entières.
+
+\section{\texorpdfstring{Résolution pour $n$ satellites ($n\ge4$)}{Résolution pour n satellites (n>=4)}} \label{resolution}
+
+Les pseudo-distances corrigées et les mesures de phase corrigées restent affectées par un bruit de mesure résiduel. Les modèles d'observation s'écrivent
+
+\begin{align}
+\bar{\rho}_i
+&=
+r_i
++
+c\delta t_r
++
+n_{\rho,i},
+\\
+\bar{\Phi}_i
+&=
+r_i
++
+c\delta t_r
++
+\lambda N_i
++
+n_{\Phi,i},
+\label{eq:modeles_obs}
+\end{align}
+
+où
+
+\begin{itemize}
+\item $r_i=\|S_iP\|$ est la distance géométrique entre le satellite $S_i$ et le récepteur ;
+\item $N_i$ est l'ambiguïté de phase associée au satellite $i$ ;
+\item $\lambda$ est la longueur d'onde de la porteuse considérée ;
+\item $n_{\rho,i}$ et $n_{\Phi,i}$ désignent les bruits résiduels des mesures de code et de phase.
+\end{itemize}
+
+En théorie, les ambiguïtés $N_i$ sont des nombres entiers. Cependant, dans un premier temps, elles sont estimées comme des paramètres réels (\emph{float ambiguities}). Cette approche permet d'obtenir directement une solution par moindres carrés ou par filtre de Kalman. Une éventuelle résolution entière pourra ensuite être réalisée dans un second temps.
+
+Les bruits sont supposés centrés,
+
+\[
+E[n_{\rho,i}]
+=
+E[n_{\Phi,i}]
+=
+0,
+\]
+
+et indépendants d'un satellite à l'autre.
+
+On note également $(x_i^s,y_i^s,z_i^s)$ les coordonnées du satellite $S_i$.
+
+Les modèles d'observation peuvent être écrits sous la forme
+
+\begin{align}
+\bar{\rho}_i
+&=
+f_i(x,y,z,c\delta t_r)
++
+n_{\rho,i},
+\\
+\bar{\Phi}_i
+&=
+g_i(x,y,z,c\delta t_r,\lambda N_i)
++
+n_{\Phi,i},
+\end{align}
+
+avec
+
+\begin{align}
+f_i(x,y,z,c\delta t_r)
+&=
+\sqrt{(x-x_i^s)^2+(y-y_i^s)^2+(z-z_i^s)^2}
++
+c\delta t_r,
+\\
+g_i(x,y,z,c\delta t_r,\lambda N_i)
+&=
+f_i(x,y,z,c\delta t_r)
++
+\lambda N_i.
+\end{align}
+
+Les fonctions $f_i$ et $g_i$ étant non linéaires, elles sont linéarisées au premier ordre autour d'une estimation approchée
+
+\[
+a_0=
+(x_0,y_0,z_0,c\delta t_{r0},
+(\lambda N_1)_0,\ldots,(\lambda N_n)_0).
+\]
+
+En posant
+
+\[
+r_i(a_0)
+=
+\sqrt{(x_0-x_i^s)^2+(y_0-y_i^s)^2+(z_0-z_i^s)^2},
+\]
+
+on obtient
+
+\begin{align}
+\frac{\partial f_i}{\partial x}
+&=
+\frac{\partial g_i}{\partial x}
+=
+\frac{x_0-x_i^s}{r_i(a_0)},
+\\
+\frac{\partial f_i}{\partial y}
+&=
+\frac{\partial g_i}{\partial y}
+=
+\frac{y_0-y_i^s}{r_i(a_0)},
+\\
+\frac{\partial f_i}{\partial z}
+&=
+\frac{\partial g_i}{\partial z}
+=
+\frac{z_0-z_i^s}{r_i(a_0)},
+\\
+\frac{\partial f_i}{\partial c\delta t_r}
+&=
+\frac{\partial g_i}{\partial c\delta t_r}
+=
+1,
+\\
+\frac{\partial g_i}{\partial (\lambda N_i)}
+&=
+1.
+\end{align}
+
+En introduisant les corrections
+
+\[
+dx=x-x_0,\qquad
+dy=y-y_0,\qquad
+dz=z-z_0,\qquad
+d(c\delta t_r)=c\delta t_r-c\delta t_{r0},
+\]
+
+et
+
+\[
+d(\lambda N_i)=\lambda N_i-(\lambda N_i)_0,
+\]
+
+les modèles linéarisés deviennent
+
+\begin{align}
+\bar{\rho}_i-f_i(a_0)
+&\simeq
+\frac{x_0-x_i^s}{r_i(a_0)}dx
++
+\frac{y_0-y_i^s}{r_i(a_0)}dy
++
+\frac{z_0-z_i^s}{r_i(a_0)}dz
++
+d(c\delta t_r)
++
+n_{\rho,i},
+\\
+\bar{\Phi}_i-g_i(a_0)
+&\simeq
+\frac{x_0-x_i^s}{r_i(a_0)}dx
++
+\frac{y_0-y_i^s}{r_i(a_0)}dy
++
+\frac{z_0-z_i^s}{r_i(a_0)}dz
++
+d(c\delta t_r)
++
+d(\lambda N_i)
++
+n_{\Phi,i}.
+\end{align}
+
+En regroupant les observations de code et de phase, le système linéarisé s'écrit
+
+\[
+\mathbf y
+=
+\mathbf A\mathbf x
++
+\mathbf n,
+\]
+
+avec
+
+\[
+\mathbf y=
+\begin{bmatrix}
+\bar{\rho}_1-f_1(a_0)\\
+\vdots\\
+\bar{\rho}_n-f_n(a_0)\\
+\bar{\Phi}_1-g_1(a_0)\\
+\vdots\\
+\bar{\Phi}_n-g_n(a_0)
+\end{bmatrix},
+\qquad
+\mathbf x=
+\begin{bmatrix}
+dx\\
+dy\\
+dz\\
+d(c\delta t_r)\\
+d(\lambda N_1)\\
+\vdots\\
+d(\lambda N_n)
+\end{bmatrix},
+\qquad
+\mathbf n=
+\begin{bmatrix}
+n_{\rho,1}\\
+\vdots\\
+n_{\rho,n}\\
+n_{\Phi,1}\\
+\vdots\\
+n_{\Phi,n}
+\end{bmatrix},
+\]
+
+et
+
+\[
+\mathbf A=
+\begin{bmatrix}
+\mathbf G & \mathbf 0_{n\times n}\\
+\mathbf G & \mathbf I_n
+\end{bmatrix},
+\]
+
+où
+
+\[
+\mathbf G=
+\begin{bmatrix}
+\dfrac{x_0-x_1^s}{r_1(a_0)} &
+\dfrac{y_0-y_1^s}{r_1(a_0)} &
+\dfrac{z_0-z_1^s}{r_1(a_0)} &
+1\\
+\vdots & \vdots & \vdots & \vdots\\
+\dfrac{x_0-x_n^s}{r_n(a_0)} &
+\dfrac{y_0-y_n^s}{r_n(a_0)} &
+\dfrac{z_0-z_n^s}{r_n(a_0)} &
+1
+\end{bmatrix},
+\]
+
+
+\section{Filtre de Kalman étendu} \label{Kalman}
+
+La méthode des moindres carrés pondérés présentée précédemment estime la position du récepteur indépendamment à chaque époque d'observation. Les informations issues des époques précédentes ne sont donc pas exploitées, alors même que certains paramètres, tels que la position du récepteur ou les ambiguïtés de phase, évoluent lentement au cours du temps.
+
+Le filtre de Kalman permet de prendre en compte cette continuité temporelle en combinant les observations de l'époque courante avec les estimations obtenues aux époques précédentes. Il fournit ainsi une estimation récursive du vecteur d'état, tout en tenant compte des incertitudes associées aux mesures et au modèle d'évolution.
+
+Dans notre cas, le vecteur d'état est défini par
+
+\begin{align}
+\mathbf{x}_k=
+\begin{bmatrix}
+x &
+y &
+z &
+c\delta t_r &
+N_1 &
+\cdots &
+N_n
+\end{bmatrix}^{T},
+\end{align}
+
+où $k$ désigne l'époque considérée.
+
+Le filtre repose sur deux modèles : un modèle d'évolution temporelle de l'état et un modèle d'observation.
+
+\subsection{Modèle d'évolution}
+
+Entre deux époques successives, le vecteur d'état est supposé évoluer selon
+
+\begin{align}
+\mathbf{x}_k
+=
+\mathbf{F}_k
+\mathbf{x}_{k-1}
++
+\mathbf{w}_k,
+\label{eq:kalman_prediction}
+\end{align}
+
+où
+
+\begin{itemize}
+\item $\mathbf{F}_k$ est la matrice de transition d'état ;
+\item $\mathbf{w}_k$ est le bruit de processus.
+\end{itemize}
+
+Le bruit de processus modélise les imperfections du modèle d'évolution. Il est supposé centré,
+
+\begin{align}
+E[\mathbf{w}_k]=\mathbf{0},
+\end{align}
+
+et de matrice de covariance
+
+\begin{align}
+E[\mathbf{w}_k\mathbf{w}_k^T]
+=
+\mathbf{Q}_k.
+\end{align}
+
+Dans le cas d'un récepteur statique, les paramètres évoluent très peu entre deux époques. Une hypothèse couramment retenue consiste alors à adopter un modèle de marche aléatoire, pour lequel
+
+\begin{align}
+\mathbf{F}_k=\mathbf{I},
+\end{align}
+
+où $\mathbf{I}$ désigne la matrice identité.
+
+\subsection{Modèle d'observation}
+
+À chaque époque, les observations sont reliées au vecteur d'état par une fonction non linéaire
+
+\begin{align}
+\mathbf{y}_k
+=
+\mathbf{h}(\mathbf{x}_k)
++
+\mathbf{v}_k,
+\label{eq:kalman_observation}
+\end{align}
+
+où
+
+\begin{itemize}
+\item $\mathbf{h}$ représente le modèle d'observation GNSS ;
+\item $\mathbf{v}_k$ est le bruit de mesure.
+\end{itemize}
+
+Le bruit de mesure est supposé centré,
+
+\begin{align}
+E[\mathbf{v}_k]=\mathbf{0},
+\end{align}
+
+avec
+
+\begin{align}
+E[\mathbf{v}_k\mathbf{v}_k^T]
+=
+\mathbf{R}_k,
+\end{align}
+
+où $\mathbf{R}_k$ est la matrice de covariance des observations.
+
+Le modèle d'observation étant non linéaire, il est linéarisé à chaque itération autour de l'estimation courante. On obtient alors
+
+\begin{align}
+\mathbf{y}_k
+\simeq
+\mathbf{H}_k
+\mathbf{x}_k
++
+\mathbf{v}_k,
+\end{align}
+
+où
+
+\begin{align}
+\mathbf{H}_k
+=
+\left.
+\frac{\partial \mathbf{h}}
+{\partial \mathbf{x}}
+\right|_{\hat{\mathbf{x}}_k^{-}}
+\end{align}
+
+est la matrice jacobienne du modèle d'observation.
+
+\subsection{Étape de prédiction}
+
+À partir de l'estimation obtenue à l'époque précédente, une prédiction du vecteur d'état est calculée selon
+
+\begin{align}
+\hat{\mathbf{x}}_k^{-}
+=
+\mathbf{F}_k
+\hat{\mathbf{x}}_{k-1},
+\end{align}
+
+ainsi que la covariance associée
+
+\begin{align}
+\mathbf{P}_k^{-}
+=
+\mathbf{F}_k
+\mathbf{P}_{k-1}
+\mathbf{F}_k^{T}
++
+\mathbf{Q}_k.
+\end{align}
+
+\subsection{Étape de mise à jour}
+
+Lorsque les observations de l'époque $k$ sont disponibles, l'innovation est calculée par
+
+\begin{align}
+\mathbf{r}_k
+=
+\mathbf{y}_k
+-
+\mathbf{h}
+(\hat{\mathbf{x}}_k^{-}).
+\end{align}
+
+Le gain de Kalman est alors
+
+\begin{align}
+\mathbf{K}_k
+=
+\mathbf{P}_k^{-}
+\mathbf{H}_k^{T}
+\left(
+\mathbf{H}_k
+\mathbf{P}_k^{-}
+\mathbf{H}_k^{T}
++
+\mathbf{R}_k
+\right)^{-1}.
+\end{align}
+
+L'estimation du vecteur d'état est ensuite corrigée selon
+
+\begin{align}
+\hat{\mathbf{x}}_k
+=
+\hat{\mathbf{x}}_k^{-}
++
+\mathbf{K}_k
+\mathbf{r}_k,
+\end{align}
+
+et la matrice de covariance est mise à jour par
+
+\begin{align}
+\mathbf{P}_k
+=
+(\mathbf{I}
+-
+\mathbf{K}_k
+\mathbf{H}_k)
+\mathbf{P}_k^{-}.
+\end{align}
+
+Ces quatre équations constituent le cœur du filtre de Kalman étendu. Contrairement à la méthode des moindres carrés, le filtre fournit à chaque époque une estimation qui dépend à la fois des observations courantes et des estimations obtenues aux époques précédentes. Cette propriété est particulièrement adaptée au positionnement GNSS, où les paramètres à estimer évoluent de manière continue au cours du temps.
+

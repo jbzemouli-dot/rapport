@@ -30,9 +30,7 @@ signal doivent être modélisés avec soin.
 Ce chapitre introduit d'abord la mesure de distance, puis les deux
 observables utilisées en positionnement précis : le code et la phase de
 porteuse. Il présente ensuite leur mise en équation pour plusieurs satellites,
-la résolution par moindres carrés pondérés et enfin l'exploitation de la
-continuité temporelle par un filtre de Kalman étendu. Les modèles de correction
-appliqués aux observations seront détaillés au chapitre~\ref{chaine_traitement_positionnement_gnss}.
+la résolution par moindres carrés pondérés et par un filtre de Kalman étendu. 
 
 \section{Mesure de distance par signaux GNSS}
 
@@ -330,9 +328,7 @@ avec :
 
 Une matrice $\mathbf R$ diagonale correspond à l'hypothèse d'erreurs
 indépendantes entre observations. Cette hypothèse simplifie la pondération et
-est souvent adoptée en première approche. L'écriture matricielle reste
-toutefois générale et permet de représenter d'éventuelles corrélations par des
-termes non diagonaux.
+est souvent adoptée en première approche. 
 
 \subsection{Linéarisation du modèle}
 
@@ -552,7 +548,7 @@ Les deux observations du satellite $s$ sont ainsi linéarisées sous la forme
 \end{align}
 
 En empilant d'abord les $n$ observations de code, puis les $n$ observations de
-phase, le système linéarisé s'écrit explicitement
+phase, le système linéarisé s'écrit :
 
 \begin{align}
 \Delta\mathbf y
@@ -596,15 +592,6 @@ phase, le système linéarisé s'écrit explicitement
 \label{eq:stacked_vectors}
 \end{align}
 
-avec :
-
-\begin{itemize}
-    \item $\Delta\mathbf y$ le vecteur des écarts entre les observations et
-    les valeurs calculées à l'état approché ;
-    \item $\Delta\mathbf x$ le vecteur des corrections recherchées ;
-    \item $\boldsymbol\varepsilon$ le vecteur des erreurs résiduelles ;
-    \item $\mathbf H_0$ la matrice jacobienne du système complet.
-\end{itemize}
 
 La structure de la jacobienne est la suivante :
 

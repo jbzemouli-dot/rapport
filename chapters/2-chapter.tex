@@ -108,8 +108,6 @@ La Figure~\ref{fig:rinex_nav} présente un extrait d'un fichier RINEX Navigation
     \label{fig:rinex_nav}
 \end{figure}
 
-    \subsection{Autres fichiers auxiliaires (SP3, CLK, ANTEX, ...)} % seulement si utilisés
-
 
 
 \section{Modèles de correction} \label{correction}
@@ -146,19 +144,22 @@ Pour chaque satellite, le biais d'horloge est modélisé par un polynôme du sec
 \begin{align}
 \delta t_{\mathrm{poly}}^s(t)
 =
-a_{f0}
+a_{f0}^s
 +
-a_{f1}(t-t_{oc})
+a_{f1}^s(t-t_{oc}^s)
 +
-a_{f2}(t-t_{oc})^2,
+a_{f2}^s(t-t_{oc}^s)^2,
 \end{align}
 
 où
 
 \begin{itemize}
     \item $t$ est l'instant considéré ;
-    \item $t_{oc}$ est l'époque de référence des paramètres d'horloge ;
-    \item $a_{f0}$, $a_{f1}$ et $a_{f2}$ sont respectivement le biais, la dérive et la dérive seconde de l'horloge. Ces coefficients sont fournis dans le fichier RINEX Navigation.
+    \item $t_{oc}^s$ est l'époque de référence des paramètres d'horloge du
+    satellite $s$ ;
+    \item $a_{f0}^s$, $a_{f1}^s$ et $a_{f2}^s$ sont respectivement le biais,
+    la dérive et la dérive seconde de l'horloge. Ces coefficients sont fournis
+    dans le fichier RINEX Navigation.
 \end{itemize}
 
 À cette modélisation s'ajoute une correction relativiste liée à l'excentricité de l'orbite du satellite, donnée par
@@ -182,24 +183,56 @@ avec :
     \item $E$ l'anomalie excentrique.
 \end{itemize}
 
-Une correction supplémentaire, appelée \textit{Timing Group Delay} (TGD), est également diffusée dans le message de navigation. Elle représente le biais différentiel de groupe entre les différentes fréquences émises par le satellite. Cette correction doit être appliquée lors de l'utilisation d'observations monofréquences.
-Le retard dû au TGD pour une fréquence $f_i$, exprimé en secondes, vaut :
-\[
-\delta t_{\mathrm{TGD},i}^s = \gamma_i \, \delta t_{\mathrm{TGD}}^s,
-\]
-
-avec :
-\begin{itemize}
-    \item $\gamma_i = \frac{f_1^2}{f_i^2}$ le facteur de conversion dépendant de la fréquence utilisée ;
-    \item $\delta t_{\mathrm{TGD}}^s$ le TGD du satellite $s$ fourni dans le message de navigation, exprimé en secondes.
-\end{itemize}
-
-Au final, le biais d'horloge du satellite est obtenu en combinant le biais polynomial, la correction relativiste et le TGD (en monofréquence uniquement) :
+Le biais physique de l'horloge satellite est obtenu en combinant le polynôme
+diffusé et la correction relativiste :
 
 \begin{align}
 \delta t^s(t) = \delta t_{\mathrm{poly}}^s(t)
-+ \Delta t_{\mathrm{rel}}^s + \delta t_{\mathrm{TGD},i}^s
++ \Delta t_{\mathrm{rel}}^s.
+\label{eq:broadcast_satellite_clock}
 \end{align}
+
+avec :
+
+\begin{itemize}
+    \item $\delta t^s$ le biais d'horloge du satellite $s$ par rapport au
+    temps du système ;
+    \item $\delta t_{\mathrm{poly}}^s$ le terme polynomial diffusé ;
+    \item $\Delta t_{\mathrm{rel}}^s$ la correction relativiste liée à
+    l'excentricité orbitale.
+\end{itemize}
+
+À cela s'ajoute, dans certains cas, un terme de \textit{Total Group Delay}
+(TGD), diffusé dans le message de navigation. Il représente un biais de groupe propre au signal de code. Pour une
+convention de type GPS, le biais d'horloge apparent associé à la fréquence
+$f_i$ s'écrit
+
+\begin{align}
+\delta t_i^s
+&=
+\delta t^s-\gamma_i\,\delta t_{\mathrm{TGD}}^s,
+&
+\gamma_i
+&=
+\frac{f_1^2}{f_i^2}.
+\label{eq:tgd_signal_clock}
+\end{align}
+
+avec :
+
+\begin{itemize}
+    \item $\delta t_i^s$ le biais apparent utilisé pour l'observation de code
+    sur la fréquence $i$ ;
+    \item $\delta t_{\mathrm{TGD}}^s$ le TGD diffusé par le satellite $s$ ;
+    \item $\gamma_i$ le facteur de changement de fréquence.
+\end{itemize}
+
+Le nom du paramètre, sa fréquence de référence et son signe dépendent de la
+constellation : Galileo diffuse notamment des BGD. Le TGD ou le BGD doit donc
+être appliqué selon le signal de code utilisé. Il ne s'applique pas comme un
+terme d'horloge commun à la phase. Avec des produits précis CLK et BIA, les
+conventions des horloges et des biais observables remplacent ce traitement
+diffusé.
 
 \subsubsection{Horloge récepteur}
 
@@ -218,7 +251,7 @@ La correction de Sagnac s'écrit
 \begin{align}
 \delta_{\mathrm{Sagnac},r}^s
 =
-\frac{1}{c} \mathbf r^s \cdot (\boldsymbol\omega_E \times \mathbf r_r)
+\frac{1}{c} (\boldsymbol\omega_E \times \mathbf r^s)\cdot\mathbf r_r
 =
 \frac{\omega_E}{c}
 \left(
@@ -288,49 +321,36 @@ ZTD = ZHD + ZWD,
 où $ZHD$ (\textit{Zenith Hydrostatic Delay}) désigne le retard hydrostatique
 au zénith et $ZWD$ (\textit{Zenith Wet Delay}) le retard humide au zénith.
 
-Dans le cas général, le retard troposphérique selon la direction d'un
-satellite peut alors être modélisé par
-\begin{align}
-T_r^s(E_r^s,A_r^s)
-=
-M_{\mathrm{dry}}(E_r^s)ZHD
-+
-M_{\mathrm{wet}}(E_r^s)ZWD
-+
-G(E_r^s,A_r^s),
-\label{eq:tropo_complete}
-\end{align}
-où $E_r^s$ et $A_r^s$ désignent respectivement les angles d'élévation et d'azimut du
-satellite $s$, $M_{\mathrm{dry}}$ et $M_{\mathrm{wet}}$ les fonctions de projection
-des composantes hydrostatique et humide, et $G(E_r^s,A_r^s)$ la contribution des
-gradients horizontaux de la troposphère.
+\subsubsection{Modèle de base sans gradients}
 
-Les fonctions de projection permettent de relier les retards mesurés selon
-la direction du satellite aux retards correspondants au zénith. Dans cette
-étude, les fonctions de projection du modèle \textit{Niell Mapping Function}
-(NMF) sont utilisées. Leur formulation détaillée est présentée en
-annexe~\ref{annexe:nmf}.
+Lorsque l'atmosphère est supposée symétrique autour du récepteur, le retard ne
+dépend que de l'élévation du satellite. Le modèle de base s'écrit
 
-Deux niveaux de modélisation sont considérés dans ce travail. Dans un premier
-temps, les gradients horizontaux sont négligés afin de limiter le nombre de
-paramètres à estimer. Le modèle se réduit alors à
 \begin{align}
-T_r^s(E_r^s)
+T_{r,0}^s(E_r^s)
 =
 M_{\mathrm{dry}}(E_r^s)ZHD
 +
 M_{\mathrm{wet}}(E_r^s)ZWD.
 \label{eq:tropo_no_grad}
 \end{align}
-Dans un second temps, les gradients horizontaux sont introduits afin de
-prendre en compte une éventuelle asymétrie de l'atmosphère.
 
-\subsubsection{Modèle sans gradients}
+avec :
 
-Dans un premier temps, le retard troposphérique est considéré comme indépendant
-de l'azimut du satellite et sa dépendance à l'élévation est décrite par les
-fonctions de projection. Le modèle utilisé est donc celui de
-l'équation~\eqref{eq:tropo_no_grad}.
+\begin{itemize}
+    \item $T_{r,0}^s$ le retard troposphérique sans gradients ;
+    \item $E_r^s$ l'angle d'élévation du satellite $s$ vu par le récepteur
+    $r$ ;
+    \item $M_{\mathrm{dry}}$ et $M_{\mathrm{wet}}$ les fonctions de projection
+    des composantes hydrostatique et humide ;
+    \item $ZHD$ et $ZWD$ les retards hydrostatique et humide au zénith.
+\end{itemize}
+
+Les fonctions de projection permettent de relier les retards mesurés selon
+la direction du satellite aux retards correspondants au zénith. Dans cette
+étude, les fonctions de projection du modèle \textit{Niell Mapping Function}
+(NMF) sont utilisées. Leur formulation détaillée est présentée en
+annexe~\ref{annexe:nmf}.
 
 La composante hydrostatique représente la majeure partie du retard
 troposphérique et varie relativement lentement. Elle peut être calculée à
@@ -383,9 +403,9 @@ du récepteur. Le retard peut alors présenter une dépendance à l'azimut du
 satellite, qui n'est pas représentée par le modèle
 de l'équation~\eqref{eq:tropo_no_grad}.
 
-Cette contribution peut être prise en compte en introduisant deux paramètres
-de gradient horizontal, respectivement orientés selon les directions nord et
-est. Le modèle complet s'écrit alors
+Cette asymétrie est ajoutée au modèle de base au moyen de deux paramètres de
+gradient horizontal, respectivement orientés selon les directions nord et
+est :
 \begin{align}
 T_r^s(E_r^s,A_r^s)
 =
@@ -393,15 +413,23 @@ M_{\mathrm{dry}}(E_r^s)ZHD
 +
 M_{\mathrm{wet}}(E_r^s)ZWD
 +
+\underbrace{
 M_{\mathrm{grad}}(E_r^s)
 \left(
 G_N\cos A_r^s + G_E\sin A_r^s
-\right),
+\right)
+}_{\text{terme de gradient}},
 \label{eq:tropo_grad}
 \end{align}
-où $G_N$ et $G_E$ représentent respectivement les composantes nord et est du
-gradient troposphérique, et $M_{\mathrm{grad}}(E_r^s)$ est la fonction de
-projection associée aux gradients.
+
+avec :
+
+\begin{itemize}
+    \item $A_r^s$ l'azimut du satellite ;
+    \item $G_N$ et $G_E$ les composantes nord et est du gradient
+    troposphérique ;
+    \item $M_{\mathrm{grad}}$ la fonction de projection associée ;
+\end{itemize}
 
 La formulation détaillée de la fonction de projection utilisée pour les gradients est
 présentée en annexe~\ref{annexe:nmf}.
@@ -519,7 +547,7 @@ Considérons par exemple les modèles simplifiés
 \begin{align}
 P_{r,i}^s
 &=
-\mathcal \rho_r^s
+\mathcal G_r^s
 +
 I_{r,i}^s
 +
@@ -527,7 +555,7 @@ I_{r,i}^s
 \\
 L_{r,i}^s
 &=
-\mathcal \rho_r^s
+\mathcal G_r^s
 -
 I_{r,i}^s
 +
@@ -536,16 +564,44 @@ B_{r,i}^s
 \varepsilon_{L,r,i}^s,
 \end{align}
 
-avec
+avec le terme non dispersif commun
+
+\begin{align}
+\mathcal G_r^s
+&=
+\rho_r^s
++c\left(\delta t_r-\delta t^s\right)
++T_r^s
++\delta_{\mathrm{Sagnac},r}^s
++\delta_{\mathrm{Shapiro},r}^s,
+\label{eq:common_nondispersive_term}
+\end{align}
+
+et le retard ionosphérique du premier ordre
 
 \begin{align}
 I_{r,i}^s
 =
 \frac{K_r^s}{f_i^2},
+\qquad
+K_r^s=40{,}3\,\mathrm{STEC}_r^s,
 \end{align}
 
-où $\mathcal \varepsilon_{P,r,i}^s$ et $\mathcal \varepsilon_{L,r,i}^s$ regroupent les termes non dispersifs du code et de
-la phase, tandis que $K_r^s$ est une constante indépendante de la fréquence $f_i$.
+avec :
+
+\begin{itemize}
+    \item $\mathcal G_r^s$ l'ensemble des termes communs au code et à la
+    phase et indépendants de la fréquence dans ce modèle simplifié ;
+    \item $B_{r,i}^s=\lambda_iN_{r,i}^s$ l'ambiguïté métrique de phase ;
+    \item $\varepsilon_{P,r,i}^s$ et $\varepsilon_{L,r,i}^s$ les erreurs
+    résiduelles de code et de phase ;
+    \item $\mathrm{STEC}_r^s$ le contenu électronique total intégré le long
+    du trajet satellite--récepteur, exprimé en électrons par mètre carré ;
+    \item $K_r^s=40{,}3\,\mathrm{STEC}_r^s$ le coefficient ionosphérique du
+    premier ordre, indépendant de la fréquence $f_i$. Le facteur $40{,}3$
+    est exprimé en $\mathrm{m^3\,s^{-2}}$ lorsque $I_{r,i}^s$ est en mètres,
+    $\mathrm{STEC}_r^s$ en électrons par mètre carré et $f_i$ en hertz.
+\end{itemize}
 
 En substituant cette expression dans l'équation~\eqref{eq:code_iono_free},
 le terme ionosphérique devient
@@ -580,6 +636,119 @@ supérieur ne sont pas parfaitement éliminés et peuvent subsister dans les
 applications de très haute précision.
 
 Cette combinaison n'est cependant pas sans contrepartie : les coefficients appliqués aux observations amplifient également leur bruit de mesure. La variance de la combinaison doit donc être prise en compte lors de la pondération des observations dans les algorithmes d'estimation.
+
+\subsection{Traitement multi-constellation}
+
+L'utilisation de plusieurs constellations augmente le nombre de satellites
+disponibles et donc le nombre d'équations d'observation. Elle améliore la
+géométrie, la disponibilité de la solution et sa robustesse lorsque le ciel est
+partiellement masqué. Les mesures ne peuvent cependant pas être regroupées
+directement : les horloges satellites sont référencées au temps propre de leur
+constellation et les chaînes de réception peuvent introduire des retards
+matériels différents selon le système.
+
+Pour Galileo et GPS, le message de navigation fournit le décalage déterministe
+entre les deux échelles de temps, appelé GGTO (\textit{Galileo-to-GPS Time
+Offset}). Il est modélisé par
+
+\begin{align}
+\Delta t_{\mathrm{GGTO}}(t)
+=
+a_0+a_1\left(t-t_{\mathrm{ref}}\right).
+\label{eq:ggto}
+\end{align}
+
+avec :
+
+\begin{itemize}
+    \item $\Delta t_{\mathrm{GGTO}}(t)$ le décalage Galileo--GPS à l'époque
+    $t$, en secondes ;
+    \item $a_0$ le décalage à l'époque de référence, en secondes ;
+    \item $a_1$ sa dérive temporelle, en secondes par seconde ;
+    \item $t_{\mathrm{ref}}$ l'époque de référence du message.
+\end{itemize}
+
+Ces trois paramètres sont extraits du fichier RINEX Navigation. 
+Avec la convention retenue, une observation Galileo
+exprimée en mètres est ramenée au temps GPS selon
+
+\begin{align}
+O_{r,i}^{s,\mathrm{GPS}}(t)
+=
+O_{r,i}^{s,\mathrm{GAL}}(t)
+-c\,\Delta t_{\mathrm{GGTO}}(t).
+\label{eq:ggto_observation_correction}
+\end{align}
+
+avec :
+
+\begin{itemize}
+    \item $O_{r,i}^{s,\mathrm{GAL}}$ l'observation Galileo avant correction,
+    qu'il s'agisse du code ou de la phase exprimée en mètres ;
+    \item $O_{r,i}^{s,\mathrm{GPS}}$ la même observation ramenée à l'échelle
+    de temps GPS ;
+    \item $c$ la vitesse de la lumière.
+\end{itemize}
+
+Cette correction connue aligne les échelles de temps, mais elle ne supprime
+pas les retards différentiels propres au récepteur ni les écarts résiduels
+entre systèmes. Une unique inconnue d'horloge récepteur reste donc
+insuffisante.
+
+Une constellation est choisie comme référence, ici GPS. Pour toute autre
+constellation $q$, on introduit un biais inter-systèmes, ou ISB
+(\textit{Inter-System Bias}), exprimé en mètres :
+
+\begin{align}
+c\delta t_{r,q}
+&=
+c\delta t_r+\mathrm{ISB}_{r}^{q},
+&
+\mathrm{ISB}_{r}^{\mathrm{GPS}}
+&=0,
+\\
+c\left(\delta t_{r,q}-\delta t^{s,q}\right)
+&=
+c\left(\delta t_r-\delta t^{s,q}\right)
++\mathrm{ISB}_{r}^{q}.
+\label{eq:isb_definition}
+\end{align}
+
+avec :
+
+\begin{itemize}
+    \item $c\delta t_{r,q}$ le biais d'horloge récepteur effectif pour les
+    observations de la constellation $q$ ;
+    \item $c\delta t_r$ le biais d'horloge commun, défini par rapport au temps
+    GPS ;
+    \item $\delta t^{s,q}$ le biais de l'horloge du satellite $s$, exprimé par
+    rapport à l'échelle de temps de la constellation $q$ ;
+    \item $\mathrm{ISB}_{r}^{q}$ le décalage de la constellation $q$ par
+    rapport à la référence. Il regroupe l'écart résiduel entre les échelles de
+    temps et les retards différentiels du récepteur.
+\end{itemize}
+
+Le terme $\mathrm{ISB}_{r}^{q}$ est ajouté au modèle calculé des observations
+de la constellation concernée. Il est inconnu et doit être estimé avec la
+position et l'horloge. Pour un traitement GPS--Galileo, le vecteur d'état
+minimal contenant des ambiguïtés devient par exemple
+
+\begin{align}
+\mathbf x
+=
+\begin{bmatrix}
+\mathbf r_r^{\mathsf T} &
+c\delta t_r &
+\mathrm{ISB}_{r}^{\mathrm{GAL}} &
+B_r^1 & \cdots & B_r^n
+\end{bmatrix}^{\mathsf T}.
+\label{eq:multiconstellation_state}
+\end{align}
+
+
+Avec plus de deux constellations, un ISB indépendant est ajouté pour chaque
+système autre que la référence. Chaque
+nouvelle constellation ajoute ainsi une inconnue d'ISB dans le vecteur d'état.
 
 
 \section{Moindres carrés pondérés (WLS)}
@@ -642,8 +811,35 @@ avec :
 \end{itemize}
 
 Après chaque mise à jour, les distances et la jacobienne sont recalculées au
-nouvel état. La résolution est répétée jusqu'à ce que la norme de la correction
-devienne inférieure au seuil de convergence choisi. Cette méthode produit une
+nouvel état. Les paramètres pouvant avoir des unités et des ordres de grandeur
+différents, le critère d'arrêt porte sur la correction mise à l'échelle :
+
+\begin{align}
+\eta_j
+&=
+\max_p\left|
+\frac{\widehat{\Delta x}_{j,p}}{s_p}
+\right|,
+&
+\eta_j<\eta_{\mathrm{WLS}}
+&\quad\Longrightarrow\quad
+\text{convergence}.
+\label{eq:wls_stopping_criterion}
+\end{align}
+
+avec :
+
+\begin{itemize}
+    \item $\widehat{\Delta x}_{j,p}$ la correction du paramètre $p$ à
+    l'itération $j$ ;
+    \item $s_p$ l'échelle associée à ce paramètre ;
+    \item $\eta_j$ la plus grande correction normalisée ;
+    \item $\eta_{\mathrm{WLS}}$ le seuil de convergence.
+\end{itemize}
+
+Une valeur type est $\eta_{\mathrm{WLS}}=10^{-3}$. La résolution est répétée
+jusqu'à satisfaction de ce critère ou jusqu'au nombre maximal d'itérations,
+fixé ici à $j_{\max}=50$. Cette méthode produit une
 solution complète à partir des seules observations de l'époque considérée.
 Elle est donc adaptée à une résolution indépendante époque par époque, mais
 n'exploite pas le fait que la position, les retards atmosphériques ou les
@@ -653,9 +849,8 @@ l'introduction d'un modèle temporel.
 \section{Filtre de Kalman étendu (EKF)}
 \label{Kalman}
 
-La résolution WLS de la section~\ref{sec:wls} traite chaque époque
-indépendamment. Le filtre de Kalman étendu exploite au contraire la continuité
-temporelle et fournit une estimation récursive : la solution
+Le filtre de Kalman étendu est une autre méthode de résolution des équations.
+Il exploite la continuité temporelle et fournit une estimation récursive : la solution
 obtenue à une époque devient l'information a priori de l'époque suivante. Il
 combine deux sources d'information. Le modèle d'évolution décrit la manière
 dont l'état est susceptible de changer entre deux époques, tandis que le modèle
@@ -669,9 +864,61 @@ désigne désormais l'époque. Un exposant $-$ désignera une quantité prédite
 avant l'utilisation des observations de cette époque ; l'absence d'exposant
 désignera la quantité corrigée.
 
+\subsection{Initialisation du filtre}
+\label{sec:ekf_initialization}
+
+Le calcul récursif doit commencer avec une estimation initiale
+$\widehat{\mathbf x}_0$ et sa covariance $\mathbf P_0$. Chaque paramètre du
+vecteur d'état doit donc recevoir une valeur initiale, même approximative. Dans
+le cas d'une covariance initiale diagonale,
+
+\begin{align}
+\mathbf P_0
+=
+\operatorname{diag}
+\left(
+\sigma_{x,0}^2,
+\sigma_{y,0}^2,
+\sigma_{z,0}^2,
+\sigma_{c\delta t,0}^2,
+\sigma_{\mathrm{ISB},0}^2,
+\sigma_{B_{r,0}^1}^2,\ldots,
+\sigma_{B_{r,0}^n}^2,
+\sigma_{ZWD,0}^2,\ldots
+\right).
+\label{eq:ekf_initial_covariance}
+\end{align}
+
+avec :
+
+\begin{itemize}
+    \item $\sigma_{x,0}$, $\sigma_{y,0}$ et $\sigma_{z,0}$ les écarts-types
+    initiaux des coordonnées ;
+    \item $\sigma_{c\delta t,0}$ et $\sigma_{\mathrm{ISB},0}$ ceux de
+    l'horloge et, en multi-constellation, de l'ISB ;
+    \item $\sigma_{B_{r,0}^s}$ celui de l'ambiguïté métrique initiale
+    $B_{r,0}^s$ du satellite $s$ ;
+    \item $\sigma_{ZWD,0}$ celui du retard humide zénithal lorsque ce paramètre
+    est estimé ;
+    \item les points de suspension les autres paramètres éventuels, notamment
+    les gradients troposphériques.
+\end{itemize}
+
+La forme diagonale constitue une écriture simplifiée. Lorsque deux paramètres
+sont initialement corrélés, leur covariance doit être placée dans les termes
+hors diagonale de $\mathbf P_0$. C'est notamment le cas possible du biais
+d'horloge de référence et d'un ISB construit par différence entre deux
+horloges de constellation.
+
+Une variance trop faible fige le paramètre autour d'une valeur initiale
+potentiellement erronée ; une variance trop élevée ralentit sa convergence et
+peut dégrader le conditionnement numérique. Les méthodes utilisées pour
+obtenir les valeurs initiales propres au traitement GNSS sont présentées dans
+la section~\ref{sec:ekf_gnss_features}.
+
 \subsection{Modèle d'évolution}
 
-Le modèle discret exprime l'état courant à partir de l'état précédent :
+Le modèle suivant exprime l'état courant à partir de l'état précédent :
 
 \begin{align}
 \mathbf x_k
@@ -698,18 +945,11 @@ avec :
 
 La matrice $\mathbf F_k$ traduit l'évolution déterministe attendue. Pour un
 récepteur statique, les coordonnées sont supposées constantes entre deux
-époques ; leur bloc de transition est donc l'identité. Le bruit de processus
+époques ; leur matrice de transition est donc l'identité. Le bruit de processus
 $\mathbf w_k$ représente les variations que ce modèle idéal ne décrit pas. Sa
 covariance $\mathbf Q_k$ règle la liberté d'évolution accordée à chaque
 paramètre : une faible variance impose une forte continuité, tandis qu'une
 variance plus élevée permet une évolution plus rapide.
-
-Un modèle dans lequel la valeur suivante est égale à la valeur précédente plus
-un bruit est appelé \emph{marche aléatoire}. Il convient notamment à des
-paramètres lentement variables. Les ambiguïtés, elles, sont considérées comme
-constantes tant que le suivi de phase reste continu. Lorsqu'un saut de cycle
-est détecté, cette hypothèse n'est plus valable et l'ambiguïté concernée doit
-être réinitialisée.
 
 \subsection{Modèle d'observation}
 
@@ -836,7 +1076,11 @@ Kalman en déduit la part de l'innovation à appliquer à l'état :
 \\
 \widehat{\mathbf x}_k
 &=
-\widehat{\mathbf x}_k^-+\mathbf K_k\boldsymbol\nu_k.
+\widehat{\mathbf x}_k^-+\mathbf K_k\boldsymbol\nu_k,
+\\
+\mathbf P_k
+&=
+\left(\mathbf I-\mathbf K_k\mathbf H_k\right)\mathbf P_k^-.
 \label{eq:ekf_update}
 \end{align}
 
@@ -845,6 +1089,8 @@ avec :
 \begin{itemize}
     \item $\mathbf K_k$ le gain de Kalman ;
     \item $\widehat{\mathbf x}_k$ l'état après assimilation des observations ;
+    \item $\mathbf P_k$ la covariance de l'état corrigé ;
+    \item $\mathbf I$ la matrice identité de dimension adaptée ;
     \item les autres termes sont définis dans les équations précédentes.
 \end{itemize}
 
@@ -853,31 +1099,496 @@ place importante à l'innovation. À l'inverse, des observations très bruitées
 modifient peu l'état prédit. Le gain ne constitue donc pas un paramètre choisi
 directement : il résulte des covariances du modèle et des observations.
 
-La covariance peut être mise à jour sous la forme de Joseph, plus robuste
-numériquement :
-
-\begin{align}
-\mathbf P_k
-&=
-\left(\mathbf I-\mathbf K_k\mathbf H_k\right)
-\mathbf P_k^-
-\left(\mathbf I-\mathbf K_k\mathbf H_k\right)^{\mathsf T}
-+\mathbf K_k\mathbf R_k\mathbf K_k^{\mathsf T}.
-\label{eq:ekf_joseph}
-\end{align}
-
-avec :
-
-\begin{itemize}
-    \item $\mathbf P_k$ la covariance de l'état corrigé ;
-    \item $\mathbf I$ la matrice identité de dimension adaptée ;
-    \item $\mathbf K_k$, $\mathbf H_k$, $\mathbf P_k^-$ et $\mathbf R_k$ les
-    matrices définies précédemment.
-\end{itemize}
-
 À l'issue de cette mise à jour, $\widehat{\mathbf x}_k$ et $\mathbf P_k$
 résument toute l'information utilisée jusqu'à l'époque $k$. Ils servent de
 point de départ à la prédiction suivante. Le cycle prédiction--mise à jour est
 ainsi répété à chaque époque, ce qui permet de renforcer progressivement les
 paramètres constants tout en laissant évoluer ceux auxquels un bruit de
 processus a été attribué.
+
+\subsection{Fonctionnalités complémentaires du traitement GNSS}
+\label{sec:ekf_gnss_features}
+
+En pratique, le traitement d'observations GNSS nécessite des mécanismes qui ne
+font pas partie des équations générales d'un EKF. Le nombre de satellites et,
+par conséquent, le nombre d'ambiguïtés varient au cours du temps. Le suivi de
+la porteuse peut être interrompu, une horloge de récepteur peut évoluer trop
+rapidement pour être prédite avec fiabilité et des observations aberrantes
+peuvent apparaître. Les sections suivantes détaillent les stratégies retenues pour gérer ces situations.
+
+\subsubsection{Initialisation et réinitialisation des horloges}
+
+À la première époque, une solution ponctuelle fondée uniquement sur les
+mesures de code fournit une position approchée et une première estimation du
+biais d'horloge GPS $c\delta t_r$. En multi-constellation, le même ajustement
+estime simultanément $\mathrm{ISB}_r^{\mathrm{GAL}}$. Ces valeurs initialisent
+les composantes correspondantes de $\widehat{\mathbf x}_0$ présenté à la
+section~\ref{sec:ekf_initialization}.
+
+L'horloge du récepteur peut varier fortement d'une époque à la suivante. Elle
+n'est donc pas prédite par le modèle d'évolution retenu. Avant chaque mise à
+jour ultérieure de l'EKF, une nouvelle solution ponctuelle de code estime la
+position, $c\delta t_r$ et, lorsque Galileo est utilisé,
+$\mathrm{ISB}_r^{\mathrm{GAL}}$. Seules les estimations d'horloge et d'ISB sont
+injectées dans l'état prédit ; la position issue de ce calcul auxiliaire ne
+remplace pas la position propagée par le filtre.
+
+Le bloc de covariance associé à l'horloge et à l'ISB est alors réinitialisé.
+Leurs variances initiales et leur covariance mutuelle sont rétablies, tandis
+que leurs corrélations avec la position, la troposphère et les ambiguïtés sont
+annulées. Cette opération ne remet donc pas à zéro l'ensemble du filtre : les
+autres paramètres et l'information accumulée à leur sujet sont conservés.
+
+\subsubsection{État d'ambiguïtés adapté à la visibilité}
+
+Une ambiguïté flottante est associée à chaque satellite dont la phase est
+utilisée. Lors de sa première apparition, elle est initialisée par la
+différence entre phase et code, ramenée en cycles :
+
+\begin{align}
+\widehat N_{r,i,0}^s
+&=
+\frac{L_{r,i}^s-P_{r,i}^s}{\lambda_i},
+&
+B_{r,i,0}^s
+&=
+\lambda_i\widehat N_{r,i,0}^s
+=L_{r,i}^s-P_{r,i}^s.
+\label{eq:ambiguity_initialization}
+\end{align}
+
+avec :
+
+\begin{itemize}
+    \item $\widehat N_{r,i,0}^s$ l'estimation initiale de l'ambiguïté, en
+    cycles ;
+    \item $B_{r,i,0}^s$ la même ambiguïté initiale exprimée en mètres ;
+    \item $L_{r,i}^s$ et $P_{r,i}^s$ les observations de phase et de code
+    exprimées en mètres dans une convention commune ;
+    \item $\lambda_i$ la longueur d'onde de la porteuse considérée.
+\end{itemize}
+
+L'indice $0$ désigne ici le début du premier arc de suivi du satellite, ou le
+début d'un nouvel arc après réinitialisation. Lorsque la fréquence ou la
+combinaison utilisée est implicite, cette quantité est notée $B_{r,0}^s$. Elle
+est la valeur initiale de l'ambiguïté dont l'incertitude apparaît sous la forme
+$\sigma_{B_{r,0}^s}^2$ dans la covariance initiale $\mathbf P_0$ de
+l'équation~\eqref{eq:ekf_initial_covariance}.
+
+Le vecteur d'état est adapté lorsque la liste des satellites visibles change.
+Les paramètres communs et les ambiguïtés des satellites suivis sans
+interruption sont conservés, de même que les blocs de covariance associés. Une
+nouvelle ambiguïté reçoit sa valeur et sa variance initiales ; celle d'un
+satellite qui disparaît est retirée de l'état courant. Cette adaptation évite
+de faire évoluer des paramètres qui ne sont plus observables.
+
+\subsubsection{Définition d'un saut de cycle}
+
+Tant que le récepteur suit une porteuse sans interruption, l'ambiguïté entière
+$N_{r,i}^s$ reste constante. Une perte momentanée du suivi peut laisser la
+phase mesurée cohérente à une constante entière de cycles près. Entre les
+instants qui précèdent et suivent cette discontinuité,
+
+\begin{align}
+N_{r,i}^s(t^+)
+&=
+N_{r,i}^s(t^-)+\Delta N_{r,i}^s,
+&
+\Delta N_{r,i}^s
+&\in\mathbb Z\setminus\{0\},
+\\
+\Delta L_{r,i}^s
+&=
+\lambda_i\Delta N_{r,i}^s.
+\label{eq:cycle_slip_definition}
+\end{align}
+
+avec :
+
+\begin{itemize}
+    \item $t^-$ et $t^+$ les instants situés immédiatement avant et après la
+    discontinuité ;
+    \item $\Delta N_{r,i}^s$ le nombre entier de cycles perdus ou ajoutés ;
+    \item $\Delta L_{r,i}^s$ la discontinuité correspondante de la phase
+    exprimée en mètres ;
+    \item $\lambda_i$ la longueur d'onde de la porteuse.
+\end{itemize}
+
+Ce phénomène est appelé \emph{saut de cycle}. Il affecte la phase mais pas la
+mesure de code. L'ambiguïté antérieure ne peut donc plus être conservée après
+le saut, même si les autres paramètres du filtre restent valides.
+
+\subsubsection{Détection des sauts de cycle}
+
+Trois indicateurs complémentaires sont employés. Le premier est le
+\textit{Loss-of-Lock Indicator} (LLI) enregistré avec les observations de
+phase dans le fichier RINEX. Le verrouillage désigne la capacité de la boucle
+de poursuite du récepteur à suivre continûment la phase de la porteuse et à
+conserver le comptage des cycles. Une perte de verrouillage interrompt cette
+continuité ; après réacquisition, le nombre entier de cycles séparant les deux
+arcs est inconnu. Une ambiguïté de demi-cycle signifie que l'origine de phase
+reste incertaine de $\lambda_i/2$, généralement à cause d'une indétermination
+de $180^\circ$ dans le suivi du signal. Dans les deux cas, le modèle
+d'ambiguïté entière n'est plus garanti. Les bits correspondants du LLI
+déclenchent donc une réinitialisation, mais ils dépendent des capacités du
+récepteur et ne signalent pas nécessairement toutes les discontinuités.
+
+On utilise également des combinaisons d'observations sensibles aux sauts de
+cycle, parmi lesquelles les combinaisons \textit{geometry-free} et
+Melbourne--Wübbena.
+
+En bi-fréquence, la combinaison \textit{geometry-free} est définie par
+
+\begin{align}
+L_{\mathrm{GF},r}^s
+&=
+L_{r,1}^s-L_{r,2}^s
+\\
+&=
+I_{r,2}^s-I_{r,1}^s
++B_{r,1}^s-B_{r,2}^s
++\varepsilon_{\mathrm{GF},r}^s.
+\label{eq:geometry_free_slip}
+\end{align}
+
+avec :
+
+\begin{itemize}
+    \item $L_{r,1}^s$ et $L_{r,2}^s$ les phases exprimées en mètres sur les
+    deux fréquences ;
+    \item $I_{r,1}^s$ et $I_{r,2}^s$ les retards ionosphériques associés ;
+    \item $B_{r,1}^s$ et $B_{r,2}^s$ les ambiguïtés métriques ;
+    \item $\varepsilon_{\mathrm{GF},r}^s$ le bruit résiduel de la combinaison.
+\end{itemize}
+
+La géométrie, les horloges et la troposphère étant communes aux deux
+fréquences, elles disparaissent de cette différence. En l'absence de saut,
+$L_{\mathrm{GF},r}^s$ évolue lentement sous l'effet de l'ionosphère. Pour
+séparer cette évolution régulière d'une discontinuité, les $n_{\mathrm{GF}}$
+dernières valeurs valides du même satellite sont exprimées par rapport à
+l'époque courante $t_k$. Pour chaque époque antérieure $t_j$, on pose
+$\tau_j=t_j-t_k$. Un polynôme du second degré est ensuite ajusté par moindres
+carrés sur cette fenêtre :
+
+\begin{align}
+q_k(\tau)
+&=
+a_{0,k}+a_{1,k}\tau+a_{2,k}\tau^2,
+\\
+\begin{bmatrix}
+a_{0,k} & a_{1,k} & a_{2,k}
+\end{bmatrix}
+&=
+\underset{a_0,a_1,a_2}{\operatorname{arg\,min}}
+\sum_{j=k-n_{\mathrm{GF}}}^{k-1}
+\left[
+L_{\mathrm{GF},r}^s(t_j)
+-a_0-a_1\tau_j-a_2\tau_j^2
+\right]^2,
+\\
+\widehat L_{\mathrm{GF},r,k}^s
+&=
+q_k(0)=a_{0,k}.
+\label{eq:geometry_free_prediction}
+\end{align}
+
+La valeur extrapolée $\widehat L_{\mathrm{GF},r,k}^s$ est alors comparée à la
+combinaison effectivement observée à l'époque courante :
+
+\begin{align}
+r_{\mathrm{GF},k}^s
+&=
+L_{\mathrm{GF},r}^s(t_k)-\widehat L_{\mathrm{GF},r,k}^s,
+\\
+\left|r_{\mathrm{GF},k}^s\right|
+&>\eta_{\mathrm{GF}}
+\quad\Longrightarrow\quad
+\text{saut détecté}.
+\label{eq:geometry_free_detection}
+\end{align}
+
+avec :
+
+\begin{itemize}
+    \item $n_{\mathrm{GF}}$ le nombre de valeurs antérieures utilisées ;
+    \item $\tau_j$ le décalage temporel de l'observation antérieure $j$ par
+    rapport à l'époque testée ;
+    \item $q_k$ le polynôme du second degré ajusté sur la fenêtre ;
+    \item $a_{0,k}$, $a_{1,k}$ et $a_{2,k}$ ses coefficients ;
+    \item $\widehat L_{\mathrm{GF},r,k}^s$ la valeur prédite à l'époque $k$ ;
+    \item $r_{\mathrm{GF},k}^s$ l'écart entre la valeur observée et la
+    prédiction ;
+    \item $\eta_{\mathrm{GF}}$ le seuil de détection.
+\end{itemize}
+
+La valeur utilisée est $\eta_{\mathrm{GF}}=0{,}05\,\mathrm{m}$. La fenêtre
+contient $n_{\mathrm{GF}}=5$ valeurs et la prédiction ne commence qu'une fois
+ces cinq observations disponibles. La série n'est considérée continue que si
+l'intervalle temporel respecte
+$\Delta t\leq\Delta t_{\mathrm{GF},\max}$, avec
+$\Delta t_{\mathrm{GF},\max}=60\,\mathrm{s}$. Le polynôme absorbe ainsi
+l'évolution ionosphérique régulière, tandis qu'une variation brusque reste
+dans le résidu.
+
+La combinaison de Melbourne--Wübbena permet également de détecter des sauts de cycle.
+Elle est définie comme la somme de deux combinaisons, à savoir la combinaison de phase
+\textit{wide-lane} et la combinaison de code \textit{narrow-lane} :
+
+\begin{align}
+M_{\mathrm{MW},r}^s
+=
+\frac{f_1L_{r,1}^s-f_2L_{r,2}^s}{f_1-f_2}
+-
+\frac{f_1P_{r,1}^s+f_2P_{r,2}^s}{f_1+f_2}.
+\label{eq:melbourne_wubbena_slip}
+\end{align}
+
+avec :
+
+\begin{itemize}
+    \item $M_{\mathrm{MW},r}^s$ la combinaison de Melbourne--Wübbena exprimée
+    en mètres ;
+    \item $P_{r,1}^s$ et $P_{r,2}^s$ les mesures de code ;
+    \item $L_{r,1}^s$ et $L_{r,2}^s$ les mesures de phase en mètres ;
+    \item $f_1$ et $f_2$ les fréquences porteuses correspondantes.
+\end{itemize}
+
+Cette combinaison élimine au premier ordre la géométrie, les horloges, la
+troposphère et l'ionosphère. Elle contient principalement une combinaison
+d'ambiguïtés, à laquelle s'ajoute le bruit du code. La détection porte sur sa
+variation entre deux époques :
+
+\begin{align}
+r_{\mathrm{MW},k}^s
+&=
+M_{\mathrm{MW},r}^s(t_k)-M_{\mathrm{MW},r}^s(t_{k-1}),
+\\
+\left|r_{\mathrm{MW},k}^s\right|
+&>\eta_{\mathrm{MW}}
+\quad\Longrightarrow\quad
+\text{saut détecté}.
+\label{eq:melbourne_wubbena_detection}
+\end{align}
+
+avec :
+
+\begin{itemize}
+    \item $r_{\mathrm{MW},k}^s$ la variation de la combinaison entre deux
+    époques successives ;
+    \item $\eta_{\mathrm{MW}}$ le seuil de détection.
+\end{itemize}
+
+La valeur utilisée est $\eta_{\mathrm{MW}}=10\,\mathrm{m}$.
+
+\subsubsection{Réinitialisation après un saut ou une perte de suivi}
+
+Lorsqu'un saut est détecté, l'époque courante marque le début d'un nouvel arc.
+L'ambiguïté concernée est recalculée par
+l'équation~\eqref{eq:ambiguity_initialization} et sa variance est replacée à sa
+valeur initiale. Une absence brève ne provoque pas nécessairement cette
+opération. En revanche, si un satellite réapparaît après un nombre d'époques
+supérieur au seuil d'interruption, la continuité de phase n'est plus supposée :
+
+\begin{align}
+n_{\mathrm{gap}}^s
+&=
+k-k_{\mathrm{last}}^s,
+&
+n_{\mathrm{gap}}^s>N_{\mathrm{out}}
+&\quad\Longrightarrow\quad
+\text{ambiguïté réinitialisée}.
+\label{eq:outage_reset}
+\end{align}
+
+avec :
+
+\begin{itemize}
+    \item $k_{\mathrm{last}}^s$ la dernière époque à laquelle le satellite $s$
+    était présent ;
+    \item $n_{\mathrm{gap}}^s$ l'écart en nombre d'époques ;
+    \item $N_{\mathrm{out}}$ le seuil de réinitialisation après interruption.
+\end{itemize}
+
+La valeur utilisée est $N_{\mathrm{out}}=20$ époques. La même procédure que
+pour un saut de cycle est alors appliquée. La réinitialisation reste locale à
+l'ambiguïté concernée.
+
+\section{Sélection et rejet des observations}
+\label{sec:observation_rejection}
+
+Cette section détaille les mécanismes de détection des observations invalides
+ou insuffisamment fiables. Ils empêchent qu'un satellite défaillant, un signal
+dégradé, une mauvaise géométrie ou une mesure aberrante ne détériore la
+solution. Les contrôles sont appliqués successivement avant ou pendant
+l'estimation ; une observation rejetée n'est utilisée ni par le WLS ni par
+l'EKF.
+
+\subsection{Contrôles préalables des satellites et des signaux}
+
+\subsubsection{État de santé du satellite}
+
+Le message de navigation contient un indicateur de santé signalant si le
+satellite et les données qu'il diffuse peuvent être utilisés. Pour les
+éphémérides diffusées GPS et Galileo, seules celles dont l'indicateur vaut zéro,
+c'est-à-dire déclarées saines, sont retenues. En l'absence d'éphéméride saine
+pour l'époque considérée, toutes les observations du satellite sont écartées.
+Avec des produits précis, le satellite doit disposer simultanément d'une
+orbite SP3 et d'une horloge CLK valides sur l'intervalle traité.
+
+\subsubsection{Rapport signal sur bruit}
+
+L'observable de type \texttt{S} du fichier RINEX quantifie généralement le
+rapport entre la puissance de la porteuse et la densité spectrale du bruit,
+noté $C/N_0$ et exprimé en $\mathrm{dB\,Hz}$. Une valeur faible indique une
+mesure plus sensible au bruit, aux multitrajets et aux pertes de verrouillage.
+
+Le critère de sélection s'écrit
+
+\begin{align}
+\mathrm{SNR}_{r,i}^s
+<
+\mathrm{SNR}_{\min}
+\quad\Longrightarrow\quad
+\text{observable rejetée}.
+\label{eq:snr_threshold}
+\end{align}
+
+avec :
+
+\begin{itemize}
+    \item $\mathrm{SNR}_{r,i}^s$ le rapport signal sur bruit du satellite $s$ vue depuis le récepteur $r$ ;
+    \item $\mathrm{SNR}_{\min}$ le seuil minimal admissible.
+\end{itemize}
+
+La valeur utilisée est $\mathrm{SNR}_{\min}=30\,\mathrm{dB\,Hz}$.
+
+\subsubsection{Masque d'élévation}
+
+L'élévation $E_r^s$ est l'angle du satellite au-dessus de l'horizon local du
+récepteur. Aux faibles élévations, le trajet atmosphérique est plus long, ce qui amplifie le bruit.
+
+Le masque d'élévation est défini par le critère
+
+\begin{align}
+E_r^s < E_{\min}
+\quad\Longrightarrow\quad
+\text{satellite rejeté}.
+\label{eq:elevation_mask}
+\end{align}
+
+avec :
+
+\begin{itemize}
+    \item $E_r^s$ l'élévation du satellite $s$ vue depuis le récepteur $r$ ;
+    \item $E_{\min}$ le seuil minimal d'élévation.
+\end{itemize}
+
+La valeur utilisée est $E_{\min}=15^\circ$.
+
+\subsubsection{Disponibilité des observables}
+
+Les observations nécessaires dépendent du mode de traitement. Le code de la
+première fréquence doit toujours être disponible. Une solution
+ionosphère-libre exige les deux codes ; lorsque la phase est utilisée, les
+phases correspondantes doivent également être présentes et finies. Un
+satellite auquel il manque l'une des observables requises est exclu avant la
+construction des mesures.
+
+\subsection{Rejet sur le GDOP}
+
+Le \textit{Geometric Dilution of Precision} (GDOP) mesure l'amplification des
+erreurs de mesure par la géométrie satellite--récepteur. À partir de la matrice
+géométrique $\mathbf G$ définie par l'équation~\eqref{eq:gnss_design_matrix},
+qui contient les dérivées relatives aux trois coordonnées et au biais
+d'horloge, on définit
+
+\begin{align}
+\mathbf Q_g
+&=
+\left(\mathbf G^{\mathsf T}\mathbf G\right)^{-1},
+&
+\mathrm{GDOP}
+&=
+\sqrt{\operatorname{tr}\left(\mathbf Q_g\right)}.
+\label{eq:gdop_definition}
+\end{align}
+
+avec :
+
+\begin{itemize}
+    \item $\mathbf G$ la matrice géométrique introduite au chapitre précédent ;
+    \item $\mathbf Q_g$ la matrice décrivant l'effet de la géométrie sur les
+    inconnues ;
+    \item $\operatorname{tr}(\mathbf Q_g)$ la somme de ses termes diagonaux.
+\end{itemize}
+
+Un GDOP faible correspond à des directions de visée bien réparties. Un GDOP
+élevé indique au contraire une géométrie proche de la singularité, pour
+laquelle de faibles erreurs de mesure peuvent produire une forte erreur de
+position ou d'horloge. La logique de rejet sur le GDOP est la suivante :
+\begin{align}
+\mathrm{GDOP} > \mathrm{GDOP}_{\max} 
+\quad\Longrightarrow\quad 
+\text{époque rejetée}.
+\label{eq:gdop_threshold}
+\end{align}
+
+
+La valeur utilisée est $\mathrm{GDOP}_{\max}=30$.
+
+Ce test est indépendant du type de résolution utilisé. En cas de rejet,
+on passe à l'époque suivante en rejetant toutes les mesures.
+
+\subsection{Rejet sur les résidus}
+
+Le contrôle des résidus permet de détecter des mesures aberrantes.
+On définit le résidu pré-ajustement $v_j$ de l'observation $j$ par
+
+\begin{align}
+v_j
+=
+y_j-h_j\!\left(\widehat{\mathbf x}_{\mathrm{ref}}\right),
+\label{eq:prefit_residual_rejection}
+\end{align}
+
+avec :
+
+\begin{itemize}
+    \item $y_j$ l'observation $j$ ;
+    \item $\widehat{\mathbf x}_{\mathrm{ref}}$ l'état prédit dans l'EKF ou
+    l'état courant de l'itération dans le WLS ;
+    \item $h_j(\widehat{\mathbf x}_{\mathrm{ref}})$ la valeur calculée de
+    l'observation ;
+    \item $v_j$ le résidu pré-ajustement correspondant.
+\end{itemize}
+
+Les deux critères de rejet sont
+
+\begin{align}
+|v_j|
+&>\eta_{\mathrm{abs}},
+&
+\frac{|v_j|}{\sigma_j}
+&>\eta_{\mathrm{norm}}.
+\label{eq:residual_thresholds}
+\end{align}
+
+avec :
+
+\begin{itemize}
+    \item $\eta_{\mathrm{abs}}$ le seuil absolu du résidu ;
+    \item $\sigma_j$ l'écart-type attribué à l'observation ;
+    \item $\eta_{\mathrm{norm}}$ le seuil du résidu normalisé.
+\end{itemize}
+
+Les valeurs utilisées sont $\eta_{\mathrm{abs}}=30\,\mathrm{m}$ et
+$\eta_{\mathrm{norm}}=30$. Le critère absolu s'applique au code et à la phase,
+après conversion éventuelle de celle-ci en mètres. Le critère normalisé ne
+s'applique qu'au code, car
+l'incertitude d'initialisation d'une nouvelle ambiguïté peut produire un résidu
+normalisé élevé sans révéler une mesure fautive.
+
+Dans le WLS, ces tests sont réévalués au cours des itérations et la solution
+n'est conservée que si au moins quatre satellites restent effectivement
+utilisés. Dans l'EKF, ils sont évalués avec l'état prédit et les mesures
+rejetées sont retirées avant la mise à jour.

@@ -1,0 +1,492 @@
+% !TEX root = ../enac_project_fr.tex
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Chapter 5 - Implémentation en Java avec Orekit
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\chapter{Implémentation en Java avec Orekit}
+\label{implementation_orekit}
+
+Les chapitres précédents ont établi les modèles d'observation, les méthodes
+d'estimation et les corrections nécessaires au PPP. Le présent chapitre décrit
+leur traduction logicielle. Il
+précise comment les fonctions disponibles dans Orekit ont été assemblées,
+quelles adaptations ont été nécessaires et pour quelles raisons.
+
+L'application est écrite en Java~17 et utilise Orekit~13.1.6~\cite{orekit131api}. Hipparchus~4.0.3~\cite{hipparchus403}
+fournit les outils numériques employés indirectement par Orekit, notamment
+l'optimisation non linéaire et le filtre de Kalman. Le principe directeur du
+développement a été de conserver les objets et les algorithmes d'Orekit dès
+qu'ils répondaient au besoin. Le code est ainsi limité aux règles
+de traitement GNSS absentes de la bibliothèque.
+
+
+
+\section{État de l'art des fonctions disponibles dans Orekit}
+\label{sec:orekit_state_of_art}
+
+Orekit est principalement orienté vers la mécanique spatiale et la
+détermination d'orbite. Il possède néanmoins une infrastructure GNSS étendue :
+lecture de produits, propagation des satellites, combinaisons d'observables,
+modèles de mesure et estimateurs. La disponibilité d'une brique ne signifie
+pas toujours qu'elle puisse être employée directement. Plusieurs modèles
+physiques existent dans la bibliothèque sans disposer d'un
+\texttt{EstimationModifier} compatible avec les mesures
+\texttt{OneWayGNSSRange} et \texttt{OneWayGNSSPhase} retenues ici~\cite{orekit131api}.
+
+Les tableaux~\ref{tab:orekit_data_support} et
+\ref{tab:orekit_model_support} distinguent trois niveaux de prise en charge :
+\emph{utilisation directe} lorsque l'API répond au besoin sans ajout
+fonctionnel, \emph{adaptation nécessaire} lorsqu'un modèle ou un parseur
+Orekit doit être raccordé aux conventions du traitement, et
+\emph{développement spécifique} lorsque la fonction requise est absente.
+
+\begin{table}[H]
+\centering
+\caption{Disponibilité des fonctions de lecture et de préparation des données.}
+\label{tab:orekit_data_support}
+\small
+\begin{tabularx}{\textwidth}{p{3.3cm} p{3.0cm} X}
+\hline
+\textbf{Fonction} & \textbf{Support Orekit} & \textbf{Choix réalisé} \\
+\hline
+RINEX observation et navigation & Utilisation directe &
+Lecture par les parseurs Orekit, y compris la décompression Hatanaka. \\
+
+Orbites diffusées & Adaptation nécessaire &
+Propagation assurée par Orekit ; ajout d'une politique de sélection du message
+sain. \\
+
+SP3 et CLK & Adaptation nécessaire &
+Lecture et interpolation assurées par Orekit ; interface commune avec les
+produits diffusés. \\
+
+SINEX station & Adaptation nécessaire &
+Lecture par le parseur Orekit ; filtrage préalable de blocs non exploitables
+dans certains produits. \\
+
+SINEX-BIAS & Adaptation nécessaire &
+Lecture par le parseur Orekit ; application des OSB aux observables avec leur
+convention d'unité et de signe. \\
+
+ANTEX & Adaptation nécessaire &
+Lecture des calibrations par Orekit ; composition des corrections mono- et
+bi-fréquences dans les modèles de mesure. \\
+
+Combinaisons GNSS & Utilisation directe &
+Combinaisons iono-free, geometry-free et Melbourne--Wübbena fournies
+par Orekit. \\
+
+Sélection des signaux & Développement spécifique &
+Définition des priorités entre codes RINEX et des règles de validation. \\
+\hline
+\end{tabularx}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{Disponibilité des modèles physiques et des fonctions d'estimation.}
+\label{tab:orekit_model_support}
+\small
+\begin{tabularx}{\textwidth}{p{3.3cm} p{3.0cm} X}
+\hline
+\textbf{Fonction} & \textbf{Support Orekit} & \textbf{Choix réalisé} \\
+\hline
+Code et phase GNSS unidirectionnels & Utilisation directe &
+Réutilisation de \texttt{OneWayGNSSRange} et
+\texttt{OneWayGNSSPhase}. \\
+
+Temps de vol et rotation terrestre & Utilisation directe &
+Calcul interne au modèle de mesure dans les repères Orekit ; aucune correction
+de Sagnac n'est recodée. \\
+
+Horloge satellite et TGD & Adaptation nécessaire &
+Modèles d'horloge Orekit réutilisés ; adaptateurs propres pour unifier NAV et
+CLK et appliquer le TGD avec la convention de l'observable. \\
+
+Relativité et effet de Shapiro & Utilisation directe &
+Réutilisation des modificateurs GNSS unidirectionnels fournis par Orekit quand
+le mode de traitement les requiert. \\
+
+Ionosphère et troposphère & Adaptation nécessaire &
+Réutilisation de Klobuchar, Saastamoinen, Niell et
+\texttt{EstimatedModel} ; modificateurs propres pour les deux classes de
+mesure retenues. \\
+
+Gradients troposphériques & Développement spécifique &
+Extension de \texttt{EstimatedModel} par un modèle exposant deux
+\texttt{ParameterDriver} supplémentaires. \\
+
+PCO et PCV & Adaptation nécessaire &
+Réutilisation d'ANTEX et du calcul de centre de phase Orekit ; assemblage
+propre pour le récepteur terrestre et la combinaison iono-free. \\
+
+Marées solides & Adaptation nécessaire &
+Déplacement calculé par \texttt{TidalDisplacement} ; projection sur la ligne
+de visée réalisée par un modificateur propre. \\
+
+Wind-up & Adaptation nécessaire &
+Spécialisation de \texttt{AbstractWindUp} avec l'attitude du satellite et le
+repère topocentrique du récepteur. \\
+
+ISB & Développement spécifique &
+Ajout d'un \texttt{ParameterDriver} commun aux mesures Galileo. \\
+
+Sauts de cycle & Adaptation nécessaire &
+Détecteur geometry-free et combinaison MW d'Orekit complétés par le LLI, le
+test de saut MW et la politique de réinitialisation. \\
+
+WLS & Utilisation directe &
+Réutilisation de \texttt{BatchLSEstimator} et de l'optimiseur
+Levenberg--Marquardt d'Hipparchus. \\
+
+EKF & Adaptation nécessaire &
+Réutilisation de \texttt{KalmanEstimator} au moyen d'un propagateur de
+récepteur statique et d'une gestion propre des états GNSS variables. \\
+\hline
+\end{tabularx}
+\end{table}
+
+Cette analyse conduit à une architecture d'extension plutôt qu'à une chaîne
+de calcul indépendante. Les classes propres ne remplacent pas les modèles
+d'Orekit : elles les rendent compatibles avec le type de mesure, les unités et
+la structure d'état du positionnement au sol.
+
+
+\section{Architecture logicielle}
+\label{sec:software_architecture}
+
+\subsection{Découpage en responsabilités}
+
+Le code est organisé en couches aux responsabilités limitées. Cette séparation
+évite que les règles de sélection des observables, les modèles physiques et la
+logique d'estimation soient dupliqués. Elle permet aussi de remplacer une
+source de données ou un solveur sans modifier les autres couches.
+
+\begin{table}[H]
+\centering
+\caption{Responsabilités des principales couches de l'application.}
+\label{tab:software_packages}
+\small
+\begin{tabularx}{\textwidth}{p{3.2cm} X}
+\hline
+\textbf{Couche} & \textbf{Responsabilité} \\
+\hline
+Configuration & Définition de la session, initialisation d'Orekit et
+centralisation du modèle stochastique. \\
+Données & Lecture, regroupement par époque, sélection des observables et
+application des biais. \\
+Satellites & Accès uniforme aux éphémérides, aux horloges et aux attitudes. \\
+Mesures & Construction des observations Orekit et assemblage des corrections
+physiques. \\
+Propagation & Représentation du récepteur terrestre dans l'interface attendue
+par les estimateurs Orekit. \\
+Estimation & Orchestration des résolutions WLS et EKF, des ambiguïtés et des
+covariances. \\
+\hline
+\end{tabularx}
+\end{table}
+
+On utilise un fichier de configuration au format JSON pour décrire la session
+et sélectionner les modes de traitement. Les dépendances suivent le sens de la
+chaîne suivante :
+
+\begin{center}
+\small
+Configuration
+$\longrightarrow$ données sélectionnées
+$\longrightarrow$ états des satellites
+$\longrightarrow$ mesures corrigées
+$\longrightarrow$ estimation
+$\longrightarrow$ résultats.
+\end{center}
+
+Le point d'entrée reste ainsi limité au chargement de la configuration, au
+choix du solveur et au lancement du traitement. La construction des modèles
+est déléguée aux couches concernées, ce qui évite de concentrer les choix
+fonctionnels dans une procédure principale.
+
+\subsection{Configuration des traitements}
+
+Le fichier JSON permet de configurer une session sans modifier ni recompiler
+le programme. Les principaux choix peuvent être définis indépendamment :
+
+\begin{itemize}
+    \item les données traitées : station, jour et constellations ;
+    \item les observables : code seul ou code et phase, ainsi que la règle de
+    sélection des signaux ;
+    \item les modèles physiques : correction ionosphérique, modèle
+    troposphérique et éphémérides diffusées ou précises ;
+    \item la méthode de résolution : WLS ou EKF ;
+    \item le modèle stochastique : pondération des mesures, incertitudes
+    initiales, bruits de processus et seuils de rejet.
+\end{itemize}
+
+Le code a été conçu de manière modulaire afin que ces options puissent être
+combinées librement dès lors que la configuration reste physiquement
+cohérente. Par exemple, une combinaison iono-free exige deux
+fréquences, le traitement de la phase impose la gestion des ambiguïtés et le
+mode précis nécessite les produits d'orbite, d'horloge et de biais associés à
+la session. Chaque option sélectionne une implémentation derrière une
+interface commune.
+
+
+\section{Lecture et préparation des données}
+\label{sec:data_implementation}
+
+\subsection{Initialisation d'Orekit et parsage}
+
+Les parseurs Orekit lisent ensuite les observations, la navigation, la
+position de référence et les calibrations d'antenne. En mode précis, ils
+chargent également les orbites, les horloges et les biais observables. Les
+produits sont résolus à partir du jour de la session afin de garantir leur
+cohérence temporelle. Le filtre Hatanaka fourni par Orekit permet enfin de lire les
+observations compactes sans étape de décompression externe.
+
+
+
+\section{Construction des mesures Orekit}
+\label{sec:measurement_implementation}
+
+\subsection{Objets de mesure et combinaisons}
+
+La couche de construction transforme chaque satellite retenu en mesure
+Orekit. Les deux classes introduites au début de ce chapitre reçoivent
+respectivement le code en mètres et la phase en cycles. Elles ont été conçues
+pour une liaison unidirectionnelle entre un satellite GNSS émetteur et un
+satellite récepteur dont l'état est estimé, par exemple dans une application
+de détermination d'orbite. Elles conviennent néanmoins au positionnement au
+sol si le récepteur est fourni sous la forme d'un état propagé compatible.
+
+Ce choix permet de réaliser les fonctions suivantes : :
+
+\begin{itemize}
+    \item le calcul automatique des dérivées par rapport à l'état cartésien et
+    au biais d'horloge du récepteur ;
+    \item l'intégration des \texttt{ParameterDriver} de mesure ;
+    \item la gestion d'une ambiguïté par l'\texttt{AmbiguityDriver} d'Orekit pour
+    la phase.
+\end{itemize}
+
+En mode iono-free, les deux codes et les deux phases sont combinés par
+\texttt{IonosphereFreeCombination}. La fréquence combinée fournie par Orekit
+détermine la longueur d'onde synthétique utilisée par
+\texttt{OneWayGNSSPhase}~\cite{orekit131api}.
+
+\subsection{Assemblage par modificateurs}
+
+Une mesure Orekit fournit le terme géométrique et les horloges associées, puis
+accepte une liste de \texttt{EstimationModifier}. Chaque modificateur reçoit
+la valeur théorique, les participants et, si nécessaire, les dérivées. Cette
+interface permet d'ajouter une contribution sans modifier les classes de
+mesure ni les solveurs.
+
+Une fabrique unique centralise cet assemblage. Selon la configuration, elle
+ajoute dans un ordre déterminé l'horloge satellite, la troposphère, les
+marées, les termes relativistes, le wind-up, les antennes, l'ionosphère, l'ISB
+et les filtres de résidus. Ce point d'entrée unique garantit qu'une correction
+n'est ni oubliée ni appliquée deux fois selon le solveur.
+
+\section{Extensions développées autour d'Orekit}
+\label{sec:orekit_extensions}
+
+\subsection{Horloges satellite, TGD et multi-constellation}
+
+Les produits NAV et CLK n'exposent pas leur horloge sous la même forme. Une
+interface commune les ramène au décalage d'horloge, au retard de groupe et à
+l'indication de présence du terme relativiste. Les modificateurs de code et de
+phase évaluent ensuite cette horloge à l'instant d'émission fourni par la
+mesure.
+
+Pour le traitement GPS--Galileo, un modificateur porte un unique
+\texttt{ParameterDriver} d'ISB exprimé en mètres. Ses variantes code et phase
+appliquent respectivement ce paramètre en mètres et en cycles, puis fournissent
+au moteur d'estimation la dérivée correspondante. Toutes les mesures Galileo
+partagent ce même driver ; les mesures GPS définissent l'horloge de référence.
+
+\subsection{Modèles ionosphériques et troposphériques}
+
+Les calculs physiques sont confiés aux modèles Orekit. Le développement propre
+porte sur leur raccordement aux mesures unidirectionnelles :
+
+\begin{itemize}
+    \item le modèle de Klobuchar est appelé avec les signes et les unités
+    propres au code et à la phase ;
+    \item les modificateurs troposphériques propagent les dérivées des modèles
+    Orekit vers les \texttt{ParameterDriver} estimés ;
+    \item les modes déterministe et ZTD assemblent les modèles de Saastamoinen,
+    la fonction de projection de Niell et le modèle estimé disponibles dans
+    Orekit ;
+    \item une extension du modèle ZTD ajoute les drivers des gradients nord et
+    est. Seul le terme azimutal absent d'Orekit est développé ; les autres
+    contributions restent calculées par les modèles d'Orekit.
+\end{itemize}
+
+
+\subsection{Corrections d'antenne}
+
+Le lecteur ANTEX d'Orekit fournit les PCO, les PCV, leur période de validité et
+le type d'antenne satellite. La bibliothèque contient également une base de
+modificateur de centre de phase, mais pas l'assemblage complet requis pour une
+station au sol et une observable iono-free.
+
+Les modificateurs développés réalisent donc trois opérations :
+
+\begin{enumerate}
+    \item calculer la contribution satellite sur chaque fréquence avec la
+    géométrie et l'attitude Orekit ;
+    \item transformer le PCO récepteur du repère ANTEX nord--est--haut vers le
+    repère topocentrique est--nord--haut, puis évaluer la PCV dans la direction
+    du satellite ;
+    \item combiner les deux corrections avec les coefficients de la
+    combinaison iono-free et convertir le résultat en cycles pour la
+    phase.
+\end{enumerate}
+
+\subsection{Marées solides et wind-up}
+
+Le déplacement de marée est calculé par le modèle Orekit conforme aux
+conventions IERS~2010.
+
+De même, le traitement du wind-up spécialise la classe abstraite fournie par
+Orekit. L'orientation du dipôle émetteur provient de l'attitude du satellite ;
+celle du récepteur est définie par le repère topocentrique de la station. Un
+état est conservé pour chaque satellite afin d'assurer la continuité entière
+entre les époques. Pour une phase iono-free, un facteur d'échelle relie
+le cycle physique à la longueur d'onde synthétique de la mesure.
+
+
+\subsection{Détection des sauts de cycle}
+
+La détection compose plusieurs briques au lieu de dupliquer les algorithmes
+disponibles. La combinaison geometry-free et son ajustement polynomial sont
+confiés au détecteur Orekit, tandis que la combinaison Melbourne--Wübbena est
+calculée par la fabrique d'Orekit. Le code propre se limite à lire les bits LLI,
+à comparer la variation MW au seuil et à fusionner les causes de détection par
+satellite.
+
+La décision de réinitialisation est séparée de la détection. Le gestionnaire
+d'ambiguïtés applique la politique décrite à la
+section~\ref{sec:ekf_gnss_features} : nouvelle valeur phase moins code lors de
+la première apparition, d'un saut ou d'une interruption longue, puis
+réinitialisation de la variance correspondante.
+
+
+\section{Représentation des paramètres estimés}
+\label{sec:estimated_parameters_implementation}
+
+Orekit représente chaque inconnue ajustable par un \texttt{ParameterDriver}.
+Celui-ci contient une valeur physique, une échelle de normalisation, une date
+de référence et un indicateur de sélection. L'application emploie ce mécanisme
+pour l'horloge récepteur, l'ISB Galileo, les ambiguïtés, le ZTD et les deux
+gradients troposphériques.
+
+Les ambiguïtés utilisent plus précisément \texttt{AmbiguityCache} et
+\texttt{AmbiguityDriver}. Une clé constituée du satellite, du récepteur et de
+la longueur d'onde garantit qu'une même ambiguïté est partagée par toutes les
+mesures d'un arc. Leur valeur reste exprimée en cycles dans le driver, tandis
+que les covariances configurées en mètres sont converties avec la longueur
+d'onde propre à chaque signal.
+
+Les matrices initiales et les bruits de processus sont fournis au filtre par
+des implémentations de \texttt{CovarianceMatrixProvider}. Le bloc cartésien et
+le bloc des paramètres de mesure sont construits séparément puis assemblés en
+matrice bloc-diagonale. Les variances de marche aléatoire sont multipliées par
+l'intervalle temporel entre deux époques. Cette organisation maintient la
+cohérence entre les unités physiques de la configuration et les unités des
+drivers Orekit.
+
+
+\section{Résolution avec les estimateurs Orekit}
+\label{sec:orekit_solvers}
+
+\subsection{Moindres carrés pondérés}
+
+Un estimateur par lots Orekit indépendant est construit pour chaque époque. La
+position cartésienne est exposée par la représentation statique du récepteur,
+tandis que l'horloge, l'ISB, les ambiguïtés et les paramètres troposphériques
+sont apportés par leurs drivers. L'estimateur construit les résidus et les
+jacobiennes, puis utilise l'optimiseur de Levenberg--Marquardt d'Hipparchus~\cite{hipparchus403}.
+
+Le solveur ne forme donc pas explicitement la matrice normale de
+l'équation~\eqref{eq:wls_solution}. Cette matrice résulte des dérivées fournies
+par les mesures et leurs modificateurs. La tolérance, le nombre maximal
+d'itérations et le nombre maximal d'évaluations restent configurables.
+
+Une estimation indépendante par époque peut rendre le ZTD ou les gradients
+peu observables. Le solveur contrôle alors les écarts-types obtenus. Si les
+gradients ne sont pas déterminables, l'époque est recalculée avec le ZTD seul ;
+si ce dernier reste lui-même inobservable, le modèle déterministe est utilisé.
+Cette dégradation contrôlée évite de conserver une solution numérique ayant
+convergé le long d'une direction presque singulière.
+
+\subsection{Adaptation du filtre de Kalman d'Orekit}
+
+\subsubsection{Adaptation d'un estimateur de détermination d'orbite}
+
+\texttt{KalmanEstimator} est conçu pour la détermination d'orbite~\cite{orekit131api}. Il attend
+un \texttt{PropagatorBuilder}, une trajectoire de référence et une matrice de
+transition associée. Réimplémenter un EKF indépendant aurait dupliqué le
+mécanisme de normalisation, le calcul des jacobiennes, le gain et la mise à
+jour de covariance déjà fournis par Orekit et Hipparchus. Le choix a donc été
+d'adapter la notion de propagation au récepteur fixe.
+
+\texttt{StaticReceiverPropagator} conserve une position constante dans
+l'ITRF. À chaque date, il la transforme dans le GCRF et l'encapsule dans un
+\texttt{SpacecraftState}, type attendu par les modèles de mesure. L'orbite
+cartésienne associée n'est pas interprétée comme une orbite physique ; elle
+sert de conteneur compatible avec l'API d'estimation.
+
+Cette couche d'adaptation remplit trois responsabilités : exposer les
+coordonnées cartésiennes à l'estimateur, maintenir une position fixe en repère
+terrestre entre deux corrections et fournir la matrice de transition. Cette
+dernière transporte les corrections cartésiennes entre les bases GCRF des deux
+époques par l'intermédiaire de l'ITRF.
+
+Cette adaptation permet au moteur Orekit de conserver la position dans la
+partie propagée de l'état, tandis que l'horloge, l'ISB, les ambiguïtés et la
+troposphère restent des paramètres de mesure.
+
+\subsubsection{Traitement d'une époque}
+
+Le solveur orchestre chaque époque selon l'ordre suivant :
+
+\begin{enumerate}
+    \item construire les satellites valides et contrôler le GDOP ;
+    \item détecter les sauts de cycle et préparer les ambiguïtés ;
+    \item construire les phases puis les codes avec leurs modificateurs ;
+    \item réestimer par code l'horloge et l'ISB lorsque leur réinitialisation
+    est prévue ;
+    \item reconstruire l'estimateur si la structure de l'état a changé ;
+    \item évaluer les filtres de résidus avec l'état prédit ;
+    \item regrouper les mesures acceptées dans une
+    \texttt{MultiplexedMeasurement} et exécuter une mise à jour EKF unique ;
+    \item enregistrer l'état, sa covariance et les ambiguïtés.
+\end{enumerate}
+
+Le regroupement des observations d'une même date évite de propager le
+récepteur entre deux mesures simultanées. Le calcul du gain, de l'innovation
+et de la covariance corrigée reste entièrement réalisé par
+\texttt{KalmanEstimator}, qui s'appuie sur
+\texttt{ExtendedKalmanFilter} d'Hipparchus~\cite{hipparchus403}.
+
+
+\section{Sorties}
+\label{sec:implementation_outputs}
+
+Les deux solveurs produisent un fichier CSV de structure commune contenant la
+date, le nombre de satellites, la position ECEF et géodétique, l'horloge, les
+erreurs ENU, les écarts-types, l'ISB et les paramètres troposphériques. Lorsque
+la phase est utilisée, un second fichier enregistre les ambiguïtés par
+satellite. Le chemin de sortie encode le jour, la station, le mode
+atmosphérique, les constellations, le solveur et le type d'éphémérides. Cette
+convention rend chaque résultat traçable jusqu'à sa configuration.
+
+
+Au total, l'implémentation repose sur Orekit pour les opérations génériques et
+sensibles numériquement : temps, repères, propagation GNSS, interpolation des
+produits précis, combinaisons, dérivées et estimation. Le code propre porte sur
+la sémantique du traitement au sol : choix des observables, assemblage des
+corrections, paramètres multi-constellation, continuité des ambiguïtés et
+adaptation du filtre de détermination d'orbite. Cette frontière limite la
+duplication de modèles validés tout en laissant explicites les choix propres au
+positionnement PPP développé.

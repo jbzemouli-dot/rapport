@@ -5,15 +5,153 @@
 \markright{Introduction générale}
 \thispagestyle{fancy}
 
-Les cursus de l'ENAC comprennent des stages et des projets de synthèse. Ces derniers doivent permettre aux étudiants de mettre en application les enseignements qu'ils ont reçus.\\
-L'objectif de ce document est de fournir aux étudiants des recommandations à respecter impérativement pour la rédaction de leur rapport et pour la préparation de leur soutenance. Les conseils donnés ici sont généraux et pourront donc être repris lors de tout travail technique ou scientifique. Ce document constitue également un modèle pour ceux rédigeant en \LaTeX. \\
-Le chapitre 1 concerne la rédaction du rapport tandis que le chapitre 2 aborde la soutenance.  
 
-\section{Présentation du contexte}
+Ce rapport présente un travail réalisé pour CS Group, qui est une entreprise française qui offre des services dans de nombreux domaines liés à la défense, l'aéronautique, le transport, l'énergie et le spatial.
+Parmi ces différents domaine, l'entreprise est particulièrement active depuis plus de 40 ans dans le secteur du spatial, dont elle développe et fournit des solutions de surveillance spatiale, d'observation terrestre, de navigation et télécommunication.
+Le stage s'inscrit dans le cadre des activités de recherche et développement en navigation par satellites, j'ai pour cela eu la chance d'être intégré à l'équipe FD NAV (\emph{Flight Dynamics and Navigation}) de la \emph{Buisiness Unit} Espace de l'entreprise.
 
-todo 
+
+\section{Contexte technique}
+
+Le stage s'appuie sur Orekit, une bibliothèque Java développée par CS GROUP
+depuis 2002 pour les applications de dynamique du vol spatial. Elle fournit
+notamment des outils de calcul d'orbites et de traitement de mesures.
+Les outils présents dans cette bibliothèque sont étudiés pour le calcul de positionnement GNSS.
+
+\subsection{GNSS (\textit{Global Navigation Satellite System})}
+
+Le terme GNSS (\textit{Global Navigation Satellite System}) désigne l'ensemble des systèmes mondiaux de navigation par satellite permettant à un utilisateur équipé d'un récepteur de déterminer sa position, sa vitesse et une référence temporelle à partir des données issues des signaux émis par des satellites.
+
+Les principaux systèmes actuellement opérationnels sont le GPS (\textit{Global Positioning System}) américain, GALILEO européen, GLONASS russe et BEIDOU chinois. Chacun repose sur une constellation de satellites placés en orbite autour de la Terre et diffusant en continu des signaux de navigation dans plusieurs bandes de fréquences. Ces signaux contiennent des messages de navigation permettant au récepteur d'exploiter les informations nécessaires au calcul de sa position. 
+
+Les satellites GNSS émettent dans plusieurs bandes de fréquences situées dans
+la bande L. Le GPS utilise par exemple les fréquences L1 à
+$1575{,}42~\mathrm{MHz}$, L2 à $1227{,}60~\mathrm{MHz}$ et L5 à
+$1176{,}45~\mathrm{MHz}$. Galileo émet notamment sur E1 à
+$1575{,}42~\mathrm{MHz}$, E5a à $1176{,}45~\mathrm{MHz}$, E5b à
+$1207{,}14~\mathrm{MHz}$ et E6 à $1278{,}75~\mathrm{MHz}$. Certaines
+fréquences sont donc communes à plusieurs systèmes, comme GPS L1 et Galileo E1.
+
+Chaque signal repose sur une porteuse radiofréquence modulée par une séquence pseudo-aléatoire, 
+appelée code PRN
+(\textit{Pseudo-Random Noise}). Cette séquence est connue du récepteur. Elle
+permet d'identifier et de suivre les signaux reçus.
+
+Pour le GPS et Galileo, plusieurs satellites d'une même constellation peuvent
+émettre simultanément dans une même bande de fréquences. Leur séparation
+repose sur le CDMA (\textit{Code Division Multiple Access}) :
+les signaux sont associés à des codes PRN différents, choisis pour présenter
+de faibles corrélations croisées. Le récepteur génère localement les codes
+attendus et calcule leur corrélation avec le signal reçu. Un pic de
+corrélation permet de détecter le signal correspondant et d'estimer le
+décalage temporel du code reçu par rapport à sa réplique locale.
+
+
+\subsection{Principe de la mesure de distance}
+
+Le positionnement GNSS repose sur l'estimation du temps de propagation des
+signaux entre plusieurs satellites et le récepteur. Dans un cas idéal, si le
+satellite $s$ émet un signal à l'instant $t_e^s$ et que celui-ci est reçu à
+l'instant $t_r$, la distance parcourue est
+
+\begin{align}
+\rho_r^s = c\left(t_r-t_e^s\right),
+\label{new:geometric_time_range}
+\end{align}
+
+où $\rho_r^s$ est la distance géométrique entre le satellite et le récepteur et
+$c$ la vitesse de la lumière dans le vide.
+
+Cette relation conduit au principe de trilatération. Connaître la distance entre 
+un satellite et le récepteur permet de déterminer que le récepteur se situe quelque 
+part sur une sphère centrée sur ce satellite, dont le rayon est égal à la distance 
+mesurée. Dans un cas idéal,
+trois distances indépendantes permettent de déterminer les trois coordonnées
+du récepteur, en écartant la solution qui ne se trouve pas au voisinage de la
+surface terrestre.
+
+En pratique, l'horloge du récepteur n'est pas parfaitement synchronisée avec
+le temps du système GNSS. Son décalage, appelé biais d'horloge, constitue une quatrième inconnue,
+commune aux mesures réalisées à une même époque. Il faut donc disposer des
+mesures d'au moins quatre satellites pour déterminer les trois coordonnées du
+récepteur et son biais d'horloge. Lorsque davantage de satellites sont
+disponibles, alors il y a plus d'observations que d'inconnues, ce qui permet d'améliorer la précision de l'estimation.
+
+\subsection{Observations et méthodes de positionnement}
+
+Un récepteur GNSS fournit principalement deux types d'observations utilisables
+pour le positionnement : les mesures de pseudo-distance issues du suivi des
+codes et les mesures de phase de la porteuse. Par la suite, 
+les termes codes ou pseudo-distance seront considérés comme équivalents.
+
+\subsubsection{SPP (\textit{Single Point Positioning})}
+
+Le SPP (\textit{Single Point Positioning}) est une méthode de positionnement
+reposant sur les mesures de pseudo-distance. Le
+récepteur détermine sa position à partir des signaux reçus
+et des informations de navigation diffusées par les satellites.
+
+À chaque époque, les trois coordonnées du récepteur et son biais d'horloge sont
+estimés à partir des observations disponibles. Sa
+précision reste cependant limitée par la précision des données diffusées et
+par les erreurs des mesures et des modèles. En général, la précision obtenue est généralement de l'ordre de
+quelques mètres. Dans ce travail, la résolution SPP utilise les moindres carrés pondérés (\textit{Weighted Least Squares}, WLS).
+
+
+\subsubsection{PPP (\textit{Precise Point Positioning})}
+
+Le PPP (\textit{Precise Point Positioning}) cherche à atteindre une précision supérieure au SPP en exploitant
+des produits précis pour les satellites, les mesures de phase de la porteuse
+et des modèles de correction plus complets.
+
+L'utilisation de la phase améliore fortement la précision des observations,
+mais impose d'estimer les ambiguïtés de phase qui sont des inconnues supplémentaires. Le PPP utilise
+des données précises sur les orbites et les horloges des
+satellites afin que leur incertitude ne limite pas l'exploitation des mesures
+de phase. 
+
+La solution PPP nécessite généralement une phase de convergence pendant
+laquelle les différents paramètres sont estimés. Une fois cette convergence
+atteinte, la précision peut atteindre quelques centimètres. Cela nécesite de 
+prendre en compte des corrections supplémentaires très fines sur les mesures, 
+ainsi que des mécanismes propres à la résolution des ambiguïtés de phase.
+
+
+\section{Orekit et les outils existants}
+
+Aujourd'hui, Orekit est largement utilisée dans le secteur spatial et est activement 
+maintenue par les développeurs de CS GROUP ainsi que par une communauté d'utilisateurs. 
+La bibliothèque est \textit{open source} et distribuée sous licence Apache 2.0, une licence 
+permissive permettant son utilisation dans des projets commerciaux comme non commerciaux. 
+Elle est notamment utilisée ou développée par des acteurs majeurs du secteur tels qu'Airbus 
+Defence and Space, Thales Alenia Space, le CNES, l'ESA ou encore l'U.S. Naval Research Laboratory.
+
+Orekit fournit principalement des fonctions de bas niveau, conçues pour être assemblées 
+et adaptées en fonction de l'application considérée. La bibliothèque couvre ainsi un 
+large éventail de domaines : la dynamique du vol spatial, la propagation et la détermination 
+d'orbite, la gestion des attitudes, des dates et des systèmes de coordonnées, ou encore le 
+traitement de mesures GNSS.
+
+En ce qui concerne le GNSS, la bibliothèque met à disposition des modèles
+de propagation et des estimateurs. Ces fonctions constituent des briques
+utilisables pour le positionnement, mais leur assemblage en une chaîne
+complète adaptée au besoin du stage reste à réaliser.
+Les fonctions réutilisées et les adaptations nécessaires seront présentées
+dans la section consacrée à l'implémentation.
+
 
 \section{Problématique générale}
 
-todo 
+L'objectif du stage est de construire une chaîne de positionnement GNSS à
+partir des fonctions disponibles dans Orekit. Le travail consiste à les
+assembler, à identifier les éléments manquants et à les développer, en allant du simple programme de SPP au PPP.
 
+La chaîne doit permettre de choisir les observations, les constellations GNSS et
+les différents modèles de correction. Les
+fonctions existantes d'Orekit sont réutilisées dès qu'elles répondent au
+besoin. Les résultats sont ensuite comparés à ceux d'un logiciel de référence pour être validés.
+
+Le chapitre suivant présente d'abord les modèles retenus, du positionnement
+sur le code au PPP, puis leur mise en œuvre avec Orekit. Les développements
+mathématiques des méthodes d'estimation sont regroupés en
+annexe~\ref{ann:estimation}.

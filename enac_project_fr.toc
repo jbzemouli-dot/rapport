@@ -3,78 +3,127 @@
 \contentsline {chapter}{\nameref {resume}}{3}{chapter*.1}%
 \contentsline {chapter}{\nameref {abstract}}{5}{chapter*.2}%
 \contentsline {chapter}{\nameref {remerciements}}{7}{chapter*.3}%
-\contentsline {chapter}{\nameref {introduction}}{15}{chapter*.7}%
-\contentsline {section}{\numberline {0.1}Présentation du contexte}{15}{section.0.1}%
-\contentsline {section}{\numberline {0.2}Problématique générale}{15}{section.0.2}%
-\contentsline {chapter}{\numberline {1}Principe du positionnement GNSS}{17}{chapter.1}%
-\contentsline {section}{\numberline {1.1}Mesure de distance par signaux GNSS}{17}{section.1.1}%
-\contentsline {section}{\numberline {1.2}Observations GNSS}{18}{section.1.2}%
-\contentsline {subsection}{\numberline {1.2.1}Pseudo-distance}{18}{subsection.1.2.1}%
-\contentsline {subsection}{\numberline {1.2.2}Phase de porteuse}{19}{subsection.1.2.2}%
-\contentsline {section}{\numberline {1.3}Résolution pour $n$ satellites ($n\geq 4$)}{20}{section.1.3}%
-\contentsline {subsection}{\numberline {1.3.1}Linéarisation du modèle}{21}{subsection.1.3.1}%
-\contentsline {chapter}{\numberline {2}Chaîne de traitement du positionnement GNSS}{25}{chapter.2}%
-\contentsline {section}{\numberline {2.1}Fichiers d'entrée}{25}{section.2.1}%
-\contentsline {subsection}{\numberline {2.1.1}Fichier RINEX Observation}{25}{subsection.2.1.1}%
-\contentsline {subsection}{\numberline {2.1.2}Fichier RINEX Navigation}{26}{subsection.2.1.2}%
-\contentsline {subsection}{\numberline {2.1.3}Autres fichiers auxiliaires (SP3, CLK, ANTEX, ...)}{27}{subsection.2.1.3}%
-\contentsline {section}{\numberline {2.2}Modèles de correction}{27}{section.2.2}%
-\contentsline {subsection}{\numberline {2.2.1}Horloges}{28}{subsection.2.2.1}%
-\contentsline {subsubsection}{\numberline {2.2.1.1}Horloge satellite}{28}{subsubsection.2.2.1.1}%
-\contentsline {subsubsection}{\numberline {2.2.1.2}Horloge récepteur}{29}{subsubsection.2.2.1.2}%
-\contentsline {subsection}{\numberline {2.2.2}Corrections géométriques et relativistes}{29}{subsection.2.2.2}%
-\contentsline {subsubsection}{\numberline {2.2.2.1}Effet Sagnac}{29}{subsubsection.2.2.2.1}%
-\contentsline {subsubsection}{\numberline {2.2.2.2}Retard de Shapiro}{29}{subsubsection.2.2.2.2}%
-\contentsline {subsection}{\numberline {2.2.3}Modélisation de la troposphère}{30}{subsection.2.2.3}%
-\contentsline {subsubsection}{\numberline {2.2.3.1}Modèle sans gradients}{31}{subsubsection.2.2.3.1}%
-\contentsline {subsubsection}{\numberline {2.2.3.2}Modèle avec gradients horizontaux}{31}{subsubsection.2.2.3.2}%
-\contentsline {subsection}{\numberline {2.2.4}Modélisation de la ionosphère}{32}{subsection.2.2.4}%
-\contentsline {subsubsection}{\numberline {2.2.4.1}Modèle de Klobuchar}{32}{subsubsection.2.2.4.1}%
-\contentsline {subsubsection}{\numberline {2.2.4.2}Combinaison ionosphère-libre}{32}{subsubsection.2.2.4.2}%
-\contentsline {section}{\numberline {2.3}Moindres carrés pondérés (WLS)}{33}{section.2.3}%
-\contentsline {section}{\numberline {2.4}Filtre de Kalman étendu (EKF)}{34}{section.2.4}%
-\contentsline {subsection}{\numberline {2.4.1}Modèle d'évolution}{35}{subsection.2.4.1}%
-\contentsline {subsection}{\numberline {2.4.2}Modèle d'observation}{35}{subsection.2.4.2}%
-\contentsline {subsection}{\numberline {2.4.3}Prédiction}{36}{subsection.2.4.3}%
-\contentsline {subsection}{\numberline {2.4.4}Mise à jour}{36}{subsection.2.4.4}%
-\contentsline {chapter}{\numberline {3}Passage en Precise Point Positioning (PPP)}{39}{chapter.3}%
-\contentsline {section}{\numberline {3.1}Principe du Precise Point Positioning}{39}{section.3.1}%
-\contentsline {section}{\numberline {3.2}Fichiers d'entrée pour le PPP}{41}{section.3.2}%
-\contentsline {subsection}{\numberline {3.2.1}Orbites précises SP3}{41}{subsection.3.2.1}%
-\contentsline {subsection}{\numberline {3.2.2}Horloges précises CLK}{42}{subsection.3.2.2}%
-\contentsline {subsection}{\numberline {3.2.3}Biais observables BIA}{42}{subsection.3.2.3}%
-\contentsline {subsection}{\numberline {3.2.4}Produits d'antenne ANTEX}{42}{subsection.3.2.4}%
-\contentsline {section}{\numberline {3.3}Évolution du modèle par rapport au positionnement diffusé}{43}{section.3.3}%
-\contentsline {section}{\numberline {3.4}Corrections supplémentaires}{43}{section.3.4}%
-\contentsline {subsection}{\numberline {3.4.1}Centres de phase des antennes}{43}{subsection.3.4.1}%
-\contentsline {subsubsection}{\numberline {3.4.1.1}Phase Center Offset}{44}{subsubsection.3.4.1.1}%
-\contentsline {subsubsection}{\numberline {3.4.1.2}Phase Center Variation}{44}{subsubsection.3.4.1.2}%
-\contentsline {subsubsection}{\numberline {3.4.1.3}Prise en compte dans le modèle d'observation}{45}{subsubsection.3.4.1.3}%
-\contentsline {subsection}{\numberline {3.4.2}Enroulement de phase (\textit {wind-up})}{45}{subsection.3.4.2}%
-\contentsline {subsection}{\numberline {3.4.3}Correction des marées terrestres}{46}{subsection.3.4.3}%
-\contentsline {chapter}{\numberline {4}Implémentation dans Orekit}{47}{chapter.4}%
-\contentsline {section}{\numberline {4.1}Architecture logicielle}{47}{section.4.1}%
-\contentsline {section}{\numberline {4.2}Construction des observations GNSS}{48}{section.4.2}%
-\contentsline {subsection}{\numberline {4.2.1}Création des objets de mesure}{49}{subsection.4.2.1}%
-\contentsline {section}{\numberline {4.3}Implémentation des modèles de correction}{49}{section.4.3}%
-\contentsline {section}{\numberline {4.4}Adaptation et extension des modèles Orekit}{49}{section.4.4}%
-\contentsline {subsection}{\numberline {4.4.1}Corrections existantes réutilisées}{50}{subsection.4.4.1}%
-\contentsline {subsection}{\numberline {4.4.2}Développement des modèles atmosphériques}{50}{subsection.4.4.2}%
-\contentsline {subsection}{\numberline {4.4.3}Paramètres estimables}{51}{subsection.4.4.3}%
-\contentsline {section}{\numberline {4.5}Résolution}{51}{section.4.5}%
-\contentsline {subsection}{\numberline {4.5.1}Résolution par moindres carrés pondérés}{51}{subsection.4.5.1}%
-\contentsline {subsection}{\numberline {4.5.2}Résolution par filtre de Kalman}{52}{subsection.4.5.2}%
-\contentsline {section}{\numberline {4.6}Synthèse de la chaîne d'implémentation}{53}{section.4.6}%
-\contentsline {chapter}{\numberline {5}Résultats et validation}{55}{chapter.5}%
-\contentsline {chapter}{\textmd {\nameref {acronyms}}}{57}{chapter*.14}%
+\contentsline {chapter}{\textmd {\nameref {acronyms}}}{15}{chapter*.7}%
+\contentsline {chapter}{\nameref {introduction}}{17}{chapter*.8}%
+\contentsline {section}{\numberline {0.1}Contexte technique}{17}{section.0.1}%
+\contentsline {subsection}{\numberline {0.1.1}GNSS (\textit {Global Navigation Satellite System})}{17}{subsection.0.1.1}%
+\contentsline {subsection}{\numberline {0.1.2}Principe de la mesure de distance}{18}{subsection.0.1.2}%
+\contentsline {subsection}{\numberline {0.1.3}Observations et méthodes de positionnement}{18}{subsection.0.1.3}%
+\contentsline {subsubsection}{\numberline {0.1.3.1}SPP (\textit {Single Point Positioning})}{18}{subsubsection.0.1.3.1}%
+\contentsline {subsubsection}{\numberline {0.1.3.2}PPP (\textit {Precise Point Positioning})}{19}{subsubsection.0.1.3.2}%
+\contentsline {section}{\numberline {0.2}Orekit et les outils existants}{19}{section.0.2}%
+\contentsline {section}{\numberline {0.3}Problématique générale}{19}{section.0.3}%
+\contentsline {chapter}{\numberline {1}Modélisation et mise en œuvre du positionnement GNSS}{21}{chapter.1}%
+\contentsline {section}{\numberline {1.1}Positionnement par SPP}{21}{section.1.1}%
+\contentsline {subsection}{\numberline {1.1.1}Principe théorique}{21}{subsection.1.1.1}%
+\contentsline {subsection}{\numberline {1.1.2}Corrections utilisées en SPP}{22}{subsection.1.1.2}%
+\contentsline {subsubsection}{\numberline {1.1.2.1}Horloge satellite}{22}{subsubsection.1.1.2.1}%
+\contentsline {subsubsection}{\numberline {1.1.2.2}Horloge récepteur}{23}{subsubsection.1.1.2.2}%
+\contentsline {subsubsection}{\numberline {1.1.2.3}Effet Sagnac}{23}{subsubsection.1.1.2.3}%
+\contentsline {subsubsection}{\numberline {1.1.2.4}Modélisation de la troposphère}{24}{subsubsection.1.1.2.4}%
+\contentsline {subsubsection}{\numberline {1.1.2.5}Correction ionosphérique}{25}{subsubsection.1.1.2.5}%
+\contentsline {subsubsection}{\numberline {1.1.2.6}Modèle de Klobuchar}{25}{subsubsection.1.1.2.6}%
+\contentsline {subsubsection}{\numberline {1.1.2.7}Combinaison iono-free}{26}{subsubsection.1.1.2.7}%
+\contentsline {subsection}{\numberline {1.1.3}Estimation de la position SPP}{27}{subsection.1.1.3}%
+\contentsline {subsubsection}{\numberline {1.1.3.1}Traitement multi-constellation}{28}{subsubsection.1.1.3.1}%
+\contentsline {section}{\numberline {1.2}Positionnement par PPP}{29}{section.1.2}%
+\contentsline {subsection}{\numberline {1.2.1}Mesure de phase et ambiguïté}{29}{subsection.1.2.1}%
+\contentsline {subsubsection}{\numberline {1.2.1.1}Orbites, horloges et biais précis}{30}{subsubsection.1.2.1.1}%
+\contentsline {subsection}{\numberline {1.2.2}Corrections supplémentaires}{31}{subsection.1.2.2}%
+\contentsline {subsection}{\numberline {1.2.3}Centres de phase des antennes}{31}{subsection.1.2.3}%
+\contentsline {subsubsection}{\numberline {1.2.3.1}Décalage du centre de phase (PCO)}{32}{subsubsection.1.2.3.1}%
+\contentsline {subsubsection}{\numberline {1.2.3.2}Variation du centre de phase (PCV)}{32}{subsubsection.1.2.3.2}%
+\contentsline {subsubsection}{\numberline {1.2.3.3}Application des corrections d'antenne}{32}{subsubsection.1.2.3.3}%
+\contentsline {subsection}{\numberline {1.2.4}Effet wind-up}{33}{subsection.1.2.4}%
+\contentsline {subsubsection}{\numberline {1.2.4.1}Retard de Shapiro}{34}{subsubsection.1.2.4.1}%
+\contentsline {subsubsection}{\numberline {1.2.4.2}Estimation du retard troposphérique humide}{34}{subsubsection.1.2.4.2}%
+\contentsline {subsubsection}{\numberline {1.2.4.3}Estimation des gradients troposphériques}{35}{subsubsection.1.2.4.3}%
+\contentsline {subsubsection}{\numberline {1.2.4.4}Observations combinées et paramètres estimés}{35}{subsubsection.1.2.4.4}%
+\contentsline {subsection}{\numberline {1.2.5}Estimation séquentielle et continuité des observations}{36}{subsection.1.2.5}%
+\contentsline {section}{\numberline {1.3}Implémentation avec Orekit}{36}{section.1.3}%
+\contentsline {chapter}{\numberline {2}Principe du positionnement GNSS}{39}{chapter.2}%
+\contentsline {section}{\numberline {2.1}Mesure de distance par signaux GNSS}{39}{section.2.1}%
+\contentsline {section}{\numberline {2.2}Observations GNSS}{40}{section.2.2}%
+\contentsline {subsection}{\numberline {2.2.1}Pseudo-distance}{40}{subsection.2.2.1}%
+\contentsline {subsection}{\numberline {2.2.2}Phase de porteuse}{41}{subsection.2.2.2}%
+\contentsline {section}{\numberline {2.3}Résolution pour $n$ satellites ($n\geq 4$)}{42}{section.2.3}%
+\contentsline {subsection}{\numberline {2.3.1}Linéarisation du modèle}{43}{subsection.2.3.1}%
+\contentsline {chapter}{\numberline {3}Chaîne de traitement du positionnement GNSS}{47}{chapter.3}%
+\contentsline {section}{\numberline {3.1}Fichiers d'entrée}{47}{section.3.1}%
+\contentsline {subsection}{\numberline {3.1.1}Fichier RINEX Observation}{47}{subsection.3.1.1}%
+\contentsline {subsection}{\numberline {3.1.2}Fichier RINEX Navigation}{48}{subsection.3.1.2}%
+\contentsline {section}{\numberline {3.2}Modèles de correction}{49}{section.3.2}%
+\contentsline {subsection}{\numberline {3.2.1}Horloges}{50}{subsection.3.2.1}%
+\contentsline {subsubsection}{\numberline {3.2.1.1}Horloge satellite}{50}{subsubsection.3.2.1.1}%
+\contentsline {subsubsection}{\numberline {3.2.1.2}Horloge récepteur}{51}{subsubsection.3.2.1.2}%
+\contentsline {subsection}{\numberline {3.2.2}Corrections géométriques et relativistes}{51}{subsection.3.2.2}%
+\contentsline {subsubsection}{\numberline {3.2.2.1}Effet Sagnac}{51}{subsubsection.3.2.2.1}%
+\contentsline {subsubsection}{\numberline {3.2.2.2}Retard de Shapiro}{52}{subsubsection.3.2.2.2}%
+\contentsline {subsection}{\numberline {3.2.3}Modélisation de la troposphère}{52}{subsection.3.2.3}%
+\contentsline {subsubsection}{\numberline {3.2.3.1}Modèle de base sans gradients}{53}{subsubsection.3.2.3.1}%
+\contentsline {subsubsection}{\numberline {3.2.3.2}Modèle avec gradients horizontaux}{53}{subsubsection.3.2.3.2}%
+\contentsline {subsection}{\numberline {3.2.4}Modélisation de la ionosphère}{54}{subsection.3.2.4}%
+\contentsline {subsubsection}{\numberline {3.2.4.1}Modèle de Klobuchar}{54}{subsubsection.3.2.4.1}%
+\contentsline {subsubsection}{\numberline {3.2.4.2}Combinaison iono-free}{55}{subsubsection.3.2.4.2}%
+\contentsline {subsection}{\numberline {3.2.5}Traitement multi-constellation}{56}{subsection.3.2.5}%
+\contentsline {section}{\numberline {3.3}Sélection et rejet des observations}{58}{section.3.3}%
+\contentsline {subsection}{\numberline {3.3.1}Contrôles préalables des satellites et des signaux}{58}{subsection.3.3.1}%
+\contentsline {subsubsection}{\numberline {3.3.1.1}État de santé du satellite}{58}{subsubsection.3.3.1.1}%
+\contentsline {subsubsection}{\numberline {3.3.1.2}Rapport signal sur bruit}{58}{subsubsection.3.3.1.2}%
+\contentsline {subsubsection}{\numberline {3.3.1.3}Masque d'élévation}{58}{subsubsection.3.3.1.3}%
+\contentsline {subsubsection}{\numberline {3.3.1.4}Disponibilité des observables}{59}{subsubsection.3.3.1.4}%
+\contentsline {subsection}{\numberline {3.3.2}Rejet sur le GDOP}{59}{subsection.3.3.2}%
+\contentsline {subsection}{\numberline {3.3.3}Rejet sur les résidus}{59}{subsection.3.3.3}%
+\contentsline {section}{\numberline {3.4}Moindres carrés pondérés (WLS)}{60}{section.3.4}%
+\contentsline {section}{\numberline {3.5}Filtre de Kalman étendu (EKF)}{61}{section.3.5}%
+\contentsline {subsection}{\numberline {3.5.1}Initialisation du filtre}{62}{subsection.3.5.1}%
+\contentsline {subsection}{\numberline {3.5.2}Modèle d'évolution}{62}{subsection.3.5.2}%
+\contentsline {subsection}{\numberline {3.5.3}Modèle d'observation}{62}{subsection.3.5.3}%
+\contentsline {subsection}{\numberline {3.5.4}Prédiction}{63}{subsection.3.5.4}%
+\contentsline {subsection}{\numberline {3.5.5}Mise à jour}{63}{subsection.3.5.5}%
+\contentsline {subsection}{\numberline {3.5.6}Fonctionnalités complémentaires du traitement GNSS}{64}{subsection.3.5.6}%
+\contentsline {subsubsection}{\numberline {3.5.6.1}Initialisation et réinitialisation des horloges}{65}{subsubsection.3.5.6.1}%
+\contentsline {subsubsection}{\numberline {3.5.6.2}État d'ambiguïtés adapté à la visibilité}{65}{subsubsection.3.5.6.2}%
+\contentsline {subsubsection}{\numberline {3.5.6.3}Définition d'un saut de cycle}{65}{subsubsection.3.5.6.3}%
+\contentsline {subsubsection}{\numberline {3.5.6.4}Détection des sauts de cycle}{66}{subsubsection.3.5.6.4}%
+\contentsline {subsubsection}{\numberline {3.5.6.5}Réinitialisation après un saut ou une perte de suivi}{68}{subsubsection.3.5.6.5}%
+\contentsline {chapter}{\numberline {4}Passage en Precise Point Positioning (PPP)}{69}{chapter.4}%
+\contentsline {section}{\numberline {4.1}Principe du Precise Point Positioning}{69}{section.4.1}%
+\contentsline {section}{\numberline {4.2}Fichiers d'entrée pour le PPP}{71}{section.4.2}%
+\contentsline {subsection}{\numberline {4.2.1}Orbites précises SP3}{71}{subsection.4.2.1}%
+\contentsline {subsection}{\numberline {4.2.2}Horloges précises CLK}{72}{subsection.4.2.2}%
+\contentsline {subsection}{\numberline {4.2.3}Biais observables BIA}{72}{subsection.4.2.3}%
+\contentsline {subsection}{\numberline {4.2.4}Produits d'antenne ANTEX}{73}{subsection.4.2.4}%
+\contentsline {section}{\numberline {4.3}Corrections supplémentaires}{73}{section.4.3}%
+\contentsline {subsection}{\numberline {4.3.1}Centres de phase des antennes}{73}{subsection.4.3.1}%
+\contentsline {subsubsection}{\numberline {4.3.1.1}Phase Center Offset}{74}{subsubsection.4.3.1.1}%
+\contentsline {subsubsection}{\numberline {4.3.1.2}Phase Center Variation}{75}{subsubsection.4.3.1.2}%
+\contentsline {subsubsection}{\numberline {4.3.1.3}Prise en compte dans le modèle d'observation}{75}{subsubsection.4.3.1.3}%
+\contentsline {subsection}{\numberline {4.3.2}Enroulement de phase (\textit {wind-up})}{75}{subsection.4.3.2}%
+\contentsline {subsection}{\numberline {4.3.3}Correction des marées terrestres}{76}{subsection.4.3.3}%
+\contentsline {section}{\numberline {4.4}Synthèse des évolutions apportées par le PPP}{77}{section.4.4}%
+\contentsline {chapter}{\textmd {Glossaire}}{79}{chapter*.16}%
  \setlength {\baselineskip }{0.2\baselineskip } \setlength {\parskip }{-3pt}
-\contentsline {chapter}{\textmd {Glossaire}}{59}{chapter*.16}%
-\contentsline {chapter}{\textmd {Bibliographie}}{61}{chapter*.17}%
-\contentsline {chapter}{\numberline {A}Détails des modèles de correction}{63}{appendix.A}%
-\contentsline {section}{\numberline {A.1}Fonctions de projection troposphérique}{63}{appendix.A.1}%
-\contentsline {section}{\numberline {A.2}Modèle ionosphérique de Klobuchar}{65}{appendix.A.2}%
-\contentsline {subsection}{\numberline {A.2.1}Calcul du point de percement ionosphérique}{65}{subsection.A.2.1}%
-\contentsline {subsection}{\numberline {A.2.2}Amplitude et période du modèle}{65}{subsection.A.2.2}%
-\contentsline {subsection}{\numberline {A.2.3}Retard ionosphérique vertical}{66}{subsection.A.2.3}%
-\contentsline {subsection}{\numberline {A.2.4}Projection du retard selon la ligne de visée}{66}{subsection.A.2.4}%
-\contentsline {chapter}{\numberline {B}Titre de l'Annexe}{69}{appendix.B}%
+\contentsline {chapter}{\textmd {Bibliographie}}{82}{chapter*.17}%
+\contentsline {chapter}{\numberline {A}Détails des modèles de correction}{83}{appendix.A}%
+\contentsline {section}{\numberline {A.1}Fonctions de projection troposphérique}{83}{appendix.A.1}%
+\contentsline {section}{\numberline {A.2}Modèle ionosphérique de Klobuchar}{85}{appendix.A.2}%
+\contentsline {subsection}{\numberline {A.2.1}Calcul du point de percement ionosphérique}{85}{subsection.A.2.1}%
+\contentsline {subsection}{\numberline {A.2.2}Amplitude et période du modèle}{85}{subsection.A.2.2}%
+\contentsline {subsection}{\numberline {A.2.3}Retard ionosphérique vertical}{86}{subsection.A.2.3}%
+\contentsline {subsection}{\numberline {A.2.4}Projection du retard selon la ligne de visée}{86}{subsection.A.2.4}%
+\contentsline {chapter}{\numberline {B}Linéarisation et méthodes d'estimation}{89}{appendix.B}%
+\contentsline {section}{\numberline {B.1}Linéarisation du modèle}{89}{appendix.B.1}%
+\contentsline {section}{\numberline {B.2}Moindres carrés pondérés}{92}{appendix.B.2}%
+\contentsline {section}{\numberline {B.3}Filtre de Kalman étendu }{93}{appendix.B.3}%
+\contentsline {subsection}{\numberline {B.3.1}Initialisation du filtre}{94}{subsection.B.3.1}%
+\contentsline {subsection}{\numberline {B.3.2}Modèle d'évolution}{94}{subsection.B.3.2}%
+\contentsline {subsection}{\numberline {B.3.3}Modèle d'observation}{95}{subsection.B.3.3}%
+\contentsline {subsection}{\numberline {B.3.4}Prédiction}{95}{subsection.B.3.4}%
+\contentsline {subsection}{\numberline {B.3.5}Mise à jour}{96}{subsection.B.3.5}%
+\contentsline {subsection}{\numberline {B.3.6}Fonctionnalités complémentaires du traitement GNSS}{96}{subsection.B.3.6}%
+\contentsline {subsubsection}{\numberline {B.3.6.1}Initialisation et réinitialisation des horloges}{97}{subsubsection.B.3.6.1}%
+\contentsline {subsubsection}{\numberline {B.3.6.2}État d'ambiguïtés adapté à la visibilité}{97}{subsubsection.B.3.6.2}%
+\contentsline {subsubsection}{\numberline {B.3.6.3}Définition d'un saut de cycle}{98}{subsubsection.B.3.6.3}%
+\contentsline {subsubsection}{\numberline {B.3.6.4}Détection des sauts de cycle}{98}{subsubsection.B.3.6.4}%
+\contentsline {subsubsection}{\numberline {B.3.6.5}Réinitialisation après un saut ou une perte de suivi}{100}{subsubsection.B.3.6.5}%

@@ -1,680 +1,1604 @@
 % !TEX root = ../enac_project_fr.tex
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Chapter 4 - Implémentation en Java avec Orekit
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  % Chapter 3 - Chaîne de traitement du positionnement GNSS
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\chapter{Implémentation en Java avec Orekit}
-\label{implementation_orekit}
+\chapter{Chaîne de traitement du positionnement GNSS}
+\label{chaine_traitement_positionnement_gnss}
 
-Les chapitres précédents ont établi les modèles d'observation, les méthodes
-d'estimation et les corrections nécessaires au PPP. Le présent chapitre décrit
-leur traduction logicielle. Il ne reprend donc pas leur démonstration, mais
-précise comment les fonctions disponibles dans Orekit ont été assemblées,
-quelles adaptations ont été nécessaires et pour quelles raisons.
+Ce chapitre présente la chaîne de traitement du positionnement GNSS, depuis
+les fichiers d'entrée jusqu'au calcul de la solution. Les sections suivantes décrivent
+d'abord les données et les corrections nécessaires, puis les deux méthodes
+d'estimation considérées : les moindres carrés pondérés et le filtre de Kalman
+étendu.
 
-L'application est écrite en Java~17 et utilise Orekit~13.1.6. Hipparchus~4.0.3
-fournit les outils numériques employés indirectement par Orekit, notamment
-l'optimisation non linéaire et le filtre de Kalman. Le principe directeur du
-développement a été de conserver les objets et les algorithmes d'Orekit dès
-qu'ils répondaient au besoin. Le code spécifique est ainsi limité aux règles
-de traitement GNSS absentes de la bibliothèque et aux interfaces nécessaires
-pour appliquer ses modèles à un récepteur terrestre.
+\section{Fichiers d'entrée}
 
-Dans l'API d'estimation d'Orekit, une observation est représentée par un objet
-qui associe une valeur mesurée à un modèle de calcul de sa valeur théorique.
-Pour une liaison GNSS unidirectionnelle, Orekit fournit deux spécialisations :
-\texttt{OneWayGNSSRange} pour le code et \texttt{OneWayGNSSPhase} pour la
-phase. Une correction physique peut être attachée à ces objets par
-l'intermédiaire de l'interface \texttt{EstimationModifier}. Un tel
-\emph{modificateur} corrige la valeur théorique et, lorsqu'un paramètre doit
-être estimé, fournit également les dérivées nécessaires au solveur. Enfin,
-chaque inconnue autre que l'état cartésien est décrite par un
-\texttt{ParameterDriver}, qui porte sa valeur, son échelle et son statut
-estimable. Ces trois mécanismes constituent l'interface entre les modèles
-physiques et les estimateurs.
+On présente dans cette section les différents fichiers nécessaires au calcul de position d'une station GNSS. Ces fichiers incluent les observations GNSS, les éphémérides des satellites et les informations de configuration du récepteur.
+L'algorithme de positionnement utilise ces fichiers pour calculer la position de la station.
 
 
-\section{État de l'art des fonctions disponibles dans Orekit}
-\label{sec:orekit_state_of_art}
+    \subsection{Fichier RINEX Observation}
 
-Orekit est principalement orienté vers la mécanique spatiale et la
-détermination d'orbite. Il possède néanmoins une infrastructure GNSS étendue :
-lecture de produits, propagation des satellites, combinaisons d'observables,
-modèles de mesure et estimateurs. La disponibilité d'une brique ne signifie
-pas toujours qu'elle puisse être employée directement. Plusieurs modèles
-physiques existent dans la bibliothèque sans disposer d'un
-\texttt{EstimationModifier} compatible avec les mesures
-\texttt{OneWayGNSSRange} et \texttt{OneWayGNSSPhase} retenues ici.
+    Les observations GNSS sont généralement stockées au format \textit{Receiver INdependent EXchange Format} (RINEX). Ce format standardisé permet de stocker et d'échanger des observations GNSS indépendamment du matériel utilisé pour leur acquisition~\cite{rinex304}.
 
-Les tableaux~\ref{tab:orekit_data_support} et
-\ref{tab:orekit_model_support} distinguent trois situations : réutilisation
-directe, adaptation d'une brique Orekit et développement propre.
-
-\begin{table}[htbp]
-\centering
-\caption{Disponibilité des fonctions de lecture et de préparation des données.}
-\label{tab:orekit_data_support}
-\small
-\begin{tabularx}{\textwidth}{p{3.3cm} p{3.0cm} X}
-\hline
-\textbf{Fonction} & \textbf{Support Orekit} & \textbf{Choix réalisé} \\
-\hline
-RINEX observation et navigation & Complet &
-Lecture par les parseurs Orekit ; décompression Hatanaka par
-\texttt{HatanakaCompressFilter}. \\
-
-Orbites diffusées & Complet &
-Sélection du message sain dans l'application, puis propagation par
-\texttt{GNSSPropagator}. \\
-
-SP3 et CLK & Complet &
-Lecture et interpolation par Orekit ; une couche d'accès unifie ensuite les
-produits diffusés et précis. \\
-
-SINEX station & Complet &
-Lecture de la position de référence par \texttt{SinexParser}. Un filtre léger
-retire les blocs \texttt{SITE/ANTENNA} et \texttt{SITE/RECEIVER} non
-exploitables dans le produit considéré. \\
-
-SINEX-BIAS & Complet pour le parsage &
-Lecture des OSB par \texttt{SinexBiasParser} ; application aux observables et
-conversion des unités dans une classe dédiée. \\
-
-ANTEX & Complet pour le parsage &
-Lecture des calibrations et des modèles d'attitude par
-\texttt{AntexLoader} ; combinaison bi-fréquence adaptée dans les
-modificateurs d'antenne. \\
-
-Combinaisons GNSS & Complet &
-Utilisation de \texttt{MeasurementCombinationFactory} pour les combinaisons
-ionosphère-libre, geometry-free et Melbourne--Wübbena. \\
-
-Sélection des signaux & Non prescrite &
-Développement de \texttt{ObservableFilter}, car Orekit expose les observations
-sans imposer de priorité entre les codes RINEX. \\
-\hline
-\end{tabularx}
-\end{table}
-
-\begin{table}[htbp]
-\centering
-\caption{Disponibilité des modèles physiques et des fonctions d'estimation.}
-\label{tab:orekit_model_support}
-\small
-\begin{tabularx}{\textwidth}{p{3.3cm} p{3.0cm} X}
-\hline
-\textbf{Fonction} & \textbf{Support Orekit} & \textbf{Choix réalisé} \\
-\hline
-Code et phase GNSS unidirectionnels & Complet &
-Réutilisation de \texttt{OneWayGNSSRange} et
-\texttt{OneWayGNSSPhase}. \\
-
-Temps de vol et rotation terrestre & Complet &
-Calcul interne au modèle de mesure dans les repères Orekit ; aucune correction
-de Sagnac n'est recodée. \\
-
-Horloge satellite et TGD & Partiel &
-Modèles d'horloge Orekit réutilisés ; adaptateurs propres pour unifier NAV et
-CLK et appliquer le TGD avec la convention de l'observable. \\
-
-Relativité et effet de Shapiro & Complet &
-Réutilisation des modificateurs GNSS unidirectionnels fournis par Orekit quand
-le mode de traitement les requiert. \\
-
-Ionosphère et troposphère & Modèles disponibles &
-Réutilisation de Klobuchar, Saastamoinen, Niell et
-\texttt{EstimatedModel} ; modificateurs propres pour les deux classes de
-mesure retenues. \\
-
-Gradients troposphériques & Absent &
-Extension de \texttt{EstimatedModel} par un modèle exposant deux
-\texttt{ParameterDriver} supplémentaires. \\
-
-PCO et PCV & Briques génériques disponibles &
-Réutilisation d'ANTEX et du calcul de centre de phase Orekit ; assemblage
-propre pour le récepteur terrestre et la combinaison ionosphère-libre. \\
-
-Marées solides & Modèle disponible &
-Déplacement calculé par \texttt{TidalDisplacement} ; projection sur la ligne
-de visée réalisée par un modificateur propre. \\
-
-Wind-up & Classe abstraite disponible &
-Spécialisation de \texttt{AbstractWindUp} avec l'attitude du satellite et le
-repère topocentrique du récepteur. \\
-
-ISB & Absent du modèle de mesure &
-Ajout d'un \texttt{ParameterDriver} commun aux mesures Galileo. \\
-
-Sauts de cycle & Partiel &
-Détecteur geometry-free et combinaison MW d'Orekit complétés par le LLI, le
-test de saut MW et la politique de réinitialisation. \\
-
-WLS & Complet &
-Réutilisation de \texttt{BatchLSEstimator} et de l'optimiseur
-Levenberg--Marquardt d'Hipparchus. \\
-
-EKF & Complet pour la détermination d'orbite &
-Réutilisation de \texttt{KalmanEstimator} au moyen d'un propagateur de
-récepteur statique et d'une gestion propre des états GNSS variables. \\
-\hline
-\end{tabularx}
-\end{table}
-
-Cette analyse conduit à une architecture d'extension plutôt qu'à une chaîne
-de calcul indépendante. Les classes propres ne remplacent pas les modèles
-d'Orekit : elles les rendent compatibles avec le type de mesure, les unités et
-la structure d'état du positionnement au sol.
-
-
-\section{Architecture logicielle}
-\label{sec:software_architecture}
-
-\subsection{Découpage en responsabilités}
-
-Le code est organisé en paquets dont les responsabilités sont volontairement
-limitées. Cette séparation évite notamment que les règles de sélection des
-observables, les modèles physiques et la logique des solveurs soient
-dupliqués.
-
-\begin{table}[htbp]
-\centering
-\caption{Responsabilités des principaux paquets de l'application.}
-\label{tab:software_packages}
-\small
-\begin{tabularx}{\textwidth}{p{3.2cm} X}
-\hline
-\textbf{Paquet} & \textbf{Responsabilité} \\
-\hline
-\texttt{config} & Lecture de la configuration JSON, initialisation d'Orekit,
-choix des modes et centralisation du modèle stochastique. \\
-\texttt{data} & Regroupement par époque, sélection des observables et
-application des biais SINEX-BIAS. \\
-\texttt{satellite} & Sélection des éphémérides, construction des propagateurs
-diffusés ou précis, horloges et attitude des satellites. \\
-\texttt{modifier} & Construction des mesures et adaptation des corrections
-physiques à \texttt{OneWayGNSSRange} et \texttt{OneWayGNSSPhase}. \\
-\texttt{propagator} & Représentation d'un récepteur fixe dans l'interface de
-propagation attendue par les estimateurs Orekit. \\
-\texttt{solver} & Orchestration des résolutions WLS et EKF, gestion des
-ambiguïtés et des covariances. \\
-\hline
-\end{tabularx}
-\end{table}
-
-On utilise un fichier de configuration au format JSON pour décrire la session
-et sélectionner les modes de traitement. La dépendance entre les paquets suit
-alors le sens de la chaîne suivante :
-
-\begin{center}
-\small
-\texttt{config.json}
-$\longrightarrow$
-\texttt{ConfigParser}
-$\longrightarrow$
-\texttt{Data / ObservableFilter}
-$\longrightarrow$
-\texttt{SatelliteEphemerisProvider}
-\\[0.4em]
-$\longrightarrow$
-\texttt{MeasurementBuilder / ModifierFactory}
-$\longrightarrow$
-\texttt{WlsSolver ou EkfSolver}
-$\longrightarrow$
-\texttt{CSV}.
-\end{center}
-
-La classe \texttt{Main} reste ainsi limitée à quatre opérations : charger la
-configuration, créer le dossier de sortie, sélectionner le solveur et lancer
-le traitement. La construction des modèles n'est pas pilotée par une suite de
-conditions dans cette classe d'entrée.
-
-\subsection{Configuration des traitements}
-
-Ce fichier permet de définir une session sans imposer de recompilation. On y
-choisit la station, le jour, les constellations, l'utilisation du code seul ou
-du code et de la phase, le traitement ionosphérique, le modèle troposphérique,
-le type d'éphémérides et le solveur. Il contient également les seuils de
-sélection, les chemins des produits et les paramètres stochastiques.
-
-Deux choix ont été isolés dans des composants spécifiques :
+Un fichier RINEX Observation est constitué de deux parties :
 
 \begin{itemize}
-    \item \texttt{ObservableFilter} centralise le choix des signaux et leur
-    validation. Le mode simple impose les types RINEX indiqués dans le JSON ;
-    le mode par priorités choisit un signal par bande à partir des observables
-    annoncées dans l'en-tête ;
-    \item \texttt{KalmanParameters} centralise les écarts-types initiaux, les
-    bruits de processus et les variances de mesure. Un mode simple emploie des
-    écarts-types physiques directement configurables ; un second mode calcule
-    ces variances à partir du jeu de paramètres utilisé pour les comparaisons
-    de référence.
+    \item un en-tête (\textit{Header}) contenant les informations générales relatives au récepteur et aux observations ;
+    \item les données d'observation (\textit{Observation Data}), regroupées par époque d'acquisition.
 \end{itemize}
 
-Cette centralisation garantit qu'un même choix est appliqué aux deux solveurs
-et aux différentes classes de mesure.
-
-
-\section{Lecture et préparation des données}
-\label{sec:data_implementation}
-
-\subsection{Initialisation d'Orekit et parsage}
-
-Avant toute lecture, \texttt{OrekitInit} enregistre le répertoire
-\texttt{orekit-data} dans le \texttt{DataContext}. Les échelles de temps, les
-paramètres d'orientation de la Terre et les transformations de repères sont
-donc fournis par Orekit. La chaîne utilise l'ITRF conforme aux conventions
-IERS~2010 pour les coordonnées terrestres et le GCRF comme repère inertiel de
-calcul.
-
-\texttt{ConfigParser} construit ensuite les objets suivants :
+L'en-tête précise notamment :
 
 \begin{itemize}
-    \item \texttt{RinexObservation} et \texttt{RinexNavigation} pour les
-    observations et les messages diffusés ;
-    \item \texttt{Sinex} pour la position de référence de la station ;
-    \item \texttt{AntexLoader} pour les calibrations d'antenne ;
-    \item en mode précis, \texttt{SP3}, \texttt{RinexClock} et
-    \texttt{SinexBias} pour les orbites, les horloges et les biais observables.
+    \item la version du format RINEX ;
+    \item les systèmes GNSS enregistrés (GPS, Galileo, BeiDou, GLONASS, etc.) ;
+    \item les types d'observations disponibles pour chaque constellation ;
+    \item les coordonnées approximatives de la station de réception ;
+    \item le type d'antenne et de récepteur utilisés ;
+    \item l'intervalle d'échantillonnage ;
+    \item diverses informations de calibration.
 \end{itemize}
 
-Le chemin du fichier BIA contient le jour de la session. Sa résolution à la
-lecture évite d'associer par erreur des biais d'une autre journée aux produits
-SP3 et CLK. Les observations compactes CRINEX sont fournies au parseur RINEX
-après passage dans le filtre Hatanaka d'Orekit ; aucune décompression externe
-n'est nécessaire.
-
-\subsection{Accès unifié aux éphémérides}
-
-\texttt{SatelliteEphemerisProvider} masque au reste de l'application l'origine
-des coordonnées et de l'horloge du satellite. Il retourne une structure
-commune contenant un fournisseur de coordonnées, un propagateur, un modèle
-d'attitude, une horloge et une précision nominale.
-
-En mode diffusé, \texttt{EphemerisSelector} choisit le message sain le plus
-proche de l'instant d'émission. Le message est transmis à
-\texttt{GNSSPropagatorBuilder}. Le \texttt{GNSSPropagator} obtenu calcule la
-position, la vitesse et les corrections d'horloge issues du NAV. Les
-propagateurs sont mis en cache par message afin d'éviter leur reconstruction à
-chaque époque.
-
-En mode précis, l'orbite est fournie par l'éphéméride SP3 et son propagateur
-Orekit. Le parseur est configuré avec une fenêtre de onze points, cohérente
-avec l'interpolation retenue pour la comparaison de référence. Le fichier CLK
-fournit séparément un \texttt{ClockModel}. Une attitude GNSS issue de la
-calibration ANTEX est utilisée lorsqu'elle est disponible ; à défaut, le
-modèle \texttt{GenericGNSS} d'Orekit assure une orientation cohérente par
-rapport au Soleil. Les sources précises sont mises en cache par satellite.
-
-Le temps d'émission est d'abord approché à partir de la pseudo-distance. Lors
-de l'évaluation de la mesure, Orekit résout ensuite le temps de propagation et
-évalue les coordonnées du satellite à l'instant d'émission. Les transformations
-entre repère terrestre et inertiel incluent alors l'effet de la rotation de la
-Terre décrit au chapitre~\ref{chaine_traitement_positionnement_gnss}.
-
-\subsection{Sélection des observations}
-
-Les \texttt{ObservationDataSet} sont regroupés par date dans \texttt{Data}.
-Pour chaque époque, \texttt{EpochData} délègue toute la sélection des signaux à
-\texttt{ObservableFilter}. Celui-ci vérifie successivement la constellation,
-la présence des codes et phases requis, puis le SNR. Les observables retenues,
-leurs LLI et leurs fréquences sont regroupés dans un objet immuable
-\texttt{Selected}.
-
-La construction du satellite applique ensuite les contrôles qui dépendent de
-la géométrie ou des produits de navigation : disponibilité d'une éphéméride
-valide, état de santé et masque d'élévation. Cette séparation est importante :
-une règle portant sur les types RINEX ne peut pas être réintroduite dans un
-solveur ou dans un modificateur.
-
-
-\section{Construction des mesures Orekit}
-\label{sec:measurement_implementation}
-
-\subsection{Objets de mesure et combinaisons}
-
-\texttt{MeasurementBuilder} transforme chaque satellite retenu en mesure
-Orekit. Les deux classes introduites au début de ce chapitre reçoivent
-respectivement le code en mètres et la phase en cycles. Elles ont été conçues
-pour une liaison unidirectionnelle entre un satellite GNSS émetteur et un
-satellite récepteur dont l'état est estimé, par exemple dans une application
-de détermination d'orbite. Elles conviennent néanmoins au positionnement au
-sol si le récepteur est fourni sous la forme d'un état propagé compatible.
-
-Ce choix conserve plusieurs fonctions difficiles à reproduire correctement :
+Les données d'observation sont ensuite organisées par époque. Chaque époque contient :
 
 \begin{itemize}
-    \item la résolution du temps de vol et l'évaluation des participants aux
-    instants d'émission et de réception ;
-    \item le calcul automatique des dérivées par rapport à l'état cartésien et
-    au biais d'horloge du récepteur ;
-    \item l'intégration des \texttt{ParameterDriver} de mesure ;
-    \item la gestion native d'une ambiguïté par \texttt{AmbiguityDriver} pour
-    la phase.
+    \item la date et l'heure exactes de la mesure (temps GNSS) ;
+    \item la liste des satellites observés à cette époque ;
+    \item pour chaque satellite, l'ensemble des observations correspondant aux types déclarés dans l'en-tête.
 \end{itemize}
 
-En mode ionosphère-libre, les deux codes et les deux phases sont combinés par
-\texttt{IonosphereFreeCombination}. La fréquence combinée fournie par Orekit
-détermine la longueur d'onde synthétique utilisée par
-\texttt{OneWayGNSSPhase}. Les biais OSB sont corrigés signal par signal avant
-la combinaison ; cette chronologie est nécessaire car les biais des deux
-fréquences sont distincts.
-
-La correction GGTO lue dans le fichier NAV est également appliquée aux
-observations Galileo avant la création des mesures. Elle ne doit pas être
-confondue avec l'ISB résiduel, qui reste un paramètre estimé.
-
-\subsection{Assemblage par modificateurs}
-
-Une mesure Orekit fournit le terme géométrique et les horloges associées, puis
-accepte une liste de \texttt{EstimationModifier}. Chaque modificateur reçoit
-la valeur théorique, les participants et, si nécessaire, les dérivées. Cette
-interface permet d'ajouter une contribution sans modifier les classes de
-mesure ni les solveurs.
-
-\texttt{ModifierFactory} constitue l'unique point d'assemblage. Selon la
-configuration, elle ajoute dans un ordre déterminé l'horloge satellite, la
-troposphère, les marées, les termes relativistes, le wind-up, les antennes,
-l'ionosphère, l'ISB et les filtres de résidus. Les modèles qui portent un
-paramètre estimé sont instanciés une seule fois par session. Ainsi, toutes les
-mesures de code et de phase partagent exactement le même driver de ZTD, les
-mêmes gradients et le même ISB.
-
-Les mesures destinées à la solution ponctuelle auxiliaire utilisent une liste
-plus courte : code de première fréquence, horloge et TGD, Klobuchar,
-Saastamoinen et ISB éventuel. En mode précis, la correction du PCO satellite
-est néanmoins conservée afin de rendre la mesure cohérente avec l'orbite SP3
-référencée au centre de masse. Les PCV du récepteur, les marées, le wind-up et
-les paramètres troposphériques estimés ne sont pas introduits dans cette
-initialisation.
-
-
-\section{Extensions développées autour d'Orekit}
-\label{sec:orekit_extensions}
-
-\subsection{Horloges satellite, TGD et multi-constellation}
-
-Les produits NAV et CLK n'exposent pas leur horloge sous la même forme.
-L'interface propre \texttt{SatelliteClock} les ramène à trois informations :
-le décalage d'horloge, le retard de groupe et l'indication de présence du terme
-relativiste. Les classes
-\texttt{SatelliteClockOneWayGNSSRangeModifier} et
-\texttt{SatelliteClockOneWayGNSSPhaseModifier} évaluent cette horloge à
-l'instant d'émission fourni par la mesure.
-
-Cette couche répond à deux besoins. D'une part, elle permet d'utiliser le même
-modèle de mesure avec le polynôme du NAV ou l'interpolation du CLK. D'autre
-part, elle contrôle explicitement le TGD : il est appliqué au code
-mono-fréquence, supprimé dans la combinaison ionosphère-libre et jamais ajouté
-à la phase. Le modificateur relativiste natif d'Orekit n'est ajouté que lorsque
-la source d'horloge ne contient pas déjà cette contribution.
-
-Pour le traitement GPS--Galileo, \texttt{GalileoIsbModifier} porte un unique
-\texttt{ParameterDriver} exprimé en mètres. Ses variantes code et phase
-appliquent respectivement le driver en mètres et en cycles, et fournissent au
-moteur d'estimation la dérivée correspondante. Toutes les mesures Galileo
-partagent ce même objet ; les mesures GPS définissent l'horloge de référence.
-
-\subsection{Modèles ionosphériques et troposphériques}
-
-Les calculs physiques sont confiés aux modèles Orekit. Le développement propre
-porte sur leur raccordement aux mesures unidirectionnelles :
+Les principaux types d'observations disponibles sont :
 
 \begin{itemize}
-    \item \texttt{IonosphericDelayOneWayGNSSRangeModifier} et sa variante de
-    phase appellent le \texttt{KlobucharIonoModel} d'Orekit, avec des signes et
-    des unités adaptés au code et à la phase ;
-    \item les deux modificateurs troposphériques appellent un
-    \texttt{TroposphericModel} et propagent ses dérivées vers les
-    \texttt{ParameterDriver} estimés ;
-    \item le mode sans estimation utilise
-    \texttt{ModifiedSaastamoinenModel}. Le mode ZTD combine
-    \texttt{CanonicalSaastamoinenModel}, \texttt{NiellMappingFunctionModel}
-    et \texttt{EstimatedModel} ;
-    \item \texttt{EstimatedGradientsModel} enveloppe le modèle de ZTD et ajoute
-    les drivers des gradients nord et est. Seul le terme azimutal absent
-    d'Orekit est développé ; le retard hydrostatique, le retard humide et les
-    fonctions de projection restent calculés par les classes natives.
+    \item les pseudo-distances (\texttt{C}) ;
+    \item les mesures de phase de la porteuse (\texttt{L}) ;
+    \item les mesures Doppler (\texttt{D}) ;
+    \item le rapport signal sur bruit (\texttt{S}).
 \end{itemize}
 
-L'initialisation automatique du ZTD est isolée dans
-\texttt{RtkMopsZtdInitializer}. Elle n'affecte pas l'architecture du modèle :
-quelle que soit la valeur initiale choisie, le paramètre estimé reste le driver
-du \texttt{EstimatedModel} partagé.
+Chaque observation est identifiée par un code normalisé composé de trois caractères~\cite{rinex304}. Par exemple, \texttt{C1C} désigne une pseudo-distance GPS mesurée sur la fréquence L1 à l'aide du code C/A, tandis que \texttt{L1C} représente la mesure de phase correspondante.
 
-\subsection{Corrections d'antenne}
-
-\texttt{AntexLoader} fournit les PCO, les PCV, leur période de validité et le
-type d'antenne satellite. Orekit contient aussi la brique
-\texttt{PhaseCentersOneWayGNSSBaseModifier}, mais pas l'assemblage complet
-requis ici pour une station au sol et une observable ionosphère-libre.
-
-Les modificateurs développés réalisent donc trois opérations :
-
-\begin{enumerate}
-    \item calculer la contribution satellite sur chaque fréquence avec la
-    géométrie et l'attitude Orekit ;
-    \item transformer le PCO récepteur du repère ANTEX nord--est--haut vers le
-    repère topocentrique est--nord--haut, puis évaluer la PCV dans la direction
-    du satellite ;
-    \item combiner les deux corrections avec les coefficients de la
-    combinaison ionosphère-libre et convertir le résultat en cycles pour la
-    phase.
-\end{enumerate}
-
-Des variantes mono-fréquence sont utilisées avec Klobuchar. En mode précis,
-la correction satellite convertit l'orbite SP3, référencée au centre de masse,
-vers le centre de phase. Elle n'est pas ajoutée de nouveau aux orbites
-diffusées déjà cohérentes avec leur convention de diffusion. L'excentrement
-manuel de l'antenne réceptrice est fusionné avec le PCO dans un
-\texttt{FrequencyPattern}, ce qui maintient une seule chaîne de calcul.
-
-\subsection{Marées solides et wind-up}
-
-Le déplacement de marée est calculé par \texttt{TidalDisplacement} selon les
-conventions IERS~2010. \texttt{EarthTidesModifier} ne réimplémente pas ce
-modèle : il évalue le déplacement de la station, le transforme vers le repère
-de la mesure et projette son effet sur la distance satellite--récepteur. La
-correction métrique est divisée par la longueur d'onde pour la phase.
-
-De même, \texttt{WindUpOneWayGNSSPhaseModifier} spécialise
-\texttt{AbstractWindUp}. L'orientation du dipôle émetteur provient de
-l'attitude du propagateur GNSS ; celle du récepteur est définie par le repère
-topocentrique de la station. Une instance est conservée pour chaque satellite
-afin d'assurer la continuité entière du wind-up entre les époques. Pour une
-phase ionosphère-libre, un facteur d'échelle convertit le cycle physique vers
-la longueur d'onde synthétique employée par la mesure Orekit.
-
-\subsection{Biais observables et rejet des mesures}
-
-\texttt{SinexBiasCorrection} consulte les séries temporelles d'OSB produites
-par le parseur Orekit. La convention SINEX-BIAS est appliquée par soustraction
-du biais satellite et du biais station. Les biais de code sont déjà exprimés
-en mètres après parsage. Dans le produit employé, les biais de phase sont
-fournis en unités de temps ; la valeur en secondes est multipliée par la
-fréquence du signal afin d'obtenir des cycles.
-
-Le rejet normalisé réutilise \texttt{OutlierFilter}. Le seuil absolu
-d'innovation n'étant pas proposé sous la forme requise,
-\texttt{RtkMaxInnoFilter} a été ajouté. Il marque une mesure comme rejetée sans
-modifier le solveur. Les contrôles de SNR, d'élévation, de santé et de GDOP
-restent placés en amont, conformément à la séparation décrite à la
-section~\ref{sec:observation_rejection}.
-
-\subsection{Détection des sauts de cycle}
-
-\texttt{RtkSlipDetector} compose plusieurs briques au lieu de dupliquer les
-algorithmes disponibles. La combinaison geometry-free et son ajustement
-polynomial sont confiés à \texttt{GeometryFreeCycleSlipDetector}. La valeur
-Melbourne--Wübbena est calculée par \texttt{MeasurementCombinationFactory}.
-Le code propre se limite à lire les bits LLI, comparer la variation MW au
-seuil et fusionner les causes de détection par satellite.
-
-La décision de réinitialisation est séparée de la détection.
-\texttt{EkfAmbiguityManager} applique la politique décrite à la
-section~\ref{sec:ekf_gnss_features} : nouvelle valeur phase moins code lors de
-la première apparition, d'un saut ou d'une interruption longue, et demande de
-réinitialisation de la variance correspondante.
-
-
-\section{Représentation des paramètres estimés}
-\label{sec:estimated_parameters_implementation}
-
-Orekit représente chaque inconnue ajustable par un \texttt{ParameterDriver}.
-Celui-ci contient une valeur physique, une échelle de normalisation, une date
-de référence et un indicateur de sélection. L'application emploie ce mécanisme
-pour l'horloge récepteur, l'ISB Galileo, les ambiguïtés, le ZTD et les deux
-gradients troposphériques.
-
-Les ambiguïtés utilisent plus précisément \texttt{AmbiguityCache} et
-\texttt{AmbiguityDriver}. Une clé constituée du satellite, du récepteur et de
-la longueur d'onde garantit qu'une même ambiguïté est partagée par toutes les
-mesures d'un arc. Leur valeur reste exprimée en cycles dans le driver, tandis
-que les covariances configurées en mètres sont converties avec la longueur
-d'onde propre à chaque signal.
-
-Les matrices initiales et les bruits de processus sont fournis au filtre par
-des implémentations de \texttt{CovarianceMatrixProvider}. Le bloc cartésien et
-le bloc des paramètres de mesure sont construits séparément puis assemblés en
-matrice bloc-diagonale. Les variances de marche aléatoire sont multipliées par
-l'intervalle temporel entre deux époques. Cette organisation maintient la
-cohérence entre les unités physiques de la configuration et les unités des
-drivers Orekit.
-
-
-\section{Résolution avec les estimateurs Orekit}
-\label{sec:orekit_solvers}
-
-\subsection{Moindres carrés pondérés}
-
-\texttt{WlsSolver} construit un \texttt{BatchLSEstimator} indépendant pour
-chaque époque. Le \texttt{StaticReceiverPropagatorBuilder} fournit les
-coordonnées cartésiennes estimables, tandis que l'horloge, l'ISB, les
-ambiguïtés et les paramètres troposphériques sont apportés par leurs drivers.
-Les mesures configurées sont transmises à l'estimateur, qui construit les
-résidus et les jacobiennes puis appelle le
-\texttt{LevenbergMarquardtOptimizer} d'Hipparchus.
-
-Le solveur ne forme donc pas explicitement la matrice normale de
-l'équation~\eqref{eq:wls_solution}. Cette matrice résulte des dérivées fournies
-par les mesures et leurs modificateurs. La tolérance, le nombre maximal
-d'itérations et le nombre maximal d'évaluations restent configurables.
-
-Une estimation indépendante par époque peut rendre le ZTD ou les gradients
-peu observables. Le solveur contrôle alors les écarts-types obtenus. Si les
-gradients ne sont pas déterminables, l'époque est recalculée avec le ZTD seul ;
-si ce dernier reste lui-même inobservable, le modèle déterministe est utilisé.
-Cette dégradation contrôlée évite de conserver une solution numérique ayant
-convergé le long d'une direction presque singulière.
-
-\subsection{Adaptation du filtre de Kalman d'Orekit}
-
-\subsubsection{Détournement d'un estimateur de détermination d'orbite}
-
-\texttt{KalmanEstimator} est conçu pour la détermination d'orbite. Il attend
-un \texttt{PropagatorBuilder}, une trajectoire de référence et une matrice de
-transition associée. Réimplémenter un EKF indépendant aurait dupliqué le
-mécanisme de normalisation, le calcul des jacobiennes, le gain et la mise à
-jour de covariance déjà fournis par Orekit et Hipparchus. Le choix a donc été
-d'adapter la notion de propagation au récepteur fixe.
-
-\texttt{StaticReceiverPropagator} conserve une position constante dans
-l'ITRF. À chaque date, il la transforme dans le GCRF et l'encapsule dans un
-\texttt{SpacecraftState}, type attendu par les modèles de mesure. L'orbite
-cartésienne associée n'est pas interprétée comme une orbite physique ; elle
-sert de conteneur compatible avec l'API d'estimation.
-
-Trois classes forment cette couche d'adaptation :
+Dans le cadre de ce projet, les informations extraites du fichier RINEX Observation sont :
 
 \begin{itemize}
-    \item \texttt{StaticReceiverPropagatorBuilder} expose les paramètres
-    cartésiens à l'estimateur et reconstruit un propagateur à partir de leur
-    valeur corrigée ;
-    \item \texttt{StaticReceiverPropagator} impose une position fixe dans le
-    repère terrestre entre deux corrections ;
-    \item \texttt{StaticReceiverHarvester} fournit la matrice de transition.
-    Celle-ci transporte les corrections cartésiennes entre les bases GCRF des
-    deux époques par l'intermédiaire de l'ITRF, sans introduire une dynamique
-    orbitale fictive.
+    \item la date de chaque époque d'observation ;
+    \item l'identifiant des satellites visibles ;
+    \item les mesures de pseudo-distance ;
+    \item les mesures de phase utilisées.
 \end{itemize}
 
-Cette adaptation permet au moteur Orekit de conserver la position dans la
-partie propagée de l'état, tandis que l'horloge, l'ISB, les ambiguïtés et la
-troposphère restent des paramètres de mesure.
+Les mesures Doppler, bien que présentes dans le fichier, ne sont pas exploitées dans cette étude. Les mesures de SNR sont utiles pour exclure les observations de mauvaise qualité.
 
-\subsubsection{État de dimension variable}
+La Figure~\ref{fig:rinex_obs} présente un extrait d'un fichier RINEX Observation.
 
-La dimension d'un \texttt{KalmanEstimator} est fixée lors de sa construction,
-alors que la liste des ambiguïtés change avec la visibilité. L'application
-reconstruit donc l'estimateur lorsque apparaît ou disparaît un satellite, lors
-d'une réinitialisation d'ambiguïté ou lors de la réinitialisation des
-horloges.
+\begin{figure}[htbp]
+    \centering
+    \rule{0.8\linewidth}{5cm} % TODO: remplacer par une capture du fichier RINEX Observation
+    \caption{Extrait d'un fichier RINEX Observation.}
+    \label{fig:rinex_obs}
+\end{figure}
 
-Cette reconstruction ne constitue pas un redémarrage du filtrage.
-\texttt{EkfCovarianceMapper} recopie :
+    \subsection{Fichier RINEX Navigation}
+
+Le fichier RINEX Navigation contient les paramètres nécessaires au calcul de la position des satellites GNSS au cours du temps. Contrairement au fichier d'observation, qui regroupe les mesures effectuées par le récepteur, ce fichier fournit les éphémérides de diffusion transmises par chaque satellite~\cite{rinex304}.
+
+Comme le fichier d'observation, il est composé d'un en-tête suivi d'une succession d'enregistrements, chacun correspondant à un satellite et à une époque de validité des éphémérides.
+
+Chaque enregistrement contient notamment :
 
 \begin{itemize}
-    \item le bloc de position et les corrélations compatibles ;
-    \item les ambiguïtés des satellites dont l'arc reste continu ;
-    \item le bloc troposphérique complet, y compris ses corrélations avec la
-    position et les ambiguïtés ;
-    \item les paramètres d'horloge et d'ISB, sauf lorsqu'une réinitialisation
-    explicite demande de restaurer leur covariance initiale.
+    \item les paramètres orbitaux képlériens du satellite ;
+    \item les coefficients permettant de calculer les corrections orbitales ;
+    \item les paramètres de correction de l'horloge du satellite ;
+    \item différents paramètres relatifs à la santé du satellite et au système GNSS considéré.
 \end{itemize}
 
-Une nouvelle ambiguïté reçoit sa variance initiale. Après un saut, seule la
-variance de l'ambiguïté concernée est restaurée. Ce remappage est nécessaire
-pour conserver l'information accumulée malgré la dimension variable du
-problème GNSS.
+À partir de ces informations, il est possible de calculer, pour chaque époque d'observation, la position du satellite dans le repère ECEF ainsi que son biais d'horloge. Ces grandeurs interviennent directement dans les modèles d'observation des pseudo-distances et des mesures de phase.
 
-\subsubsection{Traitement d'une époque}
+Dans cette étude, les positions et les biais d'horloge des satellites sont déterminés à partir des éphémérides de diffusion contenues dans le fichier RINEX Navigation.
 
-\texttt{EkfSolver} orchestre chaque époque selon l'ordre suivant :
+La Figure~\ref{fig:rinex_nav} présente un extrait d'un fichier RINEX Navigation.
 
-\begin{enumerate}
-    \item construire les satellites valides et contrôler le GDOP ;
-    \item détecter les sauts de cycle et préparer les ambiguïtés ;
-    \item construire les phases puis les codes avec leurs modificateurs ;
-    \item réestimer par code l'horloge et l'ISB lorsque leur réinitialisation
-    est prévue ;
-    \item reconstruire l'estimateur si la structure de l'état a changé ;
-    \item évaluer les filtres de résidus avec l'état prédit ;
-    \item regrouper les mesures acceptées dans une
-    \texttt{MultiplexedMeasurement} et exécuter une mise à jour EKF unique ;
-    \item enregistrer l'état, sa covariance et les ambiguïtés.
-\end{enumerate}
-
-Le regroupement des observations d'une même date évite de propager le
-récepteur entre deux mesures simultanées. Le calcul du gain, de l'innovation
-et de la covariance corrigée reste entièrement réalisé par
-\texttt{KalmanEstimator}, qui s'appuie sur
-\texttt{ExtendedKalmanFilter} d'Hipparchus.
+\begin{figure}[htbp]
+    \centering
+    \rule{0.8\linewidth}{5cm} % TODO: remplacer par une capture du fichier RINEX Navigation
+    \caption{Extrait d'un fichier RINEX Navigation.}
+    \label{fig:rinex_nav}
+\end{figure}
 
 
-\section{Sorties, traçabilité et limites}
-\label{sec:implementation_outputs}
 
-Les deux solveurs produisent un fichier CSV de structure commune contenant la
-date, le nombre de satellites, la position ECEF et géodétique, l'horloge, les
-erreurs ENU, les écarts-types, l'ISB et les paramètres troposphériques. Lorsque
-la phase est utilisée, un second fichier enregistre les ambiguïtés par
-satellite. Le chemin de sortie encode le jour, la station, le mode
-atmosphérique, les constellations, le solveur et le type d'éphémérides. Cette
-convention rend chaque résultat traçable jusqu'à sa configuration.
+\section{Modèles de correction} \label{correction}
 
-L'architecture conserve plusieurs limites explicites. Le propagateur décrit
-une station statique ; un traitement cinématique nécessiterait un autre modèle
-d'évolution. Le support multi-constellation est opérationnel pour GPS et
-Galileo, avec GPS comme référence temporelle ; l'ajout d'une constellation
-exigerait un nouvel ISB et la validation de ses conventions de signaux et
-d'horloge. Enfin, la reconstruction de l'EKF est une adaptation imposée par la
-dimension fixe du filtre Orekit. Elle est isolée dans le gestionnaire d'état et
-le remappeur de covariance afin de ne pas contaminer les modèles de mesure.
+Cette section présente les principaux modèles de correction appliqués aux observations GNSS dans ce travail. Pour chaque source d'erreur, le principe physique est rappelé avant de décrire le modèle retenu et son implémentation dans Orekit. Les corrections considérées sont :
 
-Au total, l'implémentation repose sur Orekit pour les opérations génériques et
-sensibles numériquement : temps, repères, propagation GNSS, interpolation des
-produits précis, combinaisons, dérivées et estimation. Le code propre porte sur
-la sémantique du traitement au sol : choix des observables, assemblage des
-corrections, paramètres multi-constellation, continuité des ambiguïtés et
-adaptation du filtre de détermination d'orbite. Cette frontière limite la
-duplication de modèles validés tout en laissant explicites les choix propres au
-positionnement PPP développé.
+\begin{itemize}
+    \item biais d'horloge des satellites et du récepteur ;
+    \item effets géométriques et relativistes (Sagnac, Shapiro) ;
+    \item retard troposphérique ;
+    \item retard ionosphérique.
+\end{itemize}
+
+Les corrections de centre de phase des antennes (PCO, PCV, enroulement de phase) sont nécessaires à l'échelle centimétrique et sont présentées au chapitre~\ref{precise_point_positioning}.
+
+Les observations corrigées constituent ensuite les entrées des algorithmes d'estimation.
+
+\subsection{Horloges}
+
+L'un des principaux termes affectant les observations GNSS provient des imperfections des horloges embarquées à bord des satellites et de celle du récepteur. Ces décalages temporels se traduisent directement par des erreurs de distance de l'ordre de
+
+\[
+\Delta \rho = c\,\Delta t,
+\]
+
+où $c$ est la vitesse de la lumière. À titre d'exemple, une erreur d'une microseconde correspond à une erreur de distance d'environ $300$ m.
+
+\subsubsection{Horloge satellite}
+
+Les satellites GNSS sont équipés d'horloges atomiques très stables, mais celles-ci présentent malgré tout un biais et une dérive qui évoluent au cours du temps. Les paramètres permettant de modéliser cette évolution sont transmis dans le message de navigation et figurent dans le fichier RINEX Navigation.
+
+Pour chaque satellite, le biais d'horloge est modélisé par un polynôme du second ordre~\cite{isgps200n} :
+
+\begin{align}
+\delta t_{\mathrm{poly}}^s(t)
+=
+a_{f0}^s
++
+a_{f1}^s(t-t_{oc}^s)
++
+a_{f2}^s(t-t_{oc}^s)^2,
+\end{align}
+
+où
+
+\begin{itemize}
+    \item $t$ est l'instant considéré ;
+    \item $t_{oc}^s$ est l'époque de référence des paramètres d'horloge du
+    satellite $s$ ;
+    \item $a_{f0}^s$, $a_{f1}^s$ et $a_{f2}^s$ sont respectivement le biais,
+    la dérive et la dérive seconde de l'horloge. Ces coefficients sont fournis
+    dans le fichier RINEX Navigation.
+\end{itemize}
+
+À cette modélisation s'ajoute une correction relativiste liée à l'excentricité de l'orbite du satellite~\cite{ashby2003}, donnée par
+
+\begin{align}
+\Delta t_{\mathrm{rel}}^s
+=
+-\frac{2}{c^2}\,
+\mathbf r^s \cdot \mathbf v^s
+=
+-2\frac{\sqrt{\mu a}\,e}{c^2}\,\sin E,
+\end{align}
+
+avec :
+\begin{itemize}
+    \item $\mathbf r^s$ et $\mathbf v^s$ respectivement la position et la
+    vitesse du satellite $s$ ;
+    \item $\mu$  la constante gravitationnelle standard de la Terre ;
+    \item $a$ le demi-grand axe de l'orbite ;
+    \item $e$ son excentricité ;
+    \item $E$ l'anomalie excentrique.
+\end{itemize}
+
+Le biais physique de l'horloge satellite est obtenu en combinant le polynôme
+diffusé et la correction relativiste :
+
+\begin{align}
+\delta t^s(t) = \delta t_{\mathrm{poly}}^s(t)
++ \Delta t_{\mathrm{rel}}^s.
+\label{eq:broadcast_satellite_clock}
+\end{align}
+
+avec :
+
+\begin{itemize}
+    \item $\delta t^s$ le biais d'horloge du satellite $s$ par rapport au
+    temps du système ;
+    \item $\delta t_{\mathrm{poly}}^s$ le terme polynomial diffusé ;
+    \item $\Delta t_{\mathrm{rel}}^s$ la correction relativiste liée à
+    l'excentricité orbitale.
+\end{itemize}
+
+À cela s'ajoute, dans certains cas, un terme de \textit{Total Group Delay}
+(TGD), diffusé dans le message de navigation~\cite{isgps200n}. Il représente un biais de groupe propre au signal de code. Pour une
+convention de type GPS, le biais d'horloge apparent associé à la fréquence
+$f_i$ s'écrit
+
+\begin{align}
+\delta t_i^s
+&=
+\delta t^s-\gamma_i\,\delta t_{\mathrm{TGD}}^s,
+&
+\gamma_i
+&=
+\frac{f_1^2}{f_i^2}.
+\label{eq:tgd_signal_clock}
+\end{align}
+
+avec :
+
+\begin{itemize}
+    \item $\delta t_i^s$ le biais apparent utilisé pour l'observation de code
+    sur la fréquence $i$ ;
+    \item $\delta t_{\mathrm{TGD}}^s$ le TGD diffusé par le satellite $s$ ;
+    \item $\gamma_i$ le facteur de changement de fréquence.
+\end{itemize}
+
+Le nom du paramètre, sa fréquence de référence et son signe dépendent de la
+constellation : Galileo diffuse notamment des BGD~\cite{galileoOsSisIcd21}. Le TGD ou le BGD doit donc
+être appliqué selon le signal de code utilisé. Il ne s'applique pas comme un
+terme d'horloge commun à la phase. Avec des produits précis CLK et BIA, les
+conventions des horloges et des biais observables remplacent ce traitement
+diffusé.
+
+\subsubsection{Horloge récepteur}
+
+Le biais d'horloge du récepteur, quant à lui, est inconnu et ne peut être corrigé a priori. Il constitue donc un paramètre supplémentaire dans le vecteur d'état, estimé conjointement avec les coordonnées du récepteur au cours de la résolution.
+
+\subsection{Corrections géométriques et relativistes}
+
+Les modèles d'observation présentés au chapitre précédent supposent une propagation rectiligne du signal entre le satellite et le récepteur. En réalité, la rotation de la Terre au cours du temps de propagation ainsi que les effets relativistes modifient légèrement la longueur apparente du trajet parcouru par le signal. Bien que faibles devant la distance satellite-récepteur, ces effets doivent être pris en compte dans les applications de positionnement de précision.
+
+\subsubsection{Effet Sagnac}\label{sagnac}
+
+Cet effet découle de la rotation terrestre pendant la propagation du signal et
+de la transformation entre repères inertiel et terrestre~\cite{ashby2003}.
+
+Pendant le temps nécessaire à la propagation du signal GNSS, de l'ordre de 70 ms, la Terre poursuit sa rotation autour de son axe. Le satellite émet donc son signal dans une position exprimée dans un repère terrestre qui a légèrement tourné lorsque le signal est reçu. Si cette rotation est négligée, une erreur pouvant atteindre plusieurs dizaines de mètres apparaît sur la distance géométrique.
+
+La correction de Sagnac s'écrit
+
+\begin{align}
+\delta_{\mathrm{Sagnac},r}^s
+=
+\frac{1}{c} (\boldsymbol\omega_E \times \mathbf r^s)\cdot\mathbf r_r
+=
+\frac{\omega_E}{c}
+\left(
+x^s y_r
+-
+y^s x_r
+\right),
+\end{align}
+
+où
+
+\begin{itemize}
+    \item $\mathbf r^s$ et $\mathbf r_r$ sont respectivement les vecteurs position du satellite et du récepteur dans le repère terrestre ;
+    \item $\boldsymbol\omega_E$ est le vecteur de rotation de la Terre ;
+    \item $(x^s,y^s)$ sont les coordonnées du satellite dans le repère terrestre ;
+    \item $(x_r,y_r)$ sont les coordonnées du récepteur ;
+    \item $c$ est la vitesse de la lumière.
+\end{itemize}
+
+\subsubsection{Retard de Shapiro}\label{shapiro}
+
+La théorie de la relativité générale prédit qu'un signal électromagnétique ne se propage pas dans un espace parfaitement euclidien lorsque celui-ci est soumis au champ gravitationnel d'un corps massif. Le potentiel gravitationnel terrestre induit ainsi un très léger allongement du trajet optique, appelé \textit{retard de Shapiro}~\cite{ashby2003}.
+
+La correction est donnée par
+
+\begin{align}
+\delta_{\mathrm{Shapiro},r}^s
+=
+\frac{2\mu_E}{c^2}
+\ln
+\left(
+\frac{R^s+R_r+\rho_r^s}
+     {R^s+R_r-\rho_r^s}
+\right),
+\end{align}
+
+où
+
+\begin{itemize}
+    \item $\mu_E$ est le paramètre gravitationnel terrestre ;
+    \item $R^s = \|\mathbf r^s\|$ est la distance entre le centre de la Terre et le satellite ;
+    \item $R_r = \|\mathbf r_r\|$ est la distance entre le centre de la Terre et le récepteur ;
+    \item $\rho_r^s = \|\mathbf r^s - \mathbf r_r\|$ est la distance géométrique entre le satellite et le récepteur.
+\end{itemize}
+
+Cette correction reste faible, de l'ordre de quelques centimètres, mais devient nécessaire dans les applications de positionnement centimétrique telles que le PPP.
+
+\subsection{Modélisation de la troposphère}
+
+Les signaux GNSS traversent la troposphère avant d'atteindre le récepteur.
+Cette couche de l'atmosphère, composée principalement d'air sec et de vapeur
+d'eau, possède un indice de réfraction légèrement supérieur à celui du vide.
+La vitesse de propagation des ondes électromagnétiques y est donc légèrement
+réduite, ce qui se traduit par un retard de propagation qui affecte directement
+les mesures de pseudo-distance et de phase.
+
+Le retard troposphérique dépend principalement de la pression, de la
+température et de la teneur en vapeur d'eau de l'atmosphère. Il est
+classiquement décomposé selon le modèle de Saastamoinen~\cite{saastamoinen1972} en une composante hydrostatique (\textit{dry}),
+relativement stable, et une composante humide (\textit{wet}), plus variable.
+Le retard troposphérique au zénith, appelé \textit{Zenith Total Delay} (ZTD),
+s'écrit ainsi
+\begin{align}
+ZTD = ZHD + ZWD,
+\label{eq:ztd_decomposition}
+\end{align}
+où $ZHD$ (\textit{Zenith Hydrostatic Delay}) désigne le retard hydrostatique
+au zénith et $ZWD$ (\textit{Zenith Wet Delay}) le retard humide au zénith.
+
+\subsubsection{Modèle de base sans gradients}
+
+Lorsque l'atmosphère est supposée symétrique autour du récepteur, le retard ne
+dépend que de l'élévation du satellite. Le modèle de base s'écrit
+
+\begin{align}
+T_{r,0}^s(E_r^s)
+=
+M_{\mathrm{dry}}(E_r^s)ZHD
++
+M_{\mathrm{wet}}(E_r^s)ZWD.
+\label{eq:tropo_no_grad}
+\end{align}
+
+avec :
+
+\begin{itemize}
+    \item $T_{r,0}^s$ le retard troposphérique sans gradients ;
+    \item $E_r^s$ l'angle d'élévation du satellite $s$ vu par le récepteur
+    $r$ ;
+    \item $M_{\mathrm{dry}}$ et $M_{\mathrm{wet}}$ les fonctions de projection
+    des composantes hydrostatique et humide ;
+    \item $ZHD$ et $ZWD$ les retards hydrostatique et humide au zénith.
+\end{itemize}
+
+Les fonctions de projection permettent de relier les retards mesurés selon
+la direction du satellite aux retards correspondants au zénith. Dans cette
+étude, les fonctions de projection du modèle \textit{Niell Mapping Function}~\cite{niell1996}
+(NMF) sont utilisées. Leur formulation détaillée est présentée en
+annexe~\ref{annexe:nmf}.
+
+La composante hydrostatique représente la majeure partie du retard
+troposphérique et varie relativement lentement. Elle peut être calculée à
+partir de la pression atmosphérique au niveau du récepteur. Une expression
+couramment utilisée est
+\begin{align}
+ZHD
+=
+\frac{0.0022768\,P}
+{1-0.00266\cos(2\varphi)-2.8\times10^{-7}h},
+\label{eq:zhd}
+\end{align}
+où $P$ est la pression atmosphérique exprimée en hPa, $\varphi$ la latitude
+géographique du récepteur et $h$ son altitude.
+
+À l'inverse, la composante humide $ZWD$ est fortement variable dans le temps
+et plus difficile à déterminer à partir d'un modèle atmosphérique
+déterministe. Elle est donc introduite comme un paramètre supplémentaire du
+problème d'estimation et déterminée conjointement avec les autres inconnues
+du positionnement.
+
+Si le vecteur d'état utilisé pour le positionnement est initialement défini
+par
+\begin{align}
+\mathbf x
+=
+\begin{bmatrix}
+\mathbf r_r^{\mathsf T} & c\delta t_r &
+B_r^1 & \ldots & B_r^n
+\end{bmatrix}^{\mathsf T},
+\end{align}
+l'estimation de $ZWD$ conduit à l'étendre sous la forme
+\begin{align}
+\mathbf x
+=
+\begin{bmatrix}
+\mathbf r_r^{\mathsf T} & c\delta t_r & ZWD &
+B_r^1 & \ldots & B_r^n
+\end{bmatrix}^{\mathsf T}.
+\label{eq:state_zwd}
+\end{align}
+
+Le paramètre $ZWD$ constitue ainsi une inconnue supplémentaire du système.
+
+\subsubsection{Modèle avec gradients horizontaux}
+
+La dépendance azimutale est représentée par deux gradients horizontaux nord et
+est selon le modèle de Chen et Herring~\cite{chenHerring1997}.
+
+En réalité, les variations horizontales de pression, de température et
+d'humidité peuvent introduire une asymétrie du retard troposphérique autour
+du récepteur. Le retard peut alors présenter une dépendance à l'azimut du
+satellite, qui n'est pas représentée par le modèle
+de l'équation~\eqref{eq:tropo_no_grad}.
+
+Cette asymétrie est ajoutée au modèle de base au moyen de deux paramètres de
+gradient horizontal, respectivement orientés selon les directions nord et
+est :
+\begin{align}
+T_r^s(E_r^s,A_r^s)
+=
+M_{\mathrm{dry}}(E_r^s)ZHD
++
+M_{\mathrm{wet}}(E_r^s)ZWD
++
+\underbrace{
+M_{\mathrm{grad}}(E_r^s)
+\left(
+G_N\cos A_r^s + G_E\sin A_r^s
+\right)
+}_{\text{terme de gradient}},
+\label{eq:tropo_grad}
+\end{align}
+
+avec :
+
+\begin{itemize}
+    \item $A_r^s$ l'azimut du satellite ;
+    \item $G_N$ et $G_E$ les composantes nord et est du gradient
+    troposphérique ;
+    \item $M_{\mathrm{grad}}$ la fonction de projection associée ;
+\end{itemize}
+
+La formulation détaillée de la fonction de projection utilisée pour les gradients est
+présentée en annexe~\ref{annexe:nmf}.
+
+L'introduction de ces deux paramètres nécessite naturellement une extension
+du vecteur d'état. Celui-ci devient
+\begin{align}
+\mathbf x
+=
+\begin{bmatrix}
+\mathbf r_r^{\mathsf T} & c\delta t_r & ZWD & G_N & G_E &
+B_r^1 & \ldots & B_r^n
+\end{bmatrix}^{\mathsf T}.
+\label{eq:state_zwd_grad}
+\end{align}
+
+\subsection{Modélisation de la ionosphère}
+
+Avant d'atteindre le récepteur, les signaux GNSS traversent également
+l'ionosphère, région de la haute atmosphère contenant une importante
+concentration d'électrons libres. La présence de ces électrons modifie
+l'indice de réfraction du milieu et affecte ainsi la propagation des ondes
+électromagnétiques. Contrairement au retard troposphérique, cet effet est
+dispersif : son amplitude dépend de la fréquence du signal et est, au
+premier ordre, inversement proportionnelle au carré de celle-ci~\cite{hauschild2017observations}.
+
+Pour une fréquence $f_i$, le retard ionosphérique entre le satellite $s$ et le
+récepteur $r$ peut
+ainsi être exprimé sous la forme
+
+\begin{align}
+I_{r,i}^s
+\propto
+\frac{1}{f_i^2}.
+\end{align}
+
+L'effet sur la mesure de phase est de signe opposé à celui observé sur le
+code. Ainsi, l'ionosphère introduit un retard sur les pseudo-distances et
+une avance apparente sur les mesures de phase.
+
+Deux approches sont considérées dans cette étude. Pour le positionnement
+monofréquence, le retard ionosphérique est modélisé à l'aide du modèle de
+Klobuchar. Pour le positionnement bi-fréquence, l'effet ionosphérique du
+premier ordre est supprimé par l'utilisation d'une combinaison
+\textit{iono-free}.
+
+\subsubsection{Modèle de Klobuchar}
+
+Le modèle de Klobuchar est un modèle empirique de l'ionosphère conçu
+initialement pour fournir une correction de propagation à faible coût
+calculatoire aux utilisateurs GPS monofréquence. Il constitue le modèle
+ionosphérique diffusé directement dans le message de navigation GPS~\cite{klobuchar1987} et
+permet d'obtenir une estimation du retard ionosphérique sur la fréquence
+L1.
+
+Pour une observation donnée, le modèle utilise comme entrées la latitude et
+la longitude approximatives du récepteur, l'élévation et l'azimut du
+satellite, le temps GPS ainsi que les huit coefficients $\alpha_0,\ldots,
+\alpha_3$ et $\beta_0,\ldots,\beta_3$ transmis dans le message de navigation.
+Ces coefficients permettent de caractériser l'amplitude et la période de la
+variation temporelle du retard ionosphérique. 
+
+Le principe du modèle consiste à représenter l'ionosphère par une couche
+mince située à une altitude conventionnelle, puis à déterminer le point
+d'intersection du signal avec cette couche, appelé \textit{Ionospheric
+Pierce Point} (IPP). Le retard vertical estimé à cet endroit est ensuite
+projeté sur la direction du satellite afin d'obtenir le retard
+ionosphérique selon la ligne de visée.
+
+Le modèle est principalement adapté au positionnement monofréquence et
+ne constitue pas une modélisation suffisamment précise pour les applications
+de positionnement de haute précision.
+
+Les différentes étapes de calcul ainsi que les équations détaillées du
+modèle sont présentées en annexe~\ref{Klobuchar}.
+
+\subsubsection{Combinaison iono-free}
+
+L'utilisation de deux fréquences permet de réduire fortement l'influence
+de l'ionosphère sans avoir recours à un modèle externe. En effet, le retard
+ionosphérique du premier ordre étant proportionnel à $1/f^2$, il est
+possible de construire une combinaison linéaire des observations sur deux
+fréquences $f_1$ et $f_2$ dans laquelle ce terme s'annule~\cite{hauschild2017combinations}.
+
+Pour les mesures de code $P_{r,1}^s$ et $P_{r,2}^s$, la combinaison
+\textit{iono-free} est définie par
+
+\begin{align}
+P_{r,\mathrm{IF}}^s
+=
+\frac{
+f_1^2P_{r,1}^s-f_2^2P_{r,2}^s
+}{
+f_1^2-f_2^2
+}.
+\label{eq:code_iono_free}
+\end{align}
+
+Pour les mesures de phase exprimées en mètres, la combinaison s'écrit de
+manière analogue :
+
+\begin{align}
+L_{r,\mathrm{IF}}^s
+=
+\frac{
+f_1^2L_{r,1}^s-f_2^2L_{r,2}^s
+}{
+f_1^2-f_2^2
+}.
+\label{eq:phase_iono_free}
+\end{align}
+
+Considérons par exemple les modèles simplifiés
+
+\begin{align}
+P_{r,i}^s
+&=
+\mathcal G_r^s
++
+I_{r,i}^s
++
+\varepsilon_{P,r,i}^s,
+\\
+L_{r,i}^s
+&=
+\mathcal G_r^s
+-
+I_{r,i}^s
++
+B_{r,i}^s
++
+\varepsilon_{L,r,i}^s,
+\end{align}
+
+avec le terme non dispersif commun
+
+\begin{align}
+\mathcal G_r^s
+&=
+\rho_r^s
++c\left(\delta t_r-\delta t^s\right)
++T_r^s
++\delta_{\mathrm{Sagnac},r}^s
++\delta_{\mathrm{Shapiro},r}^s,
+\label{eq:common_nondispersive_term}
+\end{align}
+
+et le retard ionosphérique du premier ordre
+
+\begin{align}
+I_{r,i}^s
+=
+\frac{K_r^s}{f_i^2},
+\qquad
+K_r^s=40{,}3\,\mathrm{STEC}_r^s,
+\end{align}
+
+avec :
+
+\begin{itemize}
+    \item $\mathcal G_r^s$ l'ensemble des termes communs au code et à la
+    phase et indépendants de la fréquence dans ce modèle simplifié ;
+    \item $B_{r,i}^s=\lambda_iN_{r,i}^s$ l'ambiguïté métrique de phase ;
+    \item $\varepsilon_{P,r,i}^s$ et $\varepsilon_{L,r,i}^s$ les erreurs
+    résiduelles de code et de phase ;
+    \item $\mathrm{STEC}_r^s$ le contenu électronique total intégré le long
+    du trajet satellite--récepteur, exprimé en électrons par mètre carré ;
+    \item $K_r^s=40{,}3\,\mathrm{STEC}_r^s$ le coefficient ionosphérique du
+    premier ordre, indépendant de la fréquence $f_i$. Le facteur $40{,}3$
+    est exprimé en $\mathrm{m^3\,s^{-2}}$ lorsque $I_{r,i}^s$ est en mètres,
+    $\mathrm{STEC}_r^s$ en électrons par mètre carré et $f_i$ en hertz.
+\end{itemize}
+
+En substituant cette expression dans l'équation~\eqref{eq:code_iono_free},
+le terme ionosphérique devient
+
+\begin{align}
+\frac{
+f_1^2I_{r,1}^s-f_2^2I_{r,2}^s
+}{
+f_1^2-f_2^2
+}
+&=
+\frac{
+f_1^2\frac{K_r^s}{f_1^2}
+-
+f_2^2\frac{K_r^s}{f_2^2}
+}{
+f_1^2-f_2^2
+}
+\\
+&=
+0.
+\end{align}
+
+Le même raisonnement s'applique à la combinaison des mesures de phase,
+avec le signe opposé du terme ionosphérique. Ainsi, la combinaison
+iono-free élimine exactement, au premier ordre, l'effet
+ionosphérique.
+
+Il convient toutefois de noter que l'annulation n'est exacte que pour le
+terme ionosphérique du premier ordre. Les effets ionosphériques d'ordre
+supérieur ne sont pas parfaitement éliminés et peuvent subsister dans les
+applications de très haute précision~\cite{bassiriHajj1993}.
+
+Cette combinaison n'est cependant pas sans contrepartie : les coefficients appliqués aux observations amplifient également leur bruit de mesure. La variance de la combinaison doit donc être prise en compte lors de la pondération des observations dans les algorithmes d'estimation.
+
+\subsection{Traitement multi-constellation}
+
+L'utilisation de plusieurs constellations augmente le nombre de satellites
+disponibles et donc le nombre d'équations d'observation. Elle améliore la
+géométrie, la disponibilité de la solution et sa robustesse lorsque le ciel est
+partiellement masqué. Les mesures ne peuvent cependant pas être regroupées
+directement : les horloges satellites sont référencées au temps propre de leur
+constellation et les chaînes de réception peuvent introduire des retards
+matériels différents selon le système.
+
+Pour Galileo et GPS, le message de navigation fournit le décalage déterministe
+entre les deux échelles de temps, appelé GGTO (\textit{Galileo-to-GPS Time
+Offset})~\cite{galileoOsSisIcd21}. Il est modélisé par
+
+\begin{align}
+\Delta t_{\mathrm{GGTO}}(t)
+=
+a_0+a_1\left(t-t_{\mathrm{ref}}\right).
+\label{eq:ggto}
+\end{align}
+
+avec :
+
+\begin{itemize}
+    \item $\Delta t_{\mathrm{GGTO}}(t)$ le décalage Galileo--GPS à l'époque
+    $t$, en secondes ;
+    \item $a_0$ le décalage à l'époque de référence, en secondes ;
+    \item $a_1$ sa dérive temporelle, en secondes par seconde ;
+    \item $t_{\mathrm{ref}}$ l'époque de référence du message.
+\end{itemize}
+
+Ces trois paramètres sont extraits du fichier RINEX Navigation. 
+Avec la convention retenue, une observation Galileo
+exprimée en mètres est ramenée au temps GPS selon
+
+\begin{align}
+O_{r,i}^{s,\mathrm{GPS}}(t)
+=
+O_{r,i}^{s,\mathrm{GAL}}(t)
+-c\,\Delta t_{\mathrm{GGTO}}(t).
+\label{eq:ggto_observation_correction}
+\end{align}
+
+avec :
+
+\begin{itemize}
+    \item $O_{r,i}^{s,\mathrm{GAL}}$ l'observation Galileo avant correction,
+    qu'il s'agisse du code ou de la phase exprimée en mètres ;
+    \item $O_{r,i}^{s,\mathrm{GPS}}$ la même observation ramenée à l'échelle
+    de temps GPS ;
+    \item $c$ la vitesse de la lumière.
+\end{itemize}
+
+Cette correction connue aligne les échelles de temps, mais elle ne supprime
+pas les retards différentiels propres au récepteur ni les écarts résiduels
+entre systèmes. Une unique inconnue d'horloge récepteur reste donc
+insuffisante.
+
+Une constellation est choisie comme référence, ici GPS. Pour toute autre
+constellation $q$, on introduit un biais inter-systèmes, ou ISB
+(\textit{Inter-System Bias}), exprimé en mètres :
+
+\begin{align}
+c\delta t_{r,q}
+&=
+c\delta t_r+\mathrm{ISB}_{r}^{q},
+&
+\mathrm{ISB}_{r}^{\mathrm{GPS}}
+&=0,
+\\
+c\left(\delta t_{r,q}-\delta t^{s,q}\right)
+&=
+c\left(\delta t_r-\delta t^{s,q}\right)
++\mathrm{ISB}_{r}^{q}.
+\label{eq:isb_definition}
+\end{align}
+
+avec :
+
+\begin{itemize}
+    \item $c\delta t_{r,q}$ le biais d'horloge récepteur effectif pour les
+    observations de la constellation $q$ ;
+    \item $c\delta t_r$ le biais d'horloge commun, défini par rapport au temps
+    GPS ;
+    \item $\delta t^{s,q}$ le biais de l'horloge du satellite $s$, exprimé par
+    rapport à l'échelle de temps de la constellation $q$ ;
+    \item $\mathrm{ISB}_{r}^{q}$ le décalage de la constellation $q$ par
+    rapport à la référence. Il regroupe l'écart résiduel entre les échelles de
+    temps et les retards différentiels du récepteur.
+\end{itemize}
+
+Le terme $\mathrm{ISB}_{r}^{q}$ est ajouté au modèle calculé des observations
+de la constellation concernée. Il est inconnu et doit être estimé avec la
+position et l'horloge. Pour un traitement GPS--Galileo, le vecteur d'état
+minimal contenant des ambiguïtés devient par exemple
+
+\begin{align}
+\mathbf x
+=
+\begin{bmatrix}
+\mathbf r_r^{\mathsf T} &
+c\delta t_r &
+\mathrm{ISB}_{r}^{\mathrm{GAL}} &
+B_r^1 & \cdots & B_r^n
+\end{bmatrix}^{\mathsf T}.
+\label{eq:multiconstellation_state}
+\end{align}
+
+
+Avec plus de deux constellations, un ISB indépendant est ajouté pour chaque
+système autre que la référence. Chaque
+nouvelle constellation ajoute ainsi une inconnue d'ISB dans le vecteur d'état~\cite{odijkTeunissen2013}.
+
+\section{Sélection et rejet des observations}
+\label{sec:observation_rejection}
+
+Cette section détaille les mécanismes de détection des observations invalides
+ou insuffisamment fiables. Ils empêchent qu'un satellite défaillant, un signal
+dégradé, une mauvaise géométrie ou une mesure aberrante ne détériore la
+solution. Les contrôles sont appliqués successivement avant ou pendant
+l'estimation ; une observation rejetée n'est pas utilisée lors de la résolution.
+
+\subsection{Contrôles préalables des satellites et des signaux}
+
+\subsubsection{État de santé du satellite}
+
+Le message de navigation contient un indicateur de santé signalant si le
+satellite et les données qu'il diffuse peuvent être utilisés. Pour les
+éphémérides diffusées GPS et Galileo, seules celles dont l'indicateur vaut zéro,
+c'est-à-dire déclarées saines, sont retenues~\cite{isgps200n,galileoOsSisIcd21}.
+Le critère de rejet sur l'état de santé s'écrit :
+
+\begin{align}
+    Health Flag \neq 0
+    \quad\Longrightarrow\quad
+    \text{satellite rejeté}.
+\end{align}
+
+\subsubsection{Rapport signal sur bruit}
+
+L'observable de type \texttt{S} du fichier RINEX quantifie généralement le
+rapport entre la puissance de la porteuse et la densité spectrale du bruit,
+noté $C/N_0$ et exprimé en $\mathrm{dB\,Hz}$. Une valeur faible indique une
+mesure plus sensible au bruit, aux multitrajets et aux pertes de verrouillage.
+
+Le critère de sélection s'écrit
+
+\begin{align}
+\mathrm{SNR}_{r,i}^s
+<
+\mathrm{SNR}_{\min}
+\quad\Longrightarrow\quad
+\text{observable rejetée}.
+\label{eq:snr_threshold}
+\end{align}
+
+avec :
+
+\begin{itemize}
+    \item $\mathrm{SNR}_{r,i}^s$ le rapport signal sur bruit du satellite $s$ vue depuis le récepteur $r$ ;
+    \item $\mathrm{SNR}_{\min}$ le seuil minimal admissible.
+\end{itemize}
+
+La valeur utilisée est $\mathrm{SNR}_{\min}=30\,\mathrm{dB\,Hz}$.
+
+\subsubsection{Masque d'élévation}
+
+L'élévation $E_r^s$ est l'angle du satellite au-dessus de l'horizon local du
+récepteur. Aux faibles élévations, le trajet atmosphérique est plus long, ce qui amplifie le bruit.
+
+Le masque d'élévation est défini par le critère
+
+\begin{align}
+E_r^s < E_{\min}
+\quad\Longrightarrow\quad
+\text{satellite rejeté}.
+\label{eq:elevation_mask}
+\end{align}
+
+avec :
+
+\begin{itemize}
+    \item $E_r^s$ l'élévation du satellite $s$ vue depuis le récepteur $r$ ;
+    \item $E_{\min}$ le seuil minimal d'élévation.
+\end{itemize}
+
+La valeur utilisée est $E_{\min}=15^\circ$.
+
+\subsubsection{Disponibilité des observables}
+
+Les observations nécessaires dépendent du mode de traitement. Le code de la
+première fréquence doit toujours être disponible. Une solution
+iono-free exige les deux codes ; lorsque la phase est utilisée, les
+phases correspondantes doivent également être présentes et finies. Un
+satellite auquel il manque l'une des observables requises est exclu avant la
+construction des mesures.
+
+\subsection{Rejet sur le GDOP}
+
+Le \textit{Geometric Dilution of Precision} (GDOP) mesure l'amplification des
+erreurs de mesure par la géométrie satellite--récepteur. À partir de la matrice
+géométrique $\mathbf G$ définie par l'équation~\eqref{eq:gnss_design_matrix},
+qui contient les dérivées relatives aux trois coordonnées et au biais
+d'horloge, on définit
+
+\begin{align}
+\mathbf Q_g
+&=
+\left(\mathbf G^{\mathsf T}\mathbf G\right)^{-1},
+&
+\mathrm{GDOP}
+&=
+\sqrt{\operatorname{tr}\left(\mathbf Q_g\right)}.
+\label{eq:gdop_definition}
+\end{align}
+
+Cette définition suit le modèle géométrique classique du positionnement
+GNSS~\cite{odijk2017positioning}.
+
+avec :
+
+\begin{itemize}
+    \item $\mathbf G$ la matrice géométrique introduite au chapitre précédent ;
+    \item $\mathbf Q_g$ la matrice décrivant l'effet de la géométrie sur les
+    inconnues ;
+    \item $\operatorname{tr}(\mathbf Q_g)$ la somme de ses termes diagonaux.
+\end{itemize}
+
+Un GDOP faible correspond à des directions de visée bien réparties. Un GDOP
+élevé indique au contraire une géométrie proche de la singularité, pour
+laquelle de faibles erreurs de mesure peuvent produire une forte erreur de
+position ou d'horloge. La logique de rejet sur le GDOP est la suivante :
+\begin{align}
+\mathrm{GDOP} > \mathrm{GDOP}_{\max}
+\quad\Longrightarrow\quad
+\text{époque rejetée}.
+\label{eq:gdop_threshold}
+\end{align}
+
+
+La valeur utilisée est $\mathrm{GDOP}_{\max}=30$.
+
+Ce test est indépendant du type de résolution utilisé. En cas de rejet,
+on passe à l'époque suivante en rejetant toutes les mesures.
+
+\subsection{Rejet sur les résidus}
+
+Le contrôle des résidus permet de détecter des mesures aberrantes selon les
+principes de validation des modèles d'estimation~\cite{teunissen2017validation}.
+On définit le résidu pré-ajustement $v_j$ de l'observation $j$ par
+
+\begin{align}
+v_j
+=
+y_j-h_j\!\left(\widehat{\mathbf x}_{\mathrm{ref}}\right),
+\label{eq:prefit_residual_rejection}
+\end{align}
+
+avec :
+
+\begin{itemize}
+    \item $y_j$ l'observation $j$ ;
+    \item $\widehat{\mathbf x}_{\mathrm{ref}}$ l'état prédit dans l'EKF ou
+    l'état courant de l'itération dans le WLS ;
+    \item $h_j(\widehat{\mathbf x}_{\mathrm{ref}})$ la valeur calculée de
+    l'observation ;
+    \item $v_j$ le résidu pré-ajustement correspondant.
+\end{itemize}
+
+Les deux critères de rejet sont
+
+\begin{align}
+|v_j|
+&>\eta_{\mathrm{abs}} \quad\Longrightarrow\quad
+\text{observation rejetée}
+\end{align}
+
+\begin{align}
+\frac{|v_j|}{\sigma_j}
+&>\eta_{\mathrm{norm}} \quad\Longrightarrow\quad
+\text{observation rejetée}
+\label{eq:residual_thresholds}
+\end{align}
+
+avec :
+
+\begin{itemize}
+    \item $\eta_{\mathrm{abs}}$ le seuil absolu du résidu ;
+    \item $\sigma_j$ l'écart-type attribué à l'observation ;
+    \item $\eta_{\mathrm{norm}}$ le seuil du résidu normalisé.
+\end{itemize}
+
+Les valeurs utilisées sont $\eta_{\mathrm{abs}}=30\,\mathrm{m}$ et
+$\eta_{\mathrm{norm}}=30$. Le critère absolu s'applique au code et à la phase,
+après conversion éventuelle de celle-ci en mètres. Le critère normalisé ne
+s'applique qu'au code, car
+l'incertitude d'initialisation d'une nouvelle ambiguïté peut produire un résidu
+normalisé élevé sans révéler une mesure fautive.
+
+Dans le WLS, ces tests sont réévalués au cours des itérations et la solution
+n'est conservée que si au moins quatre satellites restent effectivement
+utilisés. Dans l'EKF, ils sont évalués avec l'état prédit et les mesures
+rejetées sont retirées avant la mise à jour.
+
+\section{Moindres carrés pondérés (WLS)}
+\label{sec:wls}
+
+La section~\ref{resolution} a établi le système
+linéarisé~\eqref{eq:stacked_linearized_system} à partir des observations
+corrigées. Les moindres carrés pondérés~\cite{verhagen2017least} recherchent la correction qui rend les résidus
+entre observations et valeurs calculées aussi faibles que possible, tout en
+tenant compte de la précision attribuée à chaque observation. Le critère
+minimisé est $J=\mathbf e^{\mathsf T}\mathbf W\mathbf e$, où
+$\mathbf e=\Delta\mathbf y-\mathbf H_0\Delta\mathbf x$ est le vecteur des
+résidus linéarisés. En notant
+$\Delta\mathbf y=\mathbf y-\mathbf h(\mathbf x_0)$, l'annulation de la dérivée
+de ce critère conduit à
+
+\begin{align}
+\widehat{\Delta\mathbf x}
+&=
+\left(\mathbf H_0^{\mathsf T}\mathbf W\mathbf H_0\right)^{-1}
+\mathbf H_0^{\mathsf T}\mathbf W\Delta\mathbf y,
+\\
+\mathbf W
+&=
+\mathbf R^{-1}.
+\label{eq:wls_solution}
+\end{align}
+
+avec :
+
+\begin{itemize}
+    \item $\widehat{\Delta\mathbf x}$ la correction d'état estimée ;
+    \item $\mathbf W$ la matrice de pondération ;
+    \item $\mathbf R$ la covariance des observations ;
+    \item $\mathbf H_0$ la jacobienne évaluée à l'état courant.
+\end{itemize}
+
+Le choix $\mathbf W=\mathbf R^{-1}$ donne davantage de poids aux observations
+les plus précises. Par exemple, une mesure dont la variance est élevée contribue
+moins à la solution qu'une mesure de faible variance. L'inversion de la matrice
+normale suppose que les paramètres soient observables avec la géométrie et le
+jeu de mesures disponibles.
+
+L'état est mis à jour itérativement selon
+
+\begin{align}
+\mathbf x_{j+1}
+&=
+\mathbf x_j+\widehat{\Delta\mathbf x}_j.
+\label{eq:wls_iteration}
+\end{align}
+
+avec :
+
+\begin{itemize}
+    \item $j$ l'indice d'itération ;
+    \item $\mathbf x_j$ l'état avant mise à jour ;
+    \item $\widehat{\Delta\mathbf x}_j$ la correction calculée à l'itération
+    $j$.
+\end{itemize}
+
+Après chaque mise à jour, les distances et la jacobienne sont recalculées au
+nouvel état. Les paramètres pouvant avoir des unités et des ordres de grandeur
+différents, le critère d'arrêt porte sur la correction mise à l'échelle :
+
+\begin{align}
+\eta_j
+&=
+\max_p\left|
+\frac{\widehat{\Delta x}_{j,p}}{s_p}
+\right|,
+&
+\eta_j<\eta_{\mathrm{WLS}}
+&\quad\Longrightarrow\quad
+\text{convergence}.
+\label{eq:wls_stopping_criterion}
+\end{align}
+
+avec :
+
+\begin{itemize}
+    \item $\widehat{\Delta x}_{j,p}$ la correction du paramètre $p$ à
+    l'itération $j$ ;
+    \item $s_p$ l'échelle associée à ce paramètre ;
+    \item $\eta_j$ la plus grande correction normalisée ;
+    \item $\eta_{\mathrm{WLS}}$ le seuil de convergence.
+\end{itemize}
+
+Une valeur type est $\eta_{\mathrm{WLS}}=10^{-3}$. La résolution est répétée
+jusqu'à satisfaction de ce critère ou jusqu'au nombre maximal d'itérations,
+fixé ici à $j_{\max}=50$. Cette méthode produit une
+solution complète à partir des seules observations de l'époque considérée.
+Elle est donc adaptée à une résolution indépendante époque par époque, mais
+n'exploite pas le fait que la position, les retards atmosphériques ou les
+ambiguïtés évoluent généralement de manière continue. Cette limitation motive
+l'introduction d'un modèle temporel.
+
+\section{Filtre de Kalman étendu (EKF)}
+\label{Kalman}
+
+Le filtre de Kalman étendu est une autre méthode de résolution des équations établies en section~\ref{resolution}.
+Il exploite la continuité temporelle : la solution
+obtenue à une époque devient l'information a priori de l'époque suivante. Il
+combine deux sources d'information. Le modèle d'évolution décrit la manière
+dont l'état est susceptible de changer entre deux époques, tandis que le modèle
+d'observation relie cet état aux mesures GNSS courantes. Leurs incertitudes
+respectives déterminent le poids accordé à la prédiction et aux observations.
+
+L'indice $k$
+désigne désormais l'époque. Un exposant $-$ désignera une quantité prédite,
+avant l'utilisation des observations de cette époque ; l'absence d'exposant
+désignera la quantité corrigée.
+
+\subsection{Initialisation du filtre}
+\label{sec:ekf_initialization}
+
+Le calcul doit commencer avec une estimation initiale
+$\widehat{\mathbf x}_0$ et sa covariance $\mathbf P_0$. Chaque paramètre du
+vecteur d'état doit donc recevoir une valeur initiale, même approximative. Dans
+le cas d'une covariance initiale diagonale,
+
+\begin{align}
+\mathbf P_0
+=
+\operatorname{diag}
+\left(
+\sigma_{x,0}^2,
+\sigma_{y,0}^2,
+\sigma_{z,0}^2,
+\sigma_{c\delta t,0}^2,
+\sigma_{\mathrm{ISB},0}^2,
+\sigma_{B_{r,0}^1}^2,\ldots,
+\sigma_{B_{r,0}^n}^2,
+\sigma_{ZWD,0}^2,\ldots
+\right).
+\label{eq:ekf_initial_covariance}
+\end{align}
+
+avec :
+
+\begin{itemize}
+    \item $\sigma_{x,0}$, $\sigma_{y,0}$ et $\sigma_{z,0}$ les écarts-types
+    initiaux des coordonnées ;
+    \item $\sigma_{c\delta t,0}$ et $\sigma_{\mathrm{ISB},0}$ ceux de
+    l'horloge et, en multi-constellation, de l'ISB ;
+    \item $\sigma_{B_{r,0}^s}$ celui de l'ambiguïté métrique initiale
+    $B_{r,0}^s$ du satellite $s$ ;
+    \item $\sigma_{ZWD,0}$ celui du retard humide zénithal lorsque ce paramètre
+    est estimé ;
+    \item les points de suspension les autres paramètres éventuels, notamment
+    les gradients troposphériques.
+\end{itemize}
+
+La forme diagonale constitue une écriture simplifiée. Lorsque deux paramètres
+sont initialement corrélés, leur covariance doit être placée dans les termes
+hors diagonale de $\mathbf P_0$. 
+
+Les méthodes utilisées pour
+obtenir les valeurs initiales propres au traitement GNSS sont présentées dans
+la section~\ref{sec:ekf_gnss_features}.
+
+\subsection{Modèle d'évolution}
+
+Le modèle suivant exprime l'état courant à partir de l'état précédent :
+
+\begin{align}
+\mathbf x_k
+&=
+\mathbf F_k\mathbf x_{k-1}+\mathbf w_k,
+\\
+\mathbb E[\mathbf w_k]
+&=\mathbf0,
+&
+\mathbb E[\mathbf w_k\mathbf w_k^{\mathsf T}]
+&=\mathbf Q_k.
+\label{eq:kalman_prediction}
+\end{align}
+
+avec :
+
+\begin{itemize}
+    \item $\mathbf x_k$ l'état à l'époque $k$ ;
+    \item $\mathbf F_k$ la matrice de transition entre les époques $k-1$ et
+    $k$ ;
+    \item $\mathbf w_k$ le bruit de processus ;
+    \item $\mathbf Q_k$ la covariance du bruit de processus.
+\end{itemize}
+
+La matrice $\mathbf F_k$ traduit l'évolution déterministe attendue. Pour un
+récepteur statique, les coordonnées sont supposées constantes entre deux
+époques ; leur matrice de transition est donc l'identité. Le bruit de processus
+$\mathbf w_k$ représente les variations que ce modèle idéal ne décrit pas. Sa
+covariance $\mathbf Q_k$ règle la liberté d'évolution accordée à chaque
+paramètre : une faible variance impose une forte continuité, tandis qu'une
+variance plus élevée permet une évolution plus rapide.
+
+\subsection{Modèle d'observation}
+
+À l'époque $k$, le vecteur $\mathbf y_k$ regroupe les observations disponibles.
+La fonction $\mathbf h_k$ calcule les valeurs attendues à partir d'un état
+donné et de la géométrie satellite-récepteur. Le modèle non linéaire des
+observations est
+
+\begin{align}
+\mathbf y_k
+&=
+\mathbf h_k(\mathbf x_k)+\mathbf v_k,
+\\
+\mathbb E[\mathbf v_k]
+&=\mathbf0,
+&
+\mathbb E[\mathbf v_k\mathbf v_k^{\mathsf T}]
+&=\mathbf R_k.
+\label{eq:kalman_observation}
+\end{align}
+
+avec :
+
+\begin{itemize}
+    \item $\mathbf y_k$ le vecteur d'observations à l'époque $k$ ;
+    \item $\mathbf h_k$ le modèle d'observation GNSS ;
+    \item $\mathbf v_k$ le bruit de mesure ;
+    \item $\mathbf R_k$ la covariance des observations.
+\end{itemize}
+
+La matrice $\mathbf R_k$ joue ici le même rôle que dans les moindres carrés
+pondérés : elle décrit la précision et, le cas échéant, les corrélations des
+mesures. Les bruits de processus et de mesure sont supposés indépendants.
+Autour de l'état prédit $\widehat{\mathbf x}_k^-$, la relation linéarisée est
+
+\begin{align}
+\mathbf y_k-\mathbf h_k(\widehat{\mathbf x}_k^-)
+&\simeq
+\mathbf H_k
+\left(\mathbf x_k-\widehat{\mathbf x}_k^-\right)
++\mathbf v_k,
+\\
+\mathbf H_k
+&=
+\left.
+\frac{\partial\mathbf h_k}{\partial\mathbf x}
+\right|_{\widehat{\mathbf x}_k^-}.
+\label{eq:ekf_linearization}
+\end{align}
+
+avec :
+
+\begin{itemize}
+    \item $\widehat{\mathbf x}_k^-$ l'état prédit avant traitement des
+    observations ;
+    \item $\mathbf H_k$ la jacobienne du modèle à l'état prédit ;
+    \item le membre de gauche l'innovation non encore pondérée.
+\end{itemize}
+
+\subsection{Prédiction}
+
+Avant de traiter les nouvelles mesures, le filtre propage l'estimation obtenue
+à l'époque précédente. Il propage également sa covariance, qui quantifie
+l'incertitude sur l'état. L'ajout de $\mathbf Q_k$ augmente cette incertitude
+pour tenir compte des évolutions non parfaitement connues :
+
+\begin{align}
+\widehat{\mathbf x}_k^-
+&=
+\mathbf F_k\widehat{\mathbf x}_{k-1},
+\\
+\mathbf P_k^-
+&=
+\mathbf F_k\mathbf P_{k-1}\mathbf F_k^{\mathsf T}
++\mathbf Q_k.
+\label{eq:ekf_predict}
+\end{align}
+
+avec :
+
+\begin{itemize}
+    \item $\widehat{\mathbf x}_{k-1}$ l'état corrigé à l'époque précédente ;
+    \item $\mathbf P_{k-1}$ sa covariance ;
+    \item $\widehat{\mathbf x}_k^-$ et $\mathbf P_k^-$ l'état prédit et sa
+    covariance.
+\end{itemize}
+
+\subsection{Mise à jour}
+
+Lorsque les observations deviennent disponibles, le filtre les compare aux
+valeurs calculées à partir de l'état prédit. Cette différence est appelée
+\emph{innovation}. Une innovation nulle signifie que la prédiction explique
+exactement la mesure ; une innovation importante peut provenir d'une erreur de
+prédiction, du bruit de mesure ou d'une observation aberrante. L'innovation et
+sa covariance sont
+
+\begin{align}
+\boldsymbol\nu_k
+&=
+\mathbf y_k-\mathbf h_k(\widehat{\mathbf x}_k^-),
+\\
+\mathbf S_k
+&=
+\mathbf H_k\mathbf P_k^-\mathbf H_k^{\mathsf T}+\mathbf R_k.
+\label{eq:ekf_innovation}
+\end{align}
+
+avec :
+
+\begin{itemize}
+    \item $\boldsymbol\nu_k$ le vecteur d'innovation ;
+    \item $\mathbf S_k$ la covariance de l'innovation ;
+    \item $\mathbf R_k$ la covariance du bruit de mesure.
+\end{itemize}
+
+La covariance $\mathbf S_k$ combine ainsi l'incertitude de l'état projetée dans
+l'espace des observations et l'incertitude propre aux mesures. Le gain de
+Kalman en déduit la part de l'innovation à appliquer à l'état :
+
+\begin{align}
+\mathbf K_k
+&=
+\mathbf P_k^-\mathbf H_k^{\mathsf T}\mathbf S_k^{-1},
+\\
+\widehat{\mathbf x}_k
+&=
+\widehat{\mathbf x}_k^-+\mathbf K_k\boldsymbol\nu_k,
+\\
+\mathbf P_k
+&=
+\left(\mathbf I-\mathbf K_k\mathbf H_k\right)\mathbf P_k^-.
+\label{eq:ekf_update}
+\end{align}
+
+avec :
+
+\begin{itemize}
+    \item $\mathbf K_k$ le gain de Kalman ;
+    \item $\widehat{\mathbf x}_k$ l'état après assimilation des observations ;
+    \item $\mathbf P_k$ la covariance de l'état corrigé ;
+    \item $\mathbf I$ la matrice identité de dimension adaptée ;
+    \item les autres termes sont définis dans les équations précédentes.
+\end{itemize}
+
+Si la prédiction est très incertaine devant les mesures, le gain accorde une
+place importante à l'innovation. À l'inverse, des observations très bruitées
+modifient peu l'état prédit. Le gain ne constitue donc pas un paramètre choisi
+directement : il résulte des covariances du modèle et des observations.
+
+À l'issue de cette mise à jour, $\widehat{\mathbf x}_k$ et $\mathbf P_k$
+résument toute l'information utilisée jusqu'à l'époque $k$. Ils servent de
+point de départ à la prédiction suivante. Le cycle prédiction--mise à jour est
+ainsi répété à chaque époque, ce qui permet de renforcer progressivement les
+paramètres constants tout en laissant évoluer ceux auxquels un bruit de
+processus a été attribué.
+
+\subsection{Fonctionnalités complémentaires du traitement GNSS}
+\label{sec:ekf_gnss_features}
+
+En pratique, le traitement d'observations GNSS nécessite des mécanismes qui ne
+font pas partie des équations générales d'un EKF. Le nombre de satellites et,
+par conséquent, le nombre d'ambiguïtés varient au cours du temps. Le suivi de
+la porteuse peut être interrompu, une horloge de récepteur peut évoluer trop
+rapidement pour être prédite avec fiabilité et des observations aberrantes
+peuvent apparaître. Les sections suivantes détaillent les stratégies retenues pour gérer ces situations.
+
+\subsubsection{Initialisation et réinitialisation des horloges}
+
+À la première époque, une solution ponctuelle fondée uniquement sur les
+mesures de code fournit une position approchée et une première estimation du
+biais d'horloge GPS $c\delta t_r$. En multi-constellation, le même ajustement
+estime simultanément $\mathrm{ISB}_r^{\mathrm{GAL}}$. Ces valeurs initialisent
+les composantes correspondantes de $\widehat{\mathbf x}_0$ présenté à la
+section~\ref{sec:ekf_initialization}.
+
+L'horloge du récepteur peut varier fortement d'une époque à la suivante. Elle
+n'est donc pas prédite par le modèle d'évolution retenu. Avant chaque mise à
+jour ultérieure de l'EKF, une nouvelle solution ponctuelle de code estime la
+position, $c\delta t_r$ et, lorsque Galileo est utilisé,
+$\mathrm{ISB}_r^{\mathrm{GAL}}$. Seules les estimations d'horloge et d'ISB sont
+injectées dans l'état prédit ; la position issue de ce calcul auxiliaire ne
+remplace pas la position propagée par le filtre.
+
+Le bloc de covariance associé à l'horloge et à l'ISB est alors réinitialisé.
+Leurs variances initiales et leur covariance mutuelle sont rétablies, tandis
+que leurs corrélations avec la position, la troposphère et les ambiguïtés sont
+annulées. Cette opération ne remet donc pas à zéro l'ensemble du filtre : les
+autres paramètres et l'information accumulée à leur sujet sont conservés.
+
+\subsubsection{État d'ambiguïtés adapté à la visibilité}
+
+Une ambiguïté flottante est associée à chaque satellite dont la phase est
+utilisée. Lors de sa première apparition, elle est initialisée par la
+différence entre phase et code, ramenée en cycles :
+
+\begin{align}
+\widehat N_{r,i,0}^s
+&=
+\frac{L_{r,i}^s-P_{r,i}^s}{\lambda_i},
+&
+B_{r,i,0}^s
+&=
+\lambda_i\widehat N_{r,i,0}^s
+=L_{r,i}^s-P_{r,i}^s.
+\label{eq:ambiguity_initialization}
+\end{align}
+
+avec :
+
+\begin{itemize}
+    \item $\widehat N_{r,i,0}^s$ l'estimation initiale de l'ambiguïté, en
+    cycles ;
+    \item $B_{r,i,0}^s$ la même ambiguïté initiale exprimée en mètres ;
+    \item $L_{r,i}^s$ et $P_{r,i}^s$ les observations de phase et de code
+    exprimées en mètres dans une convention commune ;
+    \item $\lambda_i$ la longueur d'onde de la porteuse considérée.
+\end{itemize}
+
+L'indice $0$ désigne ici le début du premier arc de suivi du satellite, ou le
+début d'un nouvel arc après réinitialisation. Lorsque la fréquence ou la
+combinaison utilisée est implicite, cette quantité est notée $B_{r,0}^s$. Elle
+est la valeur initiale de l'ambiguïté dont l'incertitude apparaît sous la forme
+$\sigma_{B_{r,0}^s}^2$ dans la covariance initiale $\mathbf P_0$ de
+l'équation~\eqref{eq:ekf_initial_covariance}.
+
+Le vecteur d'état est adapté lorsque la liste des satellites visibles change.
+Les paramètres communs et les ambiguïtés des satellites suivis sans
+interruption sont conservés, de même que les blocs de covariance associés. Une
+nouvelle ambiguïté reçoit sa valeur et sa variance initiales ; celle d'un
+satellite qui disparaît est retirée de l'état courant. Cette adaptation évite
+de faire évoluer des paramètres qui ne sont plus observables.
+
+\subsubsection{Définition d'un saut de cycle}
+
+Tant que le récepteur suit une porteuse sans interruption, l'ambiguïté entière
+$N_{r,i}^s$ reste constante. Une perte momentanée du suivi peut laisser la
+phase mesurée cohérente à une constante entière de cycles près. Entre les
+instants qui précèdent et suivent cette discontinuité,
+
+\begin{align}
+N_{r,i}^s(t^+)
+&=
+N_{r,i}^s(t^-)+\Delta N_{r,i}^s,
+&
+\Delta N_{r,i}^s
+&\in\mathbb Z\setminus\{0\},
+\\
+\Delta L_{r,i}^s
+&=
+\lambda_i\Delta N_{r,i}^s.
+\label{eq:cycle_slip_definition}
+\end{align}
+
+avec :
+
+\begin{itemize}
+    \item $t^-$ et $t^+$ les instants situés immédiatement avant et après la
+    discontinuité ;
+    \item $\Delta N_{r,i}^s$ le nombre entier de cycles perdus ou ajoutés ;
+    \item $\Delta L_{r,i}^s$ la discontinuité correspondante de la phase
+    exprimée en mètres ;
+    \item $\lambda_i$ la longueur d'onde de la porteuse.
+\end{itemize}
+
+Ce phénomène est appelé \emph{saut de cycle}. Il affecte la phase mais pas la
+mesure de code. L'ambiguïté antérieure ne peut donc plus être conservée après
+le saut, même si les autres paramètres du filtre restent valides.
+
+\subsubsection{Détection des sauts de cycle}
+
+Trois indicateurs complémentaires sont employés. Le premier est le
+\textit{Loss-of-Lock Indicator} (LLI) enregistré avec les observations de
+phase dans le fichier RINEX~\cite{rinex304}. Le verrouillage désigne la capacité de la boucle
+de poursuite du récepteur à suivre continûment la phase de la porteuse et à
+conserver le comptage des cycles. Une perte de verrouillage interrompt cette
+continuité ; après réacquisition, le nombre entier de cycles séparant les deux
+arcs est inconnu. Une ambiguïté de demi-cycle signifie que l'origine de phase
+reste incertaine de $\lambda_i/2$, généralement à cause d'une indétermination
+de $180^\circ$ dans le suivi du signal. Dans les deux cas, le modèle
+d'ambiguïté entière n'est plus garanti. Les bits correspondants du LLI
+déclenchent donc une réinitialisation, mais ils dépendent des capacités du
+récepteur et ne signalent pas nécessairement toutes les discontinuités.
+
+On utilise également des combinaisons d'observations sensibles aux sauts de
+cycle, parmi lesquelles les combinaisons \textit{geometry-free} et
+Melbourne--Wübbena~\cite{blewitt1990,melbourne1985,wubbena1985}.
+
+En bi-fréquence, la combinaison \textit{geometry-free} est définie par
+
+\begin{align}
+L_{\mathrm{GF},r}^s
+&=
+L_{r,1}^s-L_{r,2}^s
+\\
+&=
+I_{r,2}^s-I_{r,1}^s
++B_{r,1}^s-B_{r,2}^s
++\varepsilon_{\mathrm{GF},r}^s.
+\label{eq:geometry_free_slip}
+\end{align}
+
+avec :
+
+\begin{itemize}
+    \item $L_{r,1}^s$ et $L_{r,2}^s$ les phases exprimées en mètres sur les
+    deux fréquences ;
+    \item $I_{r,1}^s$ et $I_{r,2}^s$ les retards ionosphériques associés ;
+    \item $B_{r,1}^s$ et $B_{r,2}^s$ les ambiguïtés métriques ;
+    \item $\varepsilon_{\mathrm{GF},r}^s$ le bruit résiduel de la combinaison.
+\end{itemize}
+
+La géométrie, les horloges et la troposphère étant communes aux deux
+fréquences, elles disparaissent de cette différence. En l'absence de saut,
+$L_{\mathrm{GF},r}^s$ évolue lentement sous l'effet de l'ionosphère. Pour
+séparer cette évolution régulière d'une discontinuité, les $n_{\mathrm{GF}}$
+dernières valeurs valides du même satellite sont exprimées par rapport à
+l'époque courante $t_k$. Pour chaque époque antérieure $t_j$, on pose
+$\tau_j=t_j-t_k$. Dans ce travail, la méthode retenue consiste à ajuster un
+polynôme du second degré par moindres
+carrés sur cette fenêtre :
+
+\begin{align}
+q_k(\tau)
+&=
+a_{0,k}+a_{1,k}\tau+a_{2,k}\tau^2,
+\\
+\begin{bmatrix}
+a_{0,k} & a_{1,k} & a_{2,k}
+\end{bmatrix}
+&=
+\underset{a_0,a_1,a_2}{\operatorname{arg\,min}}
+\sum_{j=k-n_{\mathrm{GF}}}^{k-1}
+\left[
+L_{\mathrm{GF},r}^s(t_j)
+-a_0-a_1\tau_j-a_2\tau_j^2
+\right]^2,
+\\
+\widehat L_{\mathrm{GF},r,k}^s
+&=
+q_k(0)=a_{0,k}.
+\label{eq:geometry_free_prediction}
+\end{align}
+
+La valeur extrapolée $\widehat L_{\mathrm{GF},r,k}^s$ est alors comparée à la
+combinaison effectivement observée à l'époque courante :
+
+\begin{align}
+r_{\mathrm{GF},k}^s
+&=
+L_{\mathrm{GF},r}^s(t_k)-\widehat L_{\mathrm{GF},r,k}^s,
+\\
+\left|r_{\mathrm{GF},k}^s\right|
+&>\eta_{\mathrm{GF}}
+\quad\Longrightarrow\quad
+\text{saut détecté}.
+\label{eq:geometry_free_detection}
+\end{align}
+
+avec :
+
+\begin{itemize}
+    \item $n_{\mathrm{GF}}$ le nombre de valeurs antérieures utilisées ;
+    \item $\tau_j$ le décalage temporel de l'observation antérieure $j$ par
+    rapport à l'époque testée ;
+    \item $q_k$ le polynôme du second degré ajusté sur la fenêtre ;
+    \item $a_{0,k}$, $a_{1,k}$ et $a_{2,k}$ ses coefficients ;
+    \item $\widehat L_{\mathrm{GF},r,k}^s$ la valeur prédite à l'époque $k$ ;
+    \item $r_{\mathrm{GF},k}^s$ l'écart entre la valeur observée et la
+    prédiction ;
+    \item $\eta_{\mathrm{GF}}$ le seuil de détection.
+\end{itemize}
+
+La valeur utilisée est $\eta_{\mathrm{GF}}=0{,}05\,\mathrm{m}$. La fenêtre
+contient $n_{\mathrm{GF}}=5$ valeurs et la prédiction ne commence qu'une fois
+ces cinq observations disponibles. La série n'est considérée continue que si
+l'intervalle temporel respecte
+$\Delta t\leq\Delta t_{\mathrm{GF},\max}$, avec
+$\Delta t_{\mathrm{GF},\max}=60\,\mathrm{s}$. Le polynôme absorbe ainsi
+l'évolution ionosphérique régulière, tandis qu'une variation brusque reste
+dans le résidu.
+
+La combinaison de Melbourne--Wübbena permet également de détecter des sauts de cycle.
+Elle est définie comme la somme de deux combinaisons, à savoir la combinaison de phase
+\textit{wide-lane} et la combinaison de code \textit{narrow-lane} :
+
+\begin{align}
+M_{\mathrm{MW},r}^s
+=
+\frac{f_1L_{r,1}^s-f_2L_{r,2}^s}{f_1-f_2}
+-
+\frac{f_1P_{r,1}^s+f_2P_{r,2}^s}{f_1+f_2}.
+\label{eq:melbourne_wubbena_slip}
+\end{align}
+
+avec :
+
+\begin{itemize}
+    \item $M_{\mathrm{MW},r}^s$ la combinaison de Melbourne--Wübbena exprimée
+    en mètres ;
+    \item $P_{r,1}^s$ et $P_{r,2}^s$ les mesures de code ;
+    \item $L_{r,1}^s$ et $L_{r,2}^s$ les mesures de phase en mètres ;
+    \item $f_1$ et $f_2$ les fréquences porteuses correspondantes.
+\end{itemize}
+
+Cette combinaison élimine au premier ordre la géométrie, les horloges, la
+troposphère et l'ionosphère. Elle contient principalement une combinaison
+d'ambiguïtés, à laquelle s'ajoute le bruit du code. La détection porte sur sa
+variation entre deux époques :
+
+\begin{align}
+r_{\mathrm{MW},k}^s
+&=
+M_{\mathrm{MW},r}^s(t_k)-M_{\mathrm{MW},r}^s(t_{k-1}),
+\\
+\left|r_{\mathrm{MW},k}^s\right|
+&>\eta_{\mathrm{MW}}
+\quad\Longrightarrow\quad
+\text{saut détecté}.
+\label{eq:melbourne_wubbena_detection}
+\end{align}
+
+avec :
+
+\begin{itemize}
+    \item $r_{\mathrm{MW},k}^s$ la variation de la combinaison entre deux
+    époques successives ;
+    \item $\eta_{\mathrm{MW}}$ le seuil de détection.
+\end{itemize}
+
+La valeur utilisée est $\eta_{\mathrm{MW}}=10\,\mathrm{m}$.
+
+\subsubsection{Réinitialisation après un saut ou une perte de suivi}
+
+Lorsqu'un saut est détecté, l'ambiguïté concernée est recalculée par
+l'équation~\eqref{eq:ambiguity_initialization} et sa variance est replacée à sa
+valeur initiale. Une absence brève ne provoque pas nécessairement cette
+opération. En revanche, si un satellite réapparaît après un nombre d'époques
+supérieur au seuil d'interruption, la continuité de phase n'est plus supposée :
+
+\begin{align}
+n_{\mathrm{gap}}^s
+&=
+k-k_{\mathrm{last}}^s,
+&
+n_{\mathrm{gap}}^s>N_{\mathrm{out}}
+&\quad\Longrightarrow\quad
+\text{ambiguïté réinitialisée}.
+\label{eq:outage_reset}
+\end{align}
+
+avec :
+
+\begin{itemize}
+    \item $k_{\mathrm{last}}^s$ la dernière époque à laquelle le satellite $s$
+    était présent ;
+    \item $n_{\mathrm{gap}}^s$ l'écart en nombre d'époques ;
+    \item $N_{\mathrm{out}}$ le seuil de réinitialisation après interruption.
+\end{itemize}
+
+La valeur utilisée est $N_{\mathrm{out}}=20$ époques. La même procédure que
+pour un saut de cycle est alors appliquée. La réinitialisation reste locale à
+l'ambiguïté concernée.

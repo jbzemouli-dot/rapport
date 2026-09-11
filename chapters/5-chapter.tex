@@ -1,8 +1,630 @@
 % !TEX root = ../enac_project_fr.tex
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Chapter 5 - Résultats et validation
+% Chapter 4 - Passage en Precise Point Positioning
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\chapter{Résultats et validation}
-\label{resultats_validation}
+\chapter{Passage en Precise Point Positioning (PPP)}
+\label{precise_point_positioning}
 
+La chaîne décrite au chapitre~\ref{chaine_traitement_positionnement_gnss}
+utilise des observations GNSS non différenciées et estime la position d'un
+récepteur unique. Elle possède donc déjà la structure générale d'un
+positionnement ponctuel. Sa précision reste toutefois limitée par les
+éphémérides et les horloges diffusées, ainsi que par les biais instrumentaux
+qui ne peuvent plus être négligés lorsque l'objectif devient centimétrique.
+
+Le passage au \textit{Precise Point Positioning} (PPP)~\cite{zumberge1997,koubaHeroux2001} consiste à remplacer
+les orbites et horloges diffusées par des produits précis issus d'un réseau
+mondial de stations, puis à rendre le modèle d'observation cohérent avec ces
+produits. Il ne nécessite aucune station de référence à proximité du
+récepteur. Dans le cadre de cette étude, cette évolution permet d'atteindre
+une erreur tridimensionnelle d'environ $1\,\mathrm{cm}$ en fin de convergence,
+comme le montre le chapitre~\ref{resultats_validation}.
+Une telle précision constitue également une base adaptée à de futurs travaux
+de détermination précise d'orbite (POD), qui ne sont pas développés ici.
+
+\section{Principe du Precise Point Positioning}
+
+Le PPP exploite conjointement les pseudo-distances et les phases de porteuse,
+généralement sur deux fréquences. Les observations restent non différenciées :
+les erreurs communes ne sont pas éliminées par différence entre stations ou
+satellites, mais corrigées par des modèles ou estimées comme paramètres~\cite{koubaHeroux2001}.
+
+On reprend le terme non dispersif $\mathcal G_r^s$ défini par
+l'équation~\eqref{eq:common_nondispersive_term}. Pour un satellite $s$ et un
+récepteur $r$, les observations non différenciées s'écrivent alors, en mètres,
+
+\begin{align}
+P_{r,i}^{s}
+&=
+\mathcal G_r^s
++I_{r,i}^s
++\underbrace{
+\delta_{\mathrm{ant},r,i}^s
++\delta_{\mathrm{ant},i}^{s}
++b_{P,r,i}+b_{P,i}^s
+}_{\Delta_{\mathrm{PPP},P,r,i}^s}
++\varepsilon_{P,r,i}^s,
+\label{eq:ppp_code_raw}
+\\
+L_{r,i}^{s}
+&=
+\mathcal G_r^s
+-I_{r,i}^s
++B_{r,i}^s
++\underbrace{
+\delta_{\mathrm{ant},r,i}^s
++\delta_{\mathrm{ant},i}^{s}
++\delta_{\mathrm{wind\text{-}up},r,i}^s 
++b_{L,r,i}+b_{L,i}^s
+}_{\Delta_{\mathrm{PPP},L,r,i}^s}
++\varepsilon_{L,r,i}^s.
+\label{eq:ppp_phase_raw}
+\end{align}
+
+Les accolades identifient les contributions ajoutées au modèle présenté aux
+chapitres précédents. Jusqu'ici, ces effets fins pouvaient être négligés car
+leur amplitude restait inférieure ou comparable au bruit dominant des mesures ;
+la précision centimétrique désormais visée impose de les modéliser. Les termes
+géométriques, atmosphériques, relativistes et d'horloge contenus dans
+$\mathcal G_r^s$ ne sont donc pas redéfinis ici.
+
+Avec :
+
+\begin{itemize}
+    \item $I_{r,i}^s$ le retard ionosphérique, de signe opposé sur la phase ;
+    \item $\delta_{\mathrm{ant},r,i}^s$ et $\delta_{\mathrm{ant},i}^{s}$ les corrections signées de centre de phase (PCO, PCV) des antennes du récepteur et du satellite, détaillées en section~\ref{sec:antenna_corrections} ;
+    \item $\delta_{\mathrm{wind\text{-}up},r,i}^s$ la correction d'enroulement de phase (phase uniquement), détaillée en section~\ref{windup} ;
+    \item $b_{P,r,i}$, $b_{P,i}^s$, $b_{L,r,i}$ et $b_{L,i}^s$ les biais instrumentaux (OSB) de code et de phase du récepteur et du satellite présentés en section~\ref{biais_obs} ;
+    \item $B_{r,i}^s=\lambda_iN_{r,i}^s$ l'ambiguïté métrique de phase ;
+    \item $N_{r,i}^s$ l'ambiguïté entière de phase, en cycles ;
+    \item $\lambda_i = c/f_i$ la longueur d'onde de la fréquence $i$ ;
+    \item $\varepsilon_{P,r,i}^s$ et $\varepsilon_{L,r,i}^s$ les erreurs résiduelles de code et de phase.
+\end{itemize}
+
+Les biais apparaissent avec un signe positif dans ces équations d'observations
+brutes, car ils font partie de la grandeur mesurée. Leur correction consiste
+donc à les soustraire avant de former les combinaisons de fréquences, selon la
+convention précisée par l'équation~\eqref{eq:bia_correction}.
+
+La combinaison iono-free présentée au chapitre précédent est retenue
+afin d'éliminer le terme ionosphérique du premier ordre. Pour deux fréquences
+$f_1$ et $f_2$, ses coefficients sont
+
+\begin{align}
+\alpha=\frac{f_1^2}{f_1^2-f_2^2},
+\qquad
+\beta=-\frac{f_2^2}{f_1^2-f_2^2},
+\qquad
+\alpha+\beta=1.
+\label{eq:ppp_if_coefficients}
+\end{align}
+
+Après correction des biais propres à chaque observable, les combinaisons de
+code et de phase sont
+
+\begin{align}
+P_{r,\mathrm{IF}}^s
+&=\alpha P_{r,1}^{s,\mathrm{corr}}
++\beta P_{r,2}^{s,\mathrm{corr}},
+\\
+L_{r,\mathrm{IF}}^s
+&=\alpha L_{r,1}^{s,\mathrm{corr}}
++\beta L_{r,2}^{s,\mathrm{corr}}.
+\label{eq:ppp_if_observations}
+\end{align}
+
+On définit le terme non dispersif précis
+
+\begin{align}
+\mathcal G_{\mathrm{prec},r}^s
+&=
+\rho_r^s
++c\left(
+\delta t_r-
+\underbrace{\delta t_{\mathrm{prec}}^s}_{\text{horloge CLK précise}}
+\right)
++T_r^s
++\delta_{\mathrm{Sagnac},r}^s
++\delta_{\mathrm{Shapiro},r}^s.
+\label{eq:ppp_precise_common_term}
+\end{align}
+
+Le modèle PPP iono-free devient alors
+
+\begin{align}
+P_{r,\mathrm{IF}}^s
+&=\mathcal G_{\mathrm{prec},r}^s
++\underbrace{
+\delta_{\mathrm{ant},r,\mathrm{IF}}^s
++\delta_{\mathrm{ant},\mathrm{IF}}^{s}
+}_{\Delta_{\mathrm{ant},P,r,\mathrm{IF}}^s}
++\varepsilon_{P,r,\mathrm{IF}}^s,
+\label{eq:ppp_code_if}
+\\
+L_{r,\mathrm{IF}}^s
+&=\mathcal G_{\mathrm{prec},r}^s
++B_{r,\mathrm{IF}}^s
++\underbrace{
+\delta_{\mathrm{ant},r,\mathrm{IF}}^s
++\delta_{\mathrm{ant},\mathrm{IF}}^{s}
++\delta_{\mathrm{wind\text{-}up},r,\mathrm{IF}}^s
+}_{\Delta_{\mathrm{corr},L,r,\mathrm{IF}}^s}
++\varepsilon_{L,r,\mathrm{IF}}^s.
+\label{eq:ppp_phase_if}
+\end{align}
+
+avec, pour les termes non encore introduits :
+
+\begin{itemize}
+    \item $\delta t_{\mathrm{prec}}^s$ le biais d'horloge précis du satellite, issu du produit CLK (section~\ref{sec:clk_precise}) ;
+    \item $\delta_{\mathrm{ant},r,\mathrm{IF}}^s=\alpha\delta_{\mathrm{ant},r,1}^s+\beta\delta_{\mathrm{ant},r,2}^s$ la correction de centre de phase du récepteur combinée iono-free ;
+    \item $\delta_{\mathrm{ant},\mathrm{IF}}^{s}=\alpha\delta_{\mathrm{ant},1}^{s}+\beta\delta_{\mathrm{ant},2}^{s}$ la correction de centre de phase du satellite combinée iono-free ;
+    \item $\delta_{\mathrm{wind\text{-}up},r,\mathrm{IF}}^s=\alpha\delta_{\mathrm{wind\text{-}up},r,1}^s+\beta\delta_{\mathrm{wind\text{-}up},r,2}^s$ la correction d'enroulement de phase combinée iono-free ;
+    \item $B_{r,\mathrm{IF}}^s$ l'ambiguïté iono-free, en mètres.
+\end{itemize}
+
+Dans la résolution séquentielle retenue ici, la position, l'horloge du récepteur, les
+paramètres troposphériques et les ambiguïtés sont estimés conjointement. Un
+vecteur d'état représentatif est
+
+\begin{align}
+\mathbf x
+=
+\begin{bmatrix}
+\mathbf r_r^{\mathsf T} &
+c\delta t_r &
+ZWD &
+G_N &
+G_E &
+B_{r,\mathrm{IF}}^1 & \cdots & B_{r,\mathrm{IF}}^n
+\end{bmatrix}^{\mathsf T},
+\label{eq:ppp_state}
+\end{align}
+
+où $ZWD$ est le retard troposphérique humide zénithal, $G_N$ et $G_E$ les
+gradients horizontaux éventuels, et
+$B_{r,\mathrm{IF}}^1,\ldots,B_{r,\mathrm{IF}}^n$ les ambiguïtés des
+satellites suivis. Selon le modèle retenu, la troposphère peut aussi être
+entièrement corrigée par un modèle a priori, ou seul un retard zénithal peut
+être estimé.
+
+\section{Fichiers d'entrée pour le PPP}
+
+Les fichiers RINEX d'observation restent la source des mesures de code, de
+phase et de rapport signal sur bruit. En mode PPP précis, les positions et
+horloges satellites utilisées dans les équations~\eqref{eq:ppp_code_if} et
+\eqref{eq:ppp_phase_if} proviennent des produits \texttt{SP3} et
+\texttt{CLK}. Un produit \texttt{BIA} fournit les biais associés aux
+observables. Ces trois fichiers doivent couvrir la période traitée.
+
+Dans la suite, $\mathcal I_X(t; q_j)$ désigne l'opérateur qui estime la valeur
+$q(t)$ à l'instant $t$ par interpolation des échantillons voisins $q_j$ du
+produit $X$. L'indice $j$ parcourt les époques tabulées utilisées pour
+l'interpolation. Cette notation commune s'applique à une grandeur vectorielle,
+comme la position SP3, aussi bien qu'à une grandeur scalaire, comme le biais
+d'horloge CLK ; la méthode et le nombre de points employés peuvent différer
+selon le produit.
+
+\subsection{Orbites précises SP3}
+
+Un fichier \texttt{SP3} donne les coordonnées géocentriques des satellites à
+des époques discrètes, éventuellement accompagnées de vitesses et
+d'indicateurs de précision~\cite{hilla2016sp3d}. Il remplace le calcul orbital fondé sur les
+paramètres képlériens corrigés du message de navigation. La position à
+l'instant d'émission $t_e$ est obtenue par interpolation :
+
+\begin{align}
+\mathbf r^s(t_e)
+=
+\mathcal{I}_{\mathrm{SP3}}
+\!\left(t_e;\,\mathbf r_j^s\right),
+\label{eq:sp3_interpolation}
+\end{align}
+
+Ici, $X=\mathrm{SP3}$ et $\mathbf r_j^s$ désigne les positions tabulées
+voisines du satellite $s$. L'instant d'émission dépend lui-même du temps de
+propagation $\tau$,
+
+\begin{align}
+t_e=t_r-\tau,
+\qquad
+\tau\simeq\frac{\rho_r^s}{c},
+\label{eq:transmission_time}
+\end{align}
+
+ce qui impose une détermination cohérente de la géométrie à l'émission et à la
+réception. Les transformations de repère doivent également tenir compte de la
+rotation terrestre pendant la propagation du signal.
+
+Les orbites précises sont généralement référencées au centre de masse du
+satellite, tandis que les observations se rapportent au centre de phase de
+son antenne. Le passage de l'un à l'autre nécessite le modèle d'attitude du
+satellite et les corrections de centre de phase adaptées aux fréquences
+utilisées.
+
+\subsection{Horloges précises CLK}\label{sec:clk_precise}
+
+Le fichier \texttt{CLK} contient les estimations précises du biais d'horloge
+des satellites à des époques discrètes~\cite{rinexClock304}. À l'époque d'émission, le biais
+interpolé est
+
+\begin{align}
+\delta t_{\mathrm{CLK}}^s(t_e)
+=
+\mathcal{I}_{\mathrm{CLK}}
+\!\left(t_e;\,\delta t_j^s\right).
+\label{eq:clk_interpolation}
+\end{align}
+
+Dans cette expression, $X=\mathrm{CLK}$ et $\delta t_j^s$ désigne les biais
+d'horloge tabulés aux époques voisines.
+
+Dans la convention retenue, le biais utilisé dans le modèle d'observation
+inclut encore la correction relativiste périodique calculée à partir de
+l'orbite précise :
+
+\begin{align}
+\delta t_{\mathrm{prec}}^s(t_e)
+&=
+\delta t_{\mathrm{CLK}}^s(t_e)+\Delta t_{\mathrm{rel}}^s(t_e),
+&
+\Delta t_{\mathrm{rel}}^s(t_e)
+&=-\frac{2}{c^2}\,\mathbf r^s(t_e)\cdot\mathbf v^s(t_e).
+\label{eq:precise_satellite_clock}
+\end{align}
+
+avec :
+
+\begin{itemize}
+    \item $\delta t_{\mathrm{CLK}}^s$ le biais interpolé à partir du produit
+    CLK ;
+    \item $\Delta t_{\mathrm{rel}}^s$ la correction relativiste liée à
+    l'excentricité orbitale, évaluée avec la position et la vitesse précises ;
+    \item $\delta t_{\mathrm{prec}}^s$ le biais d'horloge satellite finalement
+    utilisé dans les équations PPP.
+\end{itemize}
+
+Une erreur temporelle $\Delta t$ produit directement une erreur de distance
+$c\Delta t$ ; une précision centimétrique exige donc une connaissance de
+l'horloge à quelques dizaines de picosecondes. 
+
+Le biais CLK remplace le polynôme d'horloge diffusé ; ce dernier ne doit donc
+pas être appliqué une seconde fois. La correction relativiste de
+l'équation~\eqref{eq:precise_satellite_clock} n'est, en revanche, appliquée
+qu'une seule fois. 
+
+\subsection{Biais observables BIA}\label{biais_obs}
+
+Le format Bias-SINEX \texttt{BIA}~\cite{schaerSinexBias} décrit des biais différentiels
+(\textit{Differential Signal Biases}, DSB) ou spécifiques à une observable
+(\textit{Observable-Specific Signal Biases}, OSB). Un OSB est associé à un
+satellite ou à une station, à un type d'observable RINEX et à un intervalle de
+validité. Il permet donc de corriger séparément, par exemple, $C1W$, $C2W$,
+$L1C$ et $L2W$.
+
+Pour les observations de code, les DSB correspondent aux biais différentiels
+de code, ou DCB (\textit{Differential Code Biases}). Dans le traitement PPP
+précis, ces DCB, ou les OSB de code équivalents, décrivent les décalages entre
+les observables utilisées et la convention du produit d'horloge. Ils remplacent
+donc la correction diffusée par TGD ou BGD : ces termes ne doivent pas être
+appliqués simultanément, sous peine de compter deux fois le même type de biais
+instrumental dépendant du signal.
+
+La convention Bias-SINEX définit le biais comme la différence entre
+l'observation mesurée et l'observation non biaisée. La correction s'écrit
+
+\begin{align}
+O_{r,o}^{s,\mathrm{corr}}(t)
+=
+O_{r,o}^{s,\mathrm{RINEX}}(t)
+-b_o^s(t)-b_{r,o}(t),
+\label{eq:bia_correction}
+\end{align}
+
+où $o$ désigne le type d'observable RINEX complet, par exemple
+\texttt{C1W} ou \texttt{L1C}, et $b_o^s$ et $b_{r,o}$ sont respectivement les
+OSB du satellite et du récepteur. Si le produit ne contient que les biais
+satellites, le second terme est absent. Cette écriture fixe la convention de
+signe : le biais est défini comme l'observation mesurée moins l'observation non
+biaisée. Les biais de code sont appliqués en mètres. Pour la phase, une valeur
+temporelle $b_{L,o}^{(t)}$ associée à la fréquence $f_i$ peut être convertie en cycles ou
+en mètres selon
+
+\begin{align}
+b_{L,o}^{(N)}=f_i b_{L,o}^{(t)},
+\qquad
+b_{L,o}^{(m)}=\lambda_i b_{L,o}^{(N)}=c b_{L,o}^{(t)}.
+\label{eq:phase_bias_units}
+\end{align}
+
+La correction doit être appliquée à chaque fréquence avant la combinaison
+iono-free. Le biais combiné vaut ainsi
+
+\begin{align}
+b_{X,r,\mathrm{IF}}^s
+=\alpha\left(b_{X,r,1}+b_{X,1}^s\right)
++\beta\left(b_{X,r,2}+b_{X,2}^s\right),
+\qquad X\in\{P,L\}.
+\label{eq:if_bias}
+\end{align}
+
+Cette opération garantit que les observations combinées restent cohérentes
+avec les horloges précises~\cite{banville2020}. Elle est indispensable pour exploiter les biais de
+phase et préserver, lorsque les produits le permettent, la structure entière
+des ambiguïtés.
+
+\subsection{Produits d'antenne ANTEX}
+
+Le format ANTEX~\cite{antexFormat} fournit, pour chaque type d'antenne et chaque fréquence, les
+calibrations des centres de phase des antennes satellite et récepteur. Il
+contient notamment les PCO et les PCV, ainsi que leurs intervalles de validité.
+Leur signification géométrique, leur convention de signe et leur combinaison
+iono-free sont détaillées en
+section~\ref{sec:antenna_corrections}.
+
+\section{Corrections supplémentaires}
+\label{sec:corrections_supplementaires}
+
+En positionnement par pseudo-distances, les effets de centre de phase des antennes et les déformations dues aux marées terrestres restent faibles devant le bruit des mesures de code et peuvent être négligés sans conséquence notable. À la précision centimétrique visée par le PPP, ces termes deviennent comparables à l'erreur finale et doivent être modélisés explicitement.
+
+\subsection{Centres de phase des antennes}\label{sec:antenna_corrections}
+
+
+Pour mesurer la position d'une station GNSS avec une précision centimétrique,
+il est nécessaire de définir avec soin le point de référence de l'antenne.
+Sur chaque antenne il existe un point de référence physique, généralement situé au centre de la base de l'antenne, qui est utilisé pour définir les coordonnées géographiques de la station.
+Il en va de même pour les antennes des satellites GNSS, dont le point de référence est défini dans le repère du satellite.
+
+Cependant, les signaux GNSS sont émis et reçus par les centres de phase électromagnétiques des antennes, qui ne coïncident pas exactement avec les points de référence physiques.
+Il est donc nécessaire de tenir compte de cet effet si l'on souhaite atteindre une précision centimétrique dans le positionnement.
+
+On distingue généralement deux contributions : le \textit{Phase Center
+Offset} (PCO), qui correspond à un décalage moyen entre le centre de référence
+de l'antenne et son centre de phase, et le \textit{Phase Center Variation}
+(PCV), qui décrit les variations de la position apparente du centre de phase
+en fonction de la direction du signal~\cite{schmid2007}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.35\linewidth]{images/pco_pcv.png}
+    \caption{Schéma de principe réalisé pour ce rapport, illustrant le décalage entre le point de référence d'une antenne et son centre de phase.}
+    \label{fig:pco_pcv}
+\end{figure}
+
+\subsubsection{Phase Center Offset}
+
+Le \textit{Phase Center Offset} correspond à un vecteur fixe, exprimé dans le
+repère propre de l'antenne, reliant le point de référence de l'antenne à son
+centre de phase. Ce décalage dépend notamment de la fréquence considérée et du
+type d'antenne.
+
+Pour l'antenne du récepteur, le PCO doit être projeté dans la direction
+d'arrivée du signal afin de déterminer la contribution correspondante à la
+distance mesurée. Pour l'antenne du satellite, le même principe s'applique en
+tenant compte de l'orientation de l'antenne dans le repère du satellite.
+
+Le vecteur de visée $\mathbf u_r^s$ est orienté du récepteur vers le satellite.
+Après transformation des PCO dans le repère terrestre, le déplacement du
+centre de réception raccourcit la distance lorsqu'il est dirigé vers le
+satellite, tandis que le déplacement du centre d'émission dans la même
+direction l'allonge. Les contributions de premier ordre sont donc
+
+\begin{align}
+\Delta_{\mathrm{PCO},r,i}^s
+&=-\mathbf u_r^{s\,\mathsf T}\mathbf o_{r,i},
+&
+\Delta_{\mathrm{PCO},i}^{s}
+&=+\mathbf u_r^{s\,\mathsf T}\mathbf o_i^s.
+\label{eq:antenna_pco_signs}
+\end{align}
+
+avec :
+
+\begin{itemize}
+    \item $\mathbf o_{r,i}$ le PCO de l'antenne réceptrice à la fréquence
+    $i$, exprimé dans le repère terrestre ;
+    \item $\mathbf o_i^s$ le PCO de l'antenne du satellite $s$ à la fréquence
+    $i$, exprimé dans le même repère ;
+    \item $\Delta_{\mathrm{PCO},r,i}^s$ et
+    $\Delta_{\mathrm{PCO},i}^{s}$ leurs contributions signées au modèle de
+    distance.
+\end{itemize}
+
+\subsubsection{Phase Center Variation}
+
+Le centre de phase réel d'une antenne ne peut cependant pas être décrit par un
+simple décalage constant. Sa position apparente varie avec la direction du
+signal. Cette variation est appelée \textit{Phase Center Variation} (PCV).
+
+La correction de PCV dépend généralement de l'angle d'élévation et, pour
+certaines antennes, de l'azimut du signal. Elle est fournie sous forme de
+modèles calibrés pour chaque type d'antenne et pour les différentes fréquences
+GNSS.
+
+Les informations nécessaires à la modélisation des PCO et PCV sont
+généralement fournies dans les fichiers de calibration d'antennes au format
+ANTEX. Ces fichiers permettent notamment d'associer à chaque modèle d'antenne
+ses offsets de centre de phase ainsi que ses variations directionnelles pour
+les différentes fréquences.
+
+\subsubsection{Prise en compte dans le modèle d'observation}
+
+On note $\Delta_{\mathrm{PCV},r,i}^s$ et
+$\Delta_{\mathrm{PCV},i}^{s}$ les valeurs PCV signées conformément à la
+convention ANTEX. Les corrections d'antenne additives utilisées dans les
+équations d'observation sont définies par
+
+\begin{align}
+\delta_{\mathrm{ant},r,i}^s
+&=
+\Delta_{\mathrm{PCO},r,i}^s+\Delta_{\mathrm{PCV},r,i}^s,
+\\
+\delta_{\mathrm{ant},i}^{s}
+&=
+\Delta_{\mathrm{PCO},i}^{s}+\Delta_{\mathrm{PCV},i}^{s}.
+\label{eq:antenna_signed_corrections}
+\end{align}
+
+avec :
+
+\begin{itemize}
+    \item $\delta_{\mathrm{ant},r,i}^s$ la contribution signée de l'antenne
+    réceptrice ;
+    \item $\delta_{\mathrm{ant},i}^{s}$ la contribution signée de l'antenne
+    satellite ;
+    \item le signe positif placé devant ces deux termes dans les modèles PPP
+    signifie qu'ils sont ajoutés à la distance entre les points de référence.
+\end{itemize}
+
+Cette correction est calculée pour la fréquence et la direction de propagation
+considérées. Dans le cas d'une combinaison ionosphère libre, les corrections
+associées aux différentes fréquences sont elles-mêmes combinées avec les
+mêmes coefficients que les observations correspondantes.
+
+La prise en compte des centres de phase est particulièrement importante pour
+un positionnement de précision. En effet, les décalages considérés sont
+généralement de l'ordre du centimètre à plusieurs dizaines de centimètres et
+peuvent donc devenir significatifs devant la précision recherchée.
+
+\subsection{Enroulement de phase (\textit{wind-up})}\label{windup}
+
+L'enroulement de phase (\textit{phase wind-up}) est un effet lié à la polarisation circulaire des signaux GNSS. Lorsque l'antenne d'émission du satellite tourne relativement à l'antenne de réception, la phase de la porteuse reçue varie d'un cycle complet pour chaque rotation de $360^\circ$. Cet effet n'affecte que les mesures de phase et peut s'accumuler sur plusieurs cycles au cours d'une session d'observation prolongée~\cite{wu1993}.
+
+Les vecteurs d'antenne effectifs du satellite et du récepteur, projetés dans le plan perpendiculaire à la ligne de visée, s'écrivent
+
+\begin{align}
+\mathbf d^s
+&=
+\hat{\mathbf x}^s
+-(\hat{\mathbf x}^s\cdot\hat{\mathbf k}_r^s)\hat{\mathbf k}_r^s
+-\hat{\mathbf k}_r^s\times\hat{\mathbf y}^s,
+\\
+\mathbf d_r
+&=
+\hat{\mathbf x}_r
+-(\hat{\mathbf x}_r\cdot\hat{\mathbf k}_r^s)\hat{\mathbf k}_r^s
++\hat{\mathbf k}_r^s\times\hat{\mathbf y}_r,
+\end{align}
+
+où
+
+\begin{itemize}
+    \item $\hat{\mathbf k}_r^s=-\mathbf u_r^s$ est le vecteur unitaire
+    orienté du satellite $s$ vers le récepteur $r$, opposé au vecteur de visée ;
+    \item $\hat{\mathbf x}^s$, $\hat{\mathbf y}^s$ sont les axes du repère propre de l'antenne du satellite ;
+    \item $\hat{\mathbf x}_r$, $\hat{\mathbf y}_r$ sont les axes du repère propre de l'antenne du récepteur.
+\end{itemize}
+
+L'angle d'enroulement différentiel est donné par
+
+\begin{align}
+\cos\Delta\phi^s
+=
+\frac{\mathbf d^s\cdot\mathbf d_r}
+{\|\mathbf d^s\|\,\|\mathbf d_r\|},
+\end{align}
+
+avec le signe déterminé par
+
+\begin{align}
+\operatorname{sign}(\Delta\phi^s)
+=
+\operatorname{sign}\!\left(
+\hat{\mathbf k}_r^s\cdot(\mathbf d^s\times\mathbf d_r)
+\right).
+\end{align}
+
+L'enroulement de phase s'accumule au cours du temps. La valeur cumulée $\phi_w^s(t)$ est mise à jour à chaque époque par
+
+\begin{align}
+\phi_w^s(t)
+=
+\phi_w^s(t-\Delta t)
++
+\Delta\phi^s,
+\end{align}
+
+où $\Delta\phi^s$ est choisi tel que $|\Delta\phi^s|\leq\pi$ afin d'assurer la continuité de l'accumulation. La correction appliquée à la mesure de phase, exprimée en mètres, est alors
+
+\begin{align}
+\delta_{\mathrm{wind\text{-}up},r,i}^s
+=
+\frac{\lambda_i}{2\pi}\,\phi_w^s(t),
+\label{eq:windup}
+\end{align}
+
+où $\lambda_i$ est la longueur d'onde de la fréquence $i$ et $\phi_w^s$ est
+exprimé en radians. Le facteur $1/(2\pi)$ convertit l'angle en cycles avant la
+conversion en mètres. Pour un récepteur statique, l'orientation de l'antenne
+de réception est constante~: la variation de l'enroulement de phase est
+principalement due à l'évolution de l'attitude du satellite et de la géométrie
+de visée.
+
+\subsection{Correction des marées terrestres}\label{marees}
+
+Les marées terrestres solides sont des déformations périodiques de la croûte
+terrestre induites principalement par les attractions gravitationnelles de la
+Lune et du Soleil. Elles peuvent atteindre plusieurs dizaines de centimètres
+en amplitude verticale. À la précision visée par le PPP, elles ne peuvent plus
+être négligées.
+
+Si $\Delta\mathbf r_{\mathrm{tide}}(t)$ désigne le déplacement du récepteur
+sous l'effet des marées terrestres solides, la distance géométrique corrigée
+s'écrit
+
+\begin{align}
+\rho_r^s(t)
+=
+\left\|
+\mathbf r^s(t_e)
+-\left(\mathbf r_r(t_r)
++\Delta\mathbf r_{\mathrm{tide}}(t_r)\right)
+\right\|.
+\label{eq:solid_tides_geometry}
+\end{align}
+
+Le déplacement $\Delta\mathbf r_{\mathrm{tide}}$ est calculé conformément
+aux conventions de l'IERS (\textit{International Earth Rotation and Reference
+Systems Service}), décrites dans les Conventions IERS 2010~\cite{iers2010}.
+
+\section{Synthèse des évolutions apportées par le PPP}
+
+Le tableau~\ref{tab:broadcast_vs_ppp} synthétise les changements introduits par
+le passage des données diffusées aux produits précis.
+
+\begin{table}[htbp]
+    \centering
+    \small
+    \renewcommand{\arraystretch}{1.25}
+    \begin{tabular}{|p{0.16\linewidth}|p{0.27\linewidth}|p{0.40\linewidth}|}
+        \hline
+        \textbf{Élément} & \textbf{Positionnement diffusé} & \textbf{PPP précis} \\
+        \hline
+        Orbites
+        & Éphémérides du message de navigation
+        & Positions SP3 interpolées à l'instant d'émission \\
+        \hline
+        Horloges
+        & Polynôme diffusé et correction relativiste
+        & Horloges CLK interpolées et correction relativiste calculée avec
+        l'orbite précise \\
+        \hline
+        Biais de signal
+        & TGD ou BGD diffusé, selon la constellation et le signal
+        & DCB ou OSB cohérents avec le produit CLK, appliqués avant la
+        combinaison de fréquences \\
+        \hline
+        Antennes
+        & Corrections négligées 
+        & PCO et PCV issus du fichier ANTEX, pour le satellite et le récepteur \\
+        \hline
+        Effets fins
+        & Modèle limité aux corrections significatives à la précision visée
+        & Enroulement de phase et marées terrestres ajoutés au modèle \\
+        \hline
+    \end{tabular}
+    \caption{Principales différences entre le positionnement fondé sur les
+    données diffusées et le PPP précis.}
+    \label{tab:broadcast_vs_ppp}
+\end{table}

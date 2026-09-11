@@ -1,40 +1,96 @@
 \relax 
 \providecommand\hyper@newdestlabel[2]{}
-\@writefile{toc}{\contentsline {chapter}{\numberline {1}Principe du positionnement GNSS}{17}{chapter.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {1}Modélisation et mise en œuvre du positionnement GNSS}{21}{chapter.1}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\newlabel{principe_positionnement_gnss}{{1}{17}{Principe du positionnement GNSS}{chapter.1}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {1.1}Mesure de distance par signaux GNSS}{17}{section.1.1}\protected@file@percent }
-\newlabel{eq:geometric_time_range}{{1.2}{17}{Mesure de distance par signaux GNSS}{equation.1.2}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {1.2}Observations GNSS}{18}{section.1.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {1.2.1}Pseudo-distance}{18}{subsection.1.2.1}\protected@file@percent }
-\newlabel{eq:rho_i}{{1.3}{18}{Pseudo-distance}{equation.1.3}{}}
-\newlabel{eq:termes_eval}{{1.4}{19}{Pseudo-distance}{equation.1.4}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {1.2.2}Phase de porteuse}{19}{subsection.1.2.2}\protected@file@percent }
-\newlabel{eq:carrier_phase_definition}{{1.5}{19}{Phase de porteuse}{equation.1.5}{}}
-\newlabel{eq:phase}{{1.6}{19}{Phase de porteuse}{equation.1.6}{}}
-\newlabel{eq:phase_corrigee}{{1.7}{20}{Phase de porteuse}{equation.1.7}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {1.3}Résolution pour $n$ satellites ($n\geq 4$)}{20}{section.1.3}\protected@file@percent }
-\newlabel{resolution}{{1.3}{20}{\texorpdfstring {Résolution pour $n$ satellites ($n\geq 4$)}{Résolution pour n satellites (n>=4)}}{section.1.3}{}}
-\newlabel{eq:modeles_obs}{{1.9}{20}{\texorpdfstring {Résolution pour $n$ satellites ($n\geq 4$)}{Résolution pour n satellites (n>=4)}}{equation.1.9}{}}
-\newlabel{eq:measurement_noise_statistics}{{1.10}{21}{\texorpdfstring {Résolution pour $n$ satellites ($n\geq 4$)}{Résolution pour n satellites (n>=4)}}{equation.1.10}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {1.3.1}Linéarisation du modèle}{21}{subsection.1.3.1}\protected@file@percent }
-\newlabel{eq:explicit_observation_functions}{{1.12}{21}{Linéarisation du modèle}{equation.1.12}{}}
-\newlabel{eq:code_observation_function}{{1.13}{21}{Linéarisation du modèle}{equation.1.13}{}}
-\newlabel{eq:phase_observation_function}{{1.14}{21}{Linéarisation du modèle}{equation.1.14}{}}
-\newlabel{eq:static_state_vector}{{1.15}{22}{Linéarisation du modèle}{equation.1.15}{}}
-\newlabel{eq:linearized_model}{{1.18}{22}{Linéarisation du modèle}{equation.1.18}{}}
-\newlabel{eq:approximate_state}{{1.19}{22}{Linéarisation du modèle}{equation.1.19}{}}
-\newlabel{eq:geometric_range_at_initial_state}{{1.20}{23}{Linéarisation du modèle}{equation.1.20}{}}
-\newlabel{eq:component_observation_derivatives}{{1.25}{23}{Linéarisation du modèle}{equation.1.25}{}}
-\newlabel{eq:state_component_corrections}{{1.27}{23}{Linéarisation du modèle}{equation.1.27}{}}
-\newlabel{eq:component_linearized_observations}{{1.29}{23}{Linéarisation du modèle}{equation.1.29}{}}
-\newlabel{eq:stacked_linearized_system}{{1.30}{24}{Linéarisation du modèle}{equation.1.30}{}}
-\newlabel{eq:stacked_vectors}{{1.31}{24}{Linéarisation du modèle}{equation.1.31}{}}
-\newlabel{eq:gnss_design_matrix}{{1.32}{24}{Linéarisation du modèle}{equation.1.32}{}}
+\newlabel{chap:modelisation}{{1}{21}{Modélisation et mise en œuvre du positionnement GNSS}{chapter.1}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {1.1}Positionnement par SPP}{21}{section.1.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.1.1}Principe théorique}{21}{subsection.1.1.1}\protected@file@percent }
+\newlabel{new:code}{{1.1}{21}{Principe théorique}{equation.1.1}{}}
+\citation{isgps200n}
+\citation{ashby2003}
+\newlabel{eq:termes_eval}{{1.2}{22}{Principe théorique}{equation.1.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.1.2}Corrections utilisées en SPP}{22}{subsection.1.1.2}\protected@file@percent }
+\newlabel{new:corrections}{{1.1.2}{22}{Corrections utilisées en SPP}{subsection.1.1.2}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {1.1.2.1}Horloge satellite}{22}{subsubsection.1.1.2.1}\protected@file@percent }
+\citation{isgps200n}
+\citation{galileoOsSisIcd21}
+\citation{ashby2003}
+\newlabel{eq:broadcast_satellite_clock}{{1.6}{23}{Horloge satellite}{equation.1.6}{}}
+\newlabel{eq:tgd_signal_clock}{{1.7}{23}{Horloge satellite}{equation.1.7}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {1.1.2.2}Horloge récepteur}{23}{subsubsection.1.1.2.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {1.1.2.3}Effet Sagnac}{23}{subsubsection.1.1.2.3}\protected@file@percent }
+\newlabel{sagnac}{{1.1.2.3}{23}{Effet Sagnac}{subsubsection.1.1.2.3}{}}
+\citation{saastamoinen1972}
+\citation{niell1996}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {1.1.2.4}Modélisation de la troposphère}{24}{subsubsection.1.1.2.4}\protected@file@percent }
+\newlabel{eq:ztd_decomposition}{{1.9}{24}{Modélisation de la troposphère}{equation.1.9}{}}
+\newlabel{eq:tropo_no_grad}{{1.10}{24}{Modélisation de la troposphère}{equation.1.10}{}}
+\citation{hauschild2017observations}
+\citation{klobuchar1987}
+\newlabel{eq:zhd}{{1.11}{25}{Modélisation de la troposphère}{equation.1.11}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {1.1.2.5}Correction ionosphérique}{25}{subsubsection.1.1.2.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {1.1.2.6}Modèle de Klobuchar}{25}{subsubsection.1.1.2.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {1.1.2.7}Combinaison iono-free}{26}{subsubsection.1.1.2.7}\protected@file@percent }
+\newlabel{eq:code_iono_free}{{1.13}{26}{Combinaison iono-free}{equation.1.13}{}}
+\newlabel{eq:phase_iono_free}{{1.14}{26}{Combinaison iono-free}{equation.1.14}{}}
+\newlabel{eq:common_nondispersive_term}{{1.16}{26}{Combinaison iono-free}{equation.1.16}{}}
+\citation{verhagen2017least}
+\newlabel{new:if}{{1.20}{27}{Combinaison iono-free}{equation.1.20}{}}
+\newlabel{new:if_variance}{{1.21}{27}{Combinaison iono-free}{equation.1.21}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.1.3}Estimation de la position SPP}{27}{subsection.1.1.3}\protected@file@percent }
+\newlabel{new:wls}{{1.23}{27}{Estimation de la position SPP}{equation.1.23}{}}
+\citation{galileoOsSisIcd21}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {1.1.3.1}Traitement multi-constellation}{28}{subsubsection.1.1.3.1}\protected@file@percent }
+\newlabel{eq:ggto}{{1.24}{28}{Traitement multi-constellation}{equation.1.24}{}}
+\newlabel{eq:ggto_observation_correction}{{1.25}{28}{Traitement multi-constellation}{equation.1.25}{}}
+\newlabel{eq:isb_definition}{{1.27}{28}{Traitement multi-constellation}{equation.1.27}{}}
+\citation{capderou2012}
+\newlabel{eq:multiconstellation_state}{{1.28}{29}{Traitement multi-constellation}{equation.1.28}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {1.2}Positionnement par PPP}{29}{section.1.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.2.1}Mesure de phase et ambiguïté}{29}{subsection.1.2.1}\protected@file@percent }
+\newlabel{new:phase_section}{{1.2.1}{29}{Mesure de phase et ambiguïté}{subsection.1.2.1}{}}
+\newlabel{eq:carrier_phase_definition}{{1.29}{29}{Mesure de phase et ambiguïté}{equation.1.29}{}}
+\newlabel{new:phase}{{1.30}{29}{Mesure de phase et ambiguïté}{equation.1.30}{}}
+\citation{teunissen2017ambiguity}
+\newlabel{eq:phase_corrigee}{{1.31}{30}{Mesure de phase et ambiguïté}{equation.1.31}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {1.2.1.1}Orbites, horloges et biais précis}{30}{subsubsection.1.2.1.1}\protected@file@percent }
+\citation{schmid2007}
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.2.2}Corrections supplémentaires}{31}{subsection.1.2.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.2.3}Centres de phase des antennes}{31}{subsection.1.2.3}\protected@file@percent }
+\newlabel{sec:antenna_corrections}{{1.2.3}{31}{Centres de phase des antennes}{subsection.1.2.3}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {1.1}{\ignorespaces Schéma de principe réalisé pour ce rapport, illustrant le décalage entre le point de référence d'une antenne et son centre de phase.}}{31}{figure.caption.9}\protected@file@percent }
+\providecommand*\caption@xref[2]{\@setref\relax\@undefined{#1}}
+\newlabel{fig:pco_pcv}{{1.1}{31}{Schéma de principe réalisé pour ce rapport, illustrant le décalage entre le point de référence d'une antenne et son centre de phase}{figure.caption.9}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {1.2.3.1}Décalage du centre de phase (PCO)}{32}{subsubsection.1.2.3.1}\protected@file@percent }
+\newlabel{eq:antenna_pco_signs}{{1.32}{32}{Décalage du centre de phase (PCO)}{equation.1.32}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {1.2.3.2}Variation du centre de phase (PCV)}{32}{subsubsection.1.2.3.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {1.2.3.3}Application des corrections d'antenne}{32}{subsubsection.1.2.3.3}\protected@file@percent }
+\newlabel{eq:antenna_signed_corrections}{{1.34}{32}{Application des corrections d'antenne}{equation.1.34}{}}
+\citation{wu1993}
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.2.4}Effet wind-up}{33}{subsection.1.2.4}\protected@file@percent }
+\newlabel{windup}{{1.2.4}{33}{Effet wind-up}{subsection.1.2.4}{}}
+\citation{ashby2003}
+\newlabel{eq:windup}{{1.40}{34}{Effet wind-up}{equation.1.40}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {1.2.4.1}Retard de Shapiro}{34}{subsubsection.1.2.4.1}\protected@file@percent }
+\newlabel{shapiro}{{1.2.4.1}{34}{Retard de Shapiro}{subsubsection.1.2.4.1}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {1.2.4.2}Estimation du retard troposphérique humide}{34}{subsubsection.1.2.4.2}\protected@file@percent }
+\citation{chenHerring1997}
+\newlabel{eq:state_zwd}{{1.43}{35}{Estimation du retard troposphérique humide}{equation.1.43}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {1.2.4.3}Estimation des gradients troposphériques}{35}{subsubsection.1.2.4.3}\protected@file@percent }
+\newlabel{eq:tropo_grad}{{1.44}{35}{Estimation des gradients troposphériques}{equation.1.44}{}}
+\newlabel{eq:state_zwd_grad}{{1.45}{35}{Estimation des gradients troposphériques}{equation.1.45}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {1.2.4.4}Observations combinées et paramètres estimés}{35}{subsubsection.1.2.4.4}\protected@file@percent }
+\newlabel{new:ppp_model}{{1.49}{35}{Observations combinées et paramètres estimés}{equation.1.49}{}}
+\newlabel{new:ppp_state}{{1.50}{36}{Observations combinées et paramètres estimés}{equation.1.50}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.2.5}Estimation séquentielle et continuité des observations}{36}{subsection.1.2.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {1.3}Implémentation avec Orekit}{36}{section.1.3}\protected@file@percent }
+\newlabel{sec:implementation_nouvelle}{{1.3}{36}{Implémentation avec Orekit}{section.1.3}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {1.1}{\ignorespaces Principales différences entre les traitements SPP et PPP retenus.}}{37}{table.caption.10}\protected@file@percent }
+\newlabel{new:summary}{{1.1}{37}{Principales différences entre les traitements SPP et PPP retenus}{table.caption.10}{}}
 \@setckpt{chapters/1-chapter}{
-\setcounter{page}{25}
-\setcounter{equation}{32}
+\setcounter{page}{38}
+\setcounter{equation}{50}
 \setcounter{enumi}{0}
 \setcounter{enumii}{0}
 \setcounter{enumiii}{0}
@@ -44,13 +100,13 @@
 \setcounter{part}{0}
 \setcounter{chapter}{1}
 \setcounter{section}{3}
-\setcounter{subsection}{1}
+\setcounter{subsection}{0}
 \setcounter{subsubsection}{0}
 \setcounter{paragraph}{0}
 \setcounter{subparagraph}{0}
-\setcounter{figure}{0}
-\setcounter{table}{0}
-\setcounter{caption@flags}{0}
+\setcounter{figure}{1}
+\setcounter{table}{1}
+\setcounter{caption@flags}{2}
 \setcounter{continuedfloat}{0}
 \setcounter{KVtest}{0}
 \setcounter{subfigure}{0}
@@ -63,8 +119,8 @@
 \setcounter{LT@tables}{0}
 \setcounter{LT@chunks}{0}
 \setcounter{float@type}{4}
-\setcounter{section@level}{2}
+\setcounter{section@level}{1}
 \setcounter{Item}{0}
 \setcounter{Hfootnote}{0}
-\setcounter{bookmark@seq@number}{13}
+\setcounter{bookmark@seq@number}{23}
 }

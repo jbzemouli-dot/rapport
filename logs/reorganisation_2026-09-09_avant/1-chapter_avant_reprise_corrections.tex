@@ -1,0 +1,439 @@
+% !TEX root = ../enac_project_fr.tex
+\chapter{Modélisation et mise en œuvre du positionnement GNSS}
+\label{chap:modelisation}
+
+Ce chapitre présente les modèles nécessaires au calcul de la position d'un
+récepteur GNSS. La démarche part du SPP, fondé sur les mesures de code et les
+données diffusées, puis introduit les observations et corrections nécessaires
+au PPP. Les détails des algorithmes d'estimation sont donnés en
+annexe~\ref{ann:estimation}.
+
+\section{Du positionnement SPP au PPP}
+\label{sec:theorie_positionnement}
+
+\subsection{Positionnement SPP : observations et inconnues}
+
+La pseudo-distance est obtenue en estimant le décalage temporel entre le code
+reçu et une réplique du même code générée par le récepteur. Pour le récepteur
+$r$, le satellite $s$ et la fréquence $i$, elle est modélisée en mètres par
+\begin{align}
+P_{r,i}^s &=
+\rho_r^s+c(\delta t_r-\delta t^s)+T_r^s+I_{r,i}^s
++\delta_{\mathrm{Sagnac},r}^s+\delta_{\mathrm{Shapiro},r}^s
++\varepsilon_{P,r,i}^s.
+\label{new:code}
+\end{align}
+avec :
+\begin{itemize}
+\item $P_{r,i}^s$ la pseudo-distance mesurée ;
+\item $\rho_r^s=\|\mathbf r^s(t_e^s)-\mathbf r_r(t_r)\|$ la distance
+géométrique entre les positions du satellite à l'émission et du récepteur
+à la réception ;
+\item $\delta t_r$ et $\delta t^s$ les biais d'horloge du récepteur et du
+satellite, en secondes, et $c$ la vitesse de la lumière ;
+\item $T_r^s$ et $I_{r,i}^s$ les retards troposphérique et ionosphérique ;
+\item $\delta_{\mathrm{Sagnac},r}^s$ la correction liée à la rotation terrestre ;
+\item $\delta_{\mathrm{Shapiro},r}^s$ le retard gravitationnel de propagation ;
+\item $\varepsilon_{P,r,i}^s$ l'erreur résiduelle, comprenant notamment le bruit
+de mesure et les effets non modélisés.
+\end{itemize}
+
+Les coordonnées sont exprimées dans un repère terrestre. Dans cette écriture,
+les positions aux deux dates sont soustraites avant correction de la rotation
+terrestre ; le terme de Sagnac corrige cette convention. Il ne doit pas être
+ajouté une seconde fois si la rotation est déjà prise en compte dans le calcul
+géométrique. Les biais instrumentaux de code sont traités selon la convention
+des horloges, comme précisé ci-dessous.
+
+Après correction des termes évaluables, l'observation s'écrit
+\begin{align}
+\underbrace{P_{r,i}^s+c\delta t^s-T_r^s-I_{r,i}^s
+-\delta_{\mathrm{Sagnac},r}^s-\delta_{\mathrm{Shapiro},r}^s}
+_{\text{Pseudo-distance corrigée }\overline P_{r,i}^s}
+&=\rho_r^s+c\delta t_r+\varepsilon_{P,r,i}^s.
+\label{new:corrected_code}
+\end{align}
+avec :
+\begin{itemize}
+\item $\overline P_{r,i}^s$ la pseudo-distance après application des corrections ;
+\item les autres termes définis dans l'équation~\eqref{new:code}.
+\end{itemize}
+
+Pour une constellation, les inconnues à une époque sont les trois coordonnées
+du récepteur et son biais d'horloge. Il faut au moins quatre observations
+indépendantes et une géométrie permettant de distinguer ces quatre paramètres.
+La présence de satellites supplémentaires apporte de la redondance.
+
+\subsection{Corrections utilisées en SPP}
+\label{new:corrections}
+
+\subsubsection{Orbites, horloges et biais instrumentaux}
+
+Les messages de navigation fournissent les éphémérides diffusées et les
+paramètres de correction des horloges. Les premières permettent de calculer
+la position du satellite à l'instant d'émission. Pour le GPS, la correction
+d'horloge repose sur un polynôme auquel s'ajoute une correction relativiste
+liée à l'excentricité de l'orbite~\cite{isgps200n,ashby2003} :
+\begin{align}
+\delta t^s(t)&=a_0^s+a_1^s(t-t_{\mathrm{oc}}^s)
++a_2^s(t-t_{\mathrm{oc}}^s)^2+\Delta t_{\mathrm{rel}}^s(t).
+\label{new:clock}
+\end{align}
+avec :
+\begin{itemize}
+\item $a_0^s$, $a_1^s$ et $a_2^s$ les coefficients diffusés d'horloge ;
+\item $t_{\mathrm{oc}}^s$ leur époque de référence ;
+\item $\Delta t_{\mathrm{rel}}^s$ la correction relativiste périodique.
+\end{itemize}
+
+À cela s'ajoute, selon le signal utilisé, une correction de délai de groupe :
+le TGD pour le GPS ou les BGD pour Galileo. Ces paramètres relient les biais
+des signaux à la convention de l'horloge diffusée. Leur application dépend
+donc de l'observable et de la combinaison de fréquences ; une correction
+monofréquence ne se reporte pas telle quelle à une combinaison ionosphère-libre.
+
+\subsubsection{Rotation terrestre et propagation relativiste}
+
+La Terre tourne pendant le trajet du signal. La correction de Sagnac tient
+compte de cette rotation entre l'émission et la réception. Le retard de
+Shapiro décrit, quant à lui, l'allongement du temps de propagation dans le
+champ gravitationnel terrestre~\cite{ashby2003}. Ces effets sont distincts de
+la correction relativiste appliquée à l'horloge du satellite.
+
+\subsubsection{Troposphère}
+
+Le retard troposphérique dépend principalement de la pression, de la
+température et de la teneur en vapeur d'eau de l'atmosphère. Il affecte le
+code et la phase avec le même signe. Il est décomposé en contributions
+hydrostatique et humide~\cite{saastamoinen1972} :
+\begin{align}
+ZTD&=ZHD+ZWD,\\
+T_r^s&=M_{\mathrm{dry}}(E_r^s)ZHD+
+M_{\mathrm{wet}}(E_r^s)ZWD.
+\label{new:tropo}
+\end{align}
+avec :
+\begin{itemize}
+\item $ZTD$, $ZHD$ et $ZWD$ les retards zénithaux total, hydrostatique et humide,
+en mètres ;
+\item $E_r^s$ l'élévation du satellite ;
+\item $M_{\mathrm{dry}}$ et $M_{\mathrm{wet}}$ les fonctions de projection
+des retards zénithaux sur la ligne de visée.
+\end{itemize}
+
+Dans le traitement SPP considéré, la troposphère est corrigée par un modèle
+de Saastamoinen alimenté par des données météorologiques conventionnelles.
+Aucun paramètre troposphérique n'est estimé. L'estimation de la composante
+humide sera introduite avec le PPP.
+
+\subsubsection{Ionosphère : modèle de Klobuchar}
+
+L'ionosphère contient des électrons libres qui modifient la propagation des
+signaux. Cet effet est dispersif : au premier ordre, son amplitude varie
+comme l'inverse du carré de la fréquence~\cite{hauschild2017observations}.
+\begin{align}
+I_{r,i}^s&=\frac{40{,}3}{f_i^2}\,\mathrm{STEC}_r^s.
+\label{new:iono}
+\end{align}
+avec :
+\begin{itemize}
+\item $I_{r,i}^s$ le retard de code, en mètres ;
+\item $f_i$ la fréquence du signal, en hertz ;
+\item $\mathrm{STEC}_r^s$ le contenu électronique intégré le long du trajet,
+en électrons par mètre carré ;
+\item $40{,}3$ le coefficient du modèle du premier ordre dans ces unités.
+\end{itemize}
+
+Le modèle de Klobuchar fournit une estimation de ce retard à partir des
+coefficients diffusés dans le message de navigation GPS, de la position
+approchée du récepteur, de la direction du satellite et du temps
+GPS~\cite{klobuchar1987}. Il représente l'ionosphère par une couche mince,
+évalue le retard vertical au point traversé par le signal, puis le projette
+sur la ligne de visée. Ses équations sont données en annexe~\ref{Klobuchar}.
+
+Cette correction permet un traitement monofréquence, mais laisse subsister
+une erreur ionosphérique résiduelle. Elle ne décrit pas toutes les variations
+spatiales et temporelles du contenu électronique.
+
+\subsubsection{Ionosphère : combinaison ionosphère-libre}
+
+Deux fréquences permettent d'annuler le terme ionosphérique du premier ordre
+sans l'estimer par un modèle. Pour le code, on forme~\cite{hauschild2017combinations}
+\begin{align}
+P_{r,\mathrm{IF}}^s&=\alpha P_{r,1}^s+\beta P_{r,2}^s,
+&
+\alpha&=\frac{f_1^2}{f_1^2-f_2^2},
+&
+\beta&=-\frac{f_2^2}{f_1^2-f_2^2}.
+\label{new:if}
+\end{align}
+avec :
+\begin{itemize}
+\item $P_{r,\mathrm{IF}}^s$ la pseudo-distance combinée ionosphère-libre
+(\textit{ionosphere-free}, IF) ;
+\item $f_1$ et $f_2$ les deux fréquences utilisées ;
+\item $\alpha$ et $\beta$ les coefficients vérifiant
+$\alpha+\beta=1$ et $\alpha/f_1^2+\beta/f_2^2=0$.
+\end{itemize}
+
+La première identité conserve les termes indépendants de la fréquence ; la
+seconde annule la contribution ionosphérique du premier ordre.
+La combinaison amplifie toutefois le bruit des observations. Pour deux
+erreurs non corrélées, sa variance vaut
+\begin{align}
+\sigma_{P,\mathrm{IF}}^2&=\alpha^2\sigma_{P,1}^2+\beta^2\sigma_{P,2}^2.
+\label{new:if_variance}
+\end{align}
+avec :
+\begin{itemize}
+\item $\sigma_{P,1}^2$ et $\sigma_{P,2}^2$ les variances des mesures de code ;
+\item $\sigma_{P,\mathrm{IF}}^2$ la variance de leur combinaison.
+\end{itemize}
+
+L'IF réduit donc l'erreur ionosphérique, mais ne garantit pas à elle seule une
+dispersion plus faible que le traitement monofréquence. Les effets
+ionosphériques d'ordre supérieur ne sont pas annulés.
+
+\subsection{Estimation de la position SPP}
+
+Les observations corrigées dépendent de façon non linéaire des coordonnées.
+La résolution part d'une position approchée et ajuste les paramètres pour
+réduire les écarts entre observations et valeurs calculées. Dans ce travail,
+le SPP utilise les moindres carrés pondérés~\cite{verhagen2017least} :
+\begin{align}
+\widehat{\mathbf x}
+&=\mathop{\mathrm{arg\,min}}_{\mathbf x}
+[\mathbf y-\mathbf h(\mathbf x)]^{\mathsf T}\mathbf R^{-1}
+[\mathbf y-\mathbf h(\mathbf x)],\\
+\mathbf x&=[\,\mathbf r_r^{\mathsf T}\quad c\delta t_r\,]^{\mathsf T}.
+\label{new:wls}
+\end{align}
+avec :
+\begin{itemize}
+\item $\mathbf y$ le vecteur des observations ;
+\item $\mathbf h(\mathbf x)$ les observations calculées à partir du modèle ;
+\item $\mathbf R$ la covariance des erreurs d'observation ;
+\item $\widehat{\mathbf x}$ l'état estimé.
+\end{itemize}
+
+Une observation de variance élevée reçoit moins de poids. L'état est ajusté
+par itérations, indépendamment à chaque époque. La linéarisation, les
+équations de résolution et le critère d'arrêt sont détaillés en
+annexe~\ref{ann:estimation}.
+
+L'ajout de constellations augmente le nombre d'observations et peut améliorer
+leur répartition géométrique. Il impose toutefois de tenir compte des
+différences entre systèmes. Après mise en cohérence des échelles de temps,
+un biais inter-systèmes résiduel (\textit{Inter-System Bias}, ISB) est estimé
+pour chaque constellation supplémentaire. En prenant le GPS comme référence,
+le terme d'horloge récepteur pour Galileo devient
+\begin{align}
+b_r^{\mathrm{GAL}}&=c\delta t_r+\mathrm{ISB}_r^{\mathrm{GAL}}.
+\label{new:isb}
+\end{align}
+avec :
+\begin{itemize}
+\item $c\delta t_r$ le biais d'horloge commun référencé au GPS, en mètres ;
+\item $\mathrm{ISB}_r^{\mathrm{GAL}}$ le biais additionnel Galileo, en mètres.
+\end{itemize}
+
+Cet ISB est ajouté au vecteur d'état. Le même principe s'applique aux autres
+constellations : le nombre minimal de mesures dépend alors du nombre de
+biais effectivement estimés et du rang du système.
+
+\subsection{Passage au PPP : phase et produits précis}
+
+La précision du SPP reste limitée par le bruit du code, les données
+diffusées et les erreurs résiduelles des corrections. Le PPP exploite la
+phase de porteuse et des produits précis pour réduire ces limitations.
+Il ne nécessite pas de station de référence à proximité du
+récepteur~\cite{zumberge1997,koubaHeroux2001}. La précision centimétrique visée
+constitue également une base pour de futurs travaux de détermination précise
+d'orbite (POD), non développés ici.
+
+\subsubsection{Mesure de phase et ambiguïté}
+
+Le récepteur compare la phase de la porteuse reçue à celle de son oscillateur.
+Une fraction de cycle est mesurée avec une grande finesse. Après acquisition,
+le récepteur suit également l'accumulation des cycles, mais le nombre entier
+initial reste inconnu : c'est l'ambiguïté de phase.
+
+La phase exprimée en mètres possède le modèle
+\begin{align}
+L_{r,i}^s&=\rho_r^s+c(\delta t_r-\delta t^s)+T_r^s-I_{r,i}^s
++B_{r,i}^s+\delta_{\mathrm{Sagnac},r}^s+
+\delta_{\mathrm{Shapiro},r}^s+\varepsilon_{L,r,i}^s.
+\label{new:phase}
+\end{align}
+avec :
+\begin{itemize}
+\item $L_{r,i}^s$ la mesure de phase exprimée en mètres ;
+\item $B_{r,i}^s=\lambda_iN_{r,i}^s$ l'ambiguïté métrique, dans un modèle
+où les biais instrumentaux de phase sont traités séparément ;
+\item $\lambda_i=c/f_i$ la longueur d'onde et $N_{r,i}^s$ l'ambiguïté entière ;
+\item $\varepsilon_{L,r,i}^s$ l'erreur résiduelle de phase ;
+\item les autres termes définis dans l'équation~\eqref{new:code}.
+\end{itemize}
+
+L'ionosphère retarde le code mais produit une avance de phase, d'où son signe
+opposé. Les corrections supplémentaires nécessaires au PPP sont introduites
+dans la sous-section suivante.
+
+L'ambiguïté reste constante sur un arc de suivi continu. Dans une solution
+flottante, elle est estimée comme un paramètre réel. La résolution entière
+constitue une étape supplémentaire, distincte du PPP flottant, qui exige
+notamment des conventions de biais adaptées~\cite{teunissen2017ambiguity}.
+
+\subsubsection{Orbites, horloges et biais précis}
+
+Le PPP remplace les éphémérides et horloges diffusées par des produits précis
+issus du traitement d'un réseau de stations. Les fichiers SP3 fournissent les
+positions des satellites et les fichiers CLK leurs corrections d'horloge.
+Ces données sont interpolées pour obtenir les valeurs à l'instant d'émission.
+
+Les biais de signal doivent être cohérents avec les conventions de ces
+horloges. Les produits BIA peuvent fournir des biais différentiels (DCB ou DSB)
+ou des biais propres à une observable (OSB). Ils permettent de relier les
+observations aux références des produits précis ; le TGD diffusé n'est donc
+pas ajouté systématiquement. Il faut éviter de corriger deux fois un effet
+déjà absorbé dans l'horloge ou dans les paramètres estimés.
+
+\subsection{Modèle PPP retenu}
+
+\subsubsection{Corrections supplémentaires}
+
+La précision désormais visée impose de tenir compte d'effets secondaires
+dans le bilan d'erreur du SPP :
+\begin{itemize}
+\item les décalages et variations des centres de phase des antennes (PCO et
+PCV), décrits par les calibrations ANTEX ;
+\item l'enroulement de phase (\textit{wind-up}), lié à l'orientation relative
+des antennes et affectant la phase ;
+\item les marées terrestres, qui déplacent la station sous l'action
+gravitationnelle de la Lune et du Soleil.
+\end{itemize}
+
+Le PCO décrit le décalage entre un point de référence de l'antenne et son
+centre de phase moyen. La PCV décrit la variation résiduelle avec la direction
+du signal. Les corrections sont signées selon le modèle d'observation retenu.
+Les déplacements de marée interviennent dans la position utilisée pour
+calculer la distance géométrique.
+
+\subsubsection{Estimation de la troposphère}
+
+La composante hydrostatique est calculée par un modèle. La composante humide,
+plus variable, est estimée conjointement avec la position. Deux gradients
+peuvent compléter le modèle pour représenter une asymétrie azimutale :
+\begin{align}
+T_r^s&=M_{\mathrm{dry}}(E_r^s)ZHD+
+M_{\mathrm{wet}}(E_r^s)ZWD
++\underbrace{M_{\mathrm{grad}}(E_r^s)
+(G_N\cos A_r^s+G_E\sin A_r^s)}_{\text{terme dépendant de l'azimut}}.
+\label{new:tropo_grad}
+\end{align}
+avec :
+\begin{itemize}
+\item $A_r^s$ l'azimut du satellite ;
+\item $G_N$ et $G_E$ les paramètres de gradient nord et est ;
+\item $M_{\mathrm{grad}}$ la fonction de projection associée, dont la
+normalisation fixe les unités des paramètres de gradient ;
+\item les autres termes définis dans l'équation~\eqref{new:tropo}.
+\end{itemize}
+
+Sans gradients, le dernier terme est supprimé. Les fonctions de projection
+et leurs conventions sont détaillées en annexe~\ref{annexe:nmf}.
+
+\subsubsection{Observations combinées et paramètres estimés}
+
+L'IF est appliquée au code et à la phase, avec les coefficients de
+l'équation~\eqref{new:if}. Après les corrections de biais et d'antenne, et de
+wind-up pour la phase, le modèle s'écrit
+\begin{align}
+P_{r,\mathrm{IF}}^{s,\mathrm{corr}}&=
+\mathcal G_r^s+\varepsilon_{P,r,\mathrm{IF}}^s,\\
+L_{r,\mathrm{IF}}^{s,\mathrm{corr}}&=
+\mathcal G_r^s+B_{r,\mathrm{IF}}^s+\varepsilon_{L,r,\mathrm{IF}}^s,\\
+\mathcal G_r^s&=\rho_r^s+c(\delta t_r-\delta t_{\mathrm{prec}}^s)
++T_r^s+\delta_{\mathrm{Sagnac},r}^s+\delta_{\mathrm{Shapiro},r}^s,\\
+B_{r,\mathrm{IF}}^s&=\alpha B_{r,1}^s+\beta B_{r,2}^s.
+\label{new:ppp_model}
+\end{align}
+avec :
+\begin{itemize}
+\item $P_{r,\mathrm{IF}}^{s,\mathrm{corr}}$ et
+$L_{r,\mathrm{IF}}^{s,\mathrm{corr}}$ les observations combinées corrigées ;
+\item $\mathcal G_r^s$ le terme commun, indépendant de la fréquence ;
+\item $\delta t_{\mathrm{prec}}^s$ l'horloge satellite issue du produit précis,
+avec les corrections requises par sa convention ;
+\item $\rho_r^s$ la distance calculée avec l'orbite précise et la position de
+station corrigée des marées ;
+\item $B_{r,\mathrm{IF}}^s$ l'ambiguïté IF en mètres, qui n'est pas directement
+une ambiguïté entière ;
+\item les $\varepsilon$ les erreurs résiduelles des observations combinées.
+\end{itemize}
+
+Pour une constellation et un modèle troposphérique avec gradients, l'état est
+\begin{align}
+\mathbf x&=[\,\mathbf r_r^{\mathsf T}\quad c\delta t_r\quad ZWD\quad
+G_N\quad G_E\quad B_{r,\mathrm{IF}}^1\quad\cdots\quad
+B_{r,\mathrm{IF}}^n\,]^{\mathsf T}.
+\label{new:ppp_state}
+\end{align}
+avec :
+\begin{itemize}
+\item $\mathbf r_r$ les trois coordonnées de la station ;
+\item $n$ le nombre d'arcs d'ambiguïté représentés dans l'état ;
+\item les autres paramètres définis précédemment.
+\end{itemize}
+Les ISB sont ajoutés lorsque plusieurs constellations sont utilisées.
+
+\subsection{Estimation séquentielle et continuité des observations}
+
+Le PPP considéré utilise un filtre de Kalman étendu. À chaque époque, le
+filtre prédit l'état et son incertitude à partir de l'époque précédente, puis
+les met à jour avec les observations disponibles. Il conserve ainsi
+l'information acquise au cours du suivi. Les équations sont données en
+annexe~\ref{ann:estimation}.
+
+Chaque paramètre doit recevoir une valeur initiale et une incertitude.
+Un modèle d'évolution décrit également les variations admises entre deux
+époques. La position d'une station statique, son horloge, la troposphère et
+les ambiguïtés n'ont pas les mêmes propriétés temporelles et ne reçoivent
+donc pas le même modèle.
+
+La phase de convergence correspond à l'accumulation d'information permettant
+de mieux séparer ces paramètres. Le code, bien que moins précis, reste utile
+pour initialiser la position, l'horloge et les ambiguïtés.
+
+Une perte de verrouillage est une interruption du suivi de la porteuse.
+Elle peut provoquer un saut de cycle, c'est-à-dire une discontinuité du
+comptage des cycles. L'ambiguïté antérieure n'est alors plus valable.
+Le traitement contrôle les indicateurs du récepteur et des combinaisons
+sensibles aux discontinuités. Lorsqu'un saut est détecté ou qu'une interruption
+dépasse la durée admise, l'ambiguïté concernée est réinitialisée.
+Les mécanismes détaillés sont conservés en annexe~\ref{ann:estimation}.
+
+Le tableau suivant résume les deux traitements retenus dans ce travail.
+Ces choix ne constituent pas une définition générale des estimateurs
+utilisables en SPP ou en PPP.
+
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabular}{|p{0.20\linewidth}|p{0.32\linewidth}|p{0.34\linewidth}|}
+\hline
+Élément & SPP retenu & PPP retenu \\\hline
+Observations & Code & Code et phase \\\hline
+Orbites et horloges & Diffusées & Produits précis \\\hline
+Ionosphère & Klobuchar ou IF & IF \\\hline
+Troposphère & Modèle a priori & Retard humide estimé, gradients optionnels \\\hline
+Estimation & WLS par époque & EKF sur plusieurs époques \\\hline
+Ambiguïtés & Absentes & Estimées sur les arcs continus \\\hline
+\end{tabular}
+\caption{Principales différences entre les traitements SPP et PPP retenus.}
+\label{new:summary}
+\end{table}
+
+\section{Implémentation avec Orekit}
+\label{sec:implementation_nouvelle}
+% Partie réservée à la rédaction suivante.

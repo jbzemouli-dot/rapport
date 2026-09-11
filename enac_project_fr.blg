@@ -7,6 +7,8 @@ Reallocating 'name_of_file' (item size: 1) to 24 items.
 A level-1 auxiliary file: chapters/0-abstract.aux
 Reallocating 'name_of_file' (item size: 1) to 31 items.
 A level-1 auxiliary file: chapters/0-acknowledgement.aux
+Reallocating 'name_of_file' (item size: 1) to 22 items.
+A level-1 auxiliary file: chapters/acronyms.aux
 Reallocating 'name_of_file' (item size: 1) to 28 items.
 A level-1 auxiliary file: chapters/0-introduction.aux
 Reallocating 'name_of_file' (item size: 1) to 23 items.
@@ -19,10 +21,6 @@ Reallocating 'name_of_file' (item size: 1) to 23 items.
 A level-1 auxiliary file: chapters/4-chapter.aux
 Reallocating 'name_of_file' (item size: 1) to 23 items.
 A level-1 auxiliary file: chapters/5-chapter.aux
-Reallocating 'name_of_file' (item size: 1) to 26 items.
-A level-1 auxiliary file: chapters/3-conclusion.aux
-Reallocating 'name_of_file' (item size: 1) to 22 items.
-A level-1 auxiliary file: chapters/acronyms.aux
 Reallocating 'name_of_file' (item size: 1) to 22 items.
 A level-1 auxiliary file: chapters/glossary.aux
 Reallocating 'name_of_file' (item size: 1) to 26 items.
@@ -35,48 +33,44 @@ A level-1 auxiliary file: chapters/annexA.aux
 Reallocating 'name_of_file' (item size: 1) to 20 items.
 A level-1 auxiliary file: chapters/annexB.aux
 Database file #1: references/biblio.bib
-Warning--I didn't find a database entry for "iers2010"
-Warning--I didn't find a database entry for "niell1996"
-Warning--I didn't find a database entry for "klobuchar1987"
-You've used 1 entry,
+You've used 35 entries,
             1876 wiz_defined-function locations,
-            501 strings with 3997 characters,
-and the built_in function-call counts, 168 in all, are:
-= -- 14
-> -- 4
+            683 strings with 8565 characters,
+and the built_in function-call counts, 8954 in all, are:
+= -- 927
+> -- 260
 < -- 0
-+ -- 2
-- -- 1
-* -- 7
-:= -- 32
-add.period$ -- 2
-call.type$ -- 1
-change.case$ -- 0
++ -- 103
+- -- 68
+* -- 569
+:= -- 1210
+add.period$ -- 43
+call.type$ -- 35
+change.case$ -- 22
 chr.to.int$ -- 0
-cite$ -- 1
-duplicate$ -- 9
-empty$ -- 21
-format.name$ -- 1
-if$ -- 39
+cite$ -- 35
+duplicate$ -- 483
+empty$ -- 925
+format.name$ -- 68
+if$ -- 2212
 int.to.chr$ -- 0
-int.to.str$ -- 1
-missing$ -- 2
-newline$ -- 7
-num.names$ -- 1
-pop$ -- 6
+int.to.str$ -- 35
+missing$ -- 26
+newline$ -- 116
+num.names$ -- 46
+pop$ -- 124
 preamble$ -- 1
 purify$ -- 0
 quote$ -- 0
-skip$ -- 1
+skip$ -- 320
 stack$ -- 0
-substring$ -- 0
-swap$ -- 1
+substring$ -- 648
+swap$ -- 208
 text.length$ -- 0
 text.prefix$ -- 0
 top$ -- 0
 type$ -- 0
 warning$ -- 0
-while$ -- 1
-width$ -- 2
-write$ -- 11
-(There were 3 warnings)
+while$ -- 100
+width$ -- 37
+write$ -- 333

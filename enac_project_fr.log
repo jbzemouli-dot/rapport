@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.29 (MiKTeX 26.5) (preloaded format=pdflatex 2026.7.1)  10 SEP 2026 16:45
+This is pdfTeX, Version 3.141592653-2.6-1.40.29 (MiKTeX 26.5) (preloaded format=pdflatex 2026.7.1)  11 SEP 2026 15:54
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -1108,6 +1108,12 @@ LaTeX Warning: Label `windup' multiply defined.
 
 LaTeX Warning: Label `eq:windup' multiply defined.
 
+
+LaTeX Warning: Label `marees' multiply defined.
+
+
+LaTeX Warning: Label `eq:solid_tides_geometry' multiply defined.
+
 ) (chapters/glossary.aux) (chapters/bibliography.aux) (chapters/annexA.aux)
 (chapters/annexB.aux))
 \openout1 = `enac_project_fr.aux'.
@@ -1178,7 +1184,7 @@ Package hyperref Info: Link coloring OFF on input line 41.
 \openout4 = `enac_project_fr.out'.
 
 Package babel Info: Main language set to 'french'.
-<sources/logos/logo_enac_and_marianne.png, id=335, 267.94102pt x 121.4136pt>
+<sources/logos/logo_enac_and_marianne.png, id=327, 267.94102pt x 121.4136pt>
 File: sources/logos/logo_enac_and_marianne.png Graphic file (type png)
 <use sources/logos/logo_enac_and_marianne.png>
 Package pdftex.def Info: sources/logos/logo_enac_and_marianne.png  used on inpu
@@ -1338,25 +1344,32 @@ t line 48.
 
 ]
 Chapitre 1.
-[21] [22] [23] [24] [25] [26] [27] [28] [29] [30]
-<images/pco_pcv.png, id=682, 389.455pt x 402.50375pt>
+[21] [22] [23] [24] [25] [26] [27] [28] [29]
+<images/pco_pcv.png, id=661, 389.455pt x 402.50375pt>
 File: images/pco_pcv.png Graphic file (type png)
 <use images/pco_pcv.png>
-Package pdftex.def Info: images/pco_pcv.png  used on input line 764.
+Package pdftex.def Info: images/pco_pcv.png  used on input line 678.
 (pdftex.def)             Requested size: 159.3382pt x 164.67139pt.
- [31 <./images/pco_pcv.png>]
-[32] [33] [34] [35]
-Underfull \hbox (badness 1478) in paragraph at lines 1150--1150
+ [30 <./images/pco_pcv.png>]
+[31] [32] [33] [34] [35] [36] [37] [38]
+Underfull \hbox (badness 1478) in paragraph at lines 1475--1475
 []|\T1/cmr/m/n/10 Retard hu-mide es-timé, gra-dients
  []
 
-) [36] [37]
+) [39] [40]
 \openout2 = `chapters/2-chapter.aux'.
 
  (chapters/2-chapter.tex)
 \openout2 = `chapters/3-chapter.aux'.
 
- (chapters/3-chapter.tex [38
+ (chapters/3-chapter.tex
+Chapitre 2.
+File: sources/logos/logo_enac_and_marianne.png Graphic file (type png)
+<use sources/logos/logo_enac_and_marianne.png>
+Package pdftex.def Info: sources/logos/logo_enac_and_marianne.png  used on inpu
+t line 58.
+(pdftex.def)             Requested size: 125.58478pt x 56.9055pt.
+[41
 
 
 
@@ -1365,60 +1378,53 @@ Underfull \hbox (badness 1478) in paragraph at lines 1150--1150
 
 
 ]
-Chapitre 2.
-File: sources/logos/logo_enac_and_marianne.png Graphic file (type png)
-<use sources/logos/logo_enac_and_marianne.png>
-Package pdftex.def Info: sources/logos/logo_enac_and_marianne.png  used on inpu
-t line 58.
-(pdftex.def)             Requested size: 125.58478pt x 56.9055pt.
-[39]
 File: sources/logos/logo_enac_and_marianne.png Graphic file (type png)
 <use sources/logos/logo_enac_and_marianne.png>
 Package pdftex.def Info: sources/logos/logo_enac_and_marianne.png  used on inpu
 t line 140.
 (pdftex.def)             Requested size: 125.58478pt x 56.9055pt.
- [40]
+ [42]
 File: sources/logos/logo_enac_and_marianne.png Graphic file (type png)
 <use sources/logos/logo_enac_and_marianne.png>
 Package pdftex.def Info: sources/logos/logo_enac_and_marianne.png  used on inpu
 t line 222.
 (pdftex.def)             Requested size: 125.58478pt x 56.9055pt.
- [41]
-File: sources/logos/logo_enac_and_marianne.png Graphic file (type png)
-<use sources/logos/logo_enac_and_marianne.png>
-Package pdftex.def Info: sources/logos/logo_enac_and_marianne.png  used on inpu
-t line 305.
-(pdftex.def)             Requested size: 125.58478pt x 56.9055pt.
- [42]
-File: sources/logos/logo_enac_and_marianne.png Graphic file (type png)
-<use sources/logos/logo_enac_and_marianne.png>
-Package pdftex.def Info: sources/logos/logo_enac_and_marianne.png  used on inpu
-t line 390.
-(pdftex.def)             Requested size: 125.58478pt x 56.9055pt.
  [43]
 File: sources/logos/logo_enac_and_marianne.png Graphic file (type png)
 <use sources/logos/logo_enac_and_marianne.png>
 Package pdftex.def Info: sources/logos/logo_enac_and_marianne.png  used on inpu
-t line 480.
+t line 306.
 (pdftex.def)             Requested size: 125.58478pt x 56.9055pt.
  [44]
 File: sources/logos/logo_enac_and_marianne.png Graphic file (type png)
 <use sources/logos/logo_enac_and_marianne.png>
 Package pdftex.def Info: sources/logos/logo_enac_and_marianne.png  used on inpu
-t line 614.
+t line 391.
 (pdftex.def)             Requested size: 125.58478pt x 56.9055pt.
- [45])
+ [45]
+File: sources/logos/logo_enac_and_marianne.png Graphic file (type png)
+<use sources/logos/logo_enac_and_marianne.png>
+Package pdftex.def Info: sources/logos/logo_enac_and_marianne.png  used on inpu
+t line 481.
+(pdftex.def)             Requested size: 125.58478pt x 56.9055pt.
+ [46]
+File: sources/logos/logo_enac_and_marianne.png Graphic file (type png)
+<use sources/logos/logo_enac_and_marianne.png>
+Package pdftex.def Info: sources/logos/logo_enac_and_marianne.png  used on inpu
+t line 615.
+(pdftex.def)             Requested size: 125.58478pt x 56.9055pt.
+ [47])
 File: sources/logos/logo_enac_and_marianne.png Graphic file (type png)
 <use sources/logos/logo_enac_and_marianne.png>
 Package pdftex.def Info: sources/logos/logo_enac_and_marianne.png  used on inpu
 t line 115.
 (pdftex.def)             Requested size: 125.58478pt x 56.9055pt.
- [46]
+ [48]
 \openout2 = `chapters/4-chapter.aux'.
 
  (chapters/4-chapter.tex
 Chapitre 3.
-[47
+[49
 
 
 
@@ -1429,137 +1435,137 @@ File: sources/logos/logo_enac_and_marianne.png Graphic file (type png)
 Package pdftex.def Info: sources/logos/logo_enac_and_marianne.png  used on inpu
 t line 89.
 (pdftex.def)             Requested size: 125.58478pt x 56.9055pt.
- [48]
+ [50]
 File: sources/logos/logo_enac_and_marianne.png Graphic file (type png)
 <use sources/logos/logo_enac_and_marianne.png>
 Package pdftex.def Info: sources/logos/logo_enac_and_marianne.png  used on inpu
 t line 132.
 (pdftex.def)             Requested size: 125.58478pt x 56.9055pt.
- [49]
+ [51]
 File: sources/logos/logo_enac_and_marianne.png Graphic file (type png)
 <use sources/logos/logo_enac_and_marianne.png>
 Package pdftex.def Info: sources/logos/logo_enac_and_marianne.png  used on inpu
 t line 201.
 (pdftex.def)             Requested size: 125.58478pt x 56.9055pt.
- [50]
+ [52]
 File: sources/logos/logo_enac_and_marianne.png Graphic file (type png)
 <use sources/logos/logo_enac_and_marianne.png>
 Package pdftex.def Info: sources/logos/logo_enac_and_marianne.png  used on inpu
 t line 265.
 (pdftex.def)             Requested size: 125.58478pt x 56.9055pt.
- [51]
+ [53]
 File: sources/logos/logo_enac_and_marianne.png Graphic file (type png)
 <use sources/logos/logo_enac_and_marianne.png>
 Package pdftex.def Info: sources/logos/logo_enac_and_marianne.png  used on inpu
 t line 327.
 (pdftex.def)             Requested size: 125.58478pt x 56.9055pt.
- [52]
+ [54]
 File: sources/logos/logo_enac_and_marianne.png Graphic file (type png)
 <use sources/logos/logo_enac_and_marianne.png>
 Package pdftex.def Info: sources/logos/logo_enac_and_marianne.png  used on inpu
 t line 415.
 (pdftex.def)             Requested size: 125.58478pt x 56.9055pt.
- [53]
+ [55]
 File: sources/logos/logo_enac_and_marianne.png Graphic file (type png)
 <use sources/logos/logo_enac_and_marianne.png>
 Package pdftex.def Info: sources/logos/logo_enac_and_marianne.png  used on inpu
 t line 500.
 (pdftex.def)             Requested size: 125.58478pt x 56.9055pt.
- [54]
+ [56]
 File: sources/logos/logo_enac_and_marianne.png Graphic file (type png)
 <use sources/logos/logo_enac_and_marianne.png>
 Package pdftex.def Info: sources/logos/logo_enac_and_marianne.png  used on inpu
 t line 599.
 (pdftex.def)             Requested size: 125.58478pt x 56.9055pt.
- [55]
+ [57]
 File: sources/logos/logo_enac_and_marianne.png Graphic file (type png)
 <use sources/logos/logo_enac_and_marianne.png>
 Package pdftex.def Info: sources/logos/logo_enac_and_marianne.png  used on inpu
 t line 673.
 (pdftex.def)             Requested size: 125.58478pt x 56.9055pt.
- [56]
+ [58]
 File: sources/logos/logo_enac_and_marianne.png Graphic file (type png)
 <use sources/logos/logo_enac_and_marianne.png>
 Package pdftex.def Info: sources/logos/logo_enac_and_marianne.png  used on inpu
 t line 767.
 (pdftex.def)             Requested size: 125.58478pt x 56.9055pt.
- [57]
+ [59]
 File: sources/logos/logo_enac_and_marianne.png Graphic file (type png)
 <use sources/logos/logo_enac_and_marianne.png>
 Package pdftex.def Info: sources/logos/logo_enac_and_marianne.png  used on inpu
 t line 834.
 (pdftex.def)             Requested size: 125.58478pt x 56.9055pt.
- [58]
+ [60]
 File: sources/logos/logo_enac_and_marianne.png Graphic file (type png)
 <use sources/logos/logo_enac_and_marianne.png>
 Package pdftex.def Info: sources/logos/logo_enac_and_marianne.png  used on inpu
 t line 912.
 (pdftex.def)             Requested size: 125.58478pt x 56.9055pt.
- [59]
+ [61]
 File: sources/logos/logo_enac_and_marianne.png Graphic file (type png)
 <use sources/logos/logo_enac_and_marianne.png>
 Package pdftex.def Info: sources/logos/logo_enac_and_marianne.png  used on inpu
 t line 991.
 (pdftex.def)             Requested size: 125.58478pt x 56.9055pt.
- [60]
+ [62]
 File: sources/logos/logo_enac_and_marianne.png Graphic file (type png)
 <use sources/logos/logo_enac_and_marianne.png>
 Package pdftex.def Info: sources/logos/logo_enac_and_marianne.png  used on inpu
 t line 1069.
 (pdftex.def)             Requested size: 125.58478pt x 56.9055pt.
- [61]
+ [63]
 File: sources/logos/logo_enac_and_marianne.png Graphic file (type png)
 <use sources/logos/logo_enac_and_marianne.png>
 Package pdftex.def Info: sources/logos/logo_enac_and_marianne.png  used on inpu
 t line 1162.
 (pdftex.def)             Requested size: 125.58478pt x 56.9055pt.
 
-[62]
+[64]
 File: sources/logos/logo_enac_and_marianne.png Graphic file (type png)
 <use sources/logos/logo_enac_and_marianne.png>
 Package pdftex.def Info: sources/logos/logo_enac_and_marianne.png  used on inpu
 t line 1248.
 (pdftex.def)             Requested size: 125.58478pt x 56.9055pt.
- [63]
+ [65]
 File: sources/logos/logo_enac_and_marianne.png Graphic file (type png)
 <use sources/logos/logo_enac_and_marianne.png>
 Package pdftex.def Info: sources/logos/logo_enac_and_marianne.png  used on inpu
 t line 1317.
 (pdftex.def)             Requested size: 125.58478pt x 56.9055pt.
- [64]
+ [66]
 File: sources/logos/logo_enac_and_marianne.png Graphic file (type png)
 <use sources/logos/logo_enac_and_marianne.png>
 Package pdftex.def Info: sources/logos/logo_enac_and_marianne.png  used on inpu
 t line 1394.
 (pdftex.def)             Requested size: 125.58478pt x 56.9055pt.
- [65]
+ [67]
 File: sources/logos/logo_enac_and_marianne.png Graphic file (type png)
 <use sources/logos/logo_enac_and_marianne.png>
 Package pdftex.def Info: sources/logos/logo_enac_and_marianne.png  used on inpu
 t line 1484.
 (pdftex.def)             Requested size: 125.58478pt x 56.9055pt.
- [66]
+ [68]
 File: sources/logos/logo_enac_and_marianne.png Graphic file (type png)
 <use sources/logos/logo_enac_and_marianne.png>
 Package pdftex.def Info: sources/logos/logo_enac_and_marianne.png  used on inpu
 t line 1567.
 (pdftex.def)             Requested size: 125.58478pt x 56.9055pt.
- [67])
+ [69])
 File: sources/logos/logo_enac_and_marianne.png Graphic file (type png)
 <use sources/logos/logo_enac_and_marianne.png>
 Package pdftex.def Info: sources/logos/logo_enac_and_marianne.png  used on inpu
 t line 122.
 (pdftex.def)             Requested size: 125.58478pt x 56.9055pt.
- [68]
+ [70]
 \openout2 = `chapters/5-chapter.aux'.
 
  (chapters/5-chapter.tex
 Chapitre 4.
 
-LaTeX Warning: Reference `resultats_validation' on page 69 undefined on input l
+LaTeX Warning: Reference `resultats_validation' on page 71 undefined on input l
 ine 22.
 
-[69
+[71
 
 
 
@@ -1570,25 +1576,25 @@ File: sources/logos/logo_enac_and_marianne.png Graphic file (type png)
 Package pdftex.def Info: sources/logos/logo_enac_and_marianne.png  used on inpu
 t line 161.
 (pdftex.def)             Requested size: 125.58478pt x 56.9055pt.
- [70]
+ [72]
 File: sources/logos/logo_enac_and_marianne.png Graphic file (type png)
 <use sources/logos/logo_enac_and_marianne.png>
 Package pdftex.def Info: sources/logos/logo_enac_and_marianne.png  used on inpu
 t line 240.
 (pdftex.def)             Requested size: 125.58478pt x 56.9055pt.
- [71]
+ [73]
 File: sources/logos/logo_enac_and_marianne.png Graphic file (type png)
 <use sources/logos/logo_enac_and_marianne.png>
 Package pdftex.def Info: sources/logos/logo_enac_and_marianne.png  used on inpu
 t line 317.
 (pdftex.def)             Requested size: 125.58478pt x 56.9055pt.
- [72]
+ [74]
 File: sources/logos/logo_enac_and_marianne.png Graphic file (type png)
 <use sources/logos/logo_enac_and_marianne.png>
 Package pdftex.def Info: sources/logos/logo_enac_and_marianne.png  used on inpu
 t line 381.
 (pdftex.def)             Requested size: 125.58478pt x 56.9055pt.
- [73]
+ [75]
 File: images/pco_pcv.png Graphic file (type png)
 <use images/pco_pcv.png>
 Package pdftex.def Info: images/pco_pcv.png  used on input line 390.
@@ -1598,19 +1604,19 @@ File: sources/logos/logo_enac_and_marianne.png Graphic file (type png)
 Package pdftex.def Info: sources/logos/logo_enac_and_marianne.png  used on inpu
 t line 432.
 (pdftex.def)             Requested size: 125.58478pt x 56.9055pt.
- [74]
+ [76]
 File: sources/logos/logo_enac_and_marianne.png Graphic file (type png)
 <use sources/logos/logo_enac_and_marianne.png>
 Package pdftex.def Info: sources/logos/logo_enac_and_marianne.png  used on inpu
 t line 508.
 (pdftex.def)             Requested size: 125.58478pt x 56.9055pt.
- [75]
+ [77]
 File: sources/logos/logo_enac_and_marianne.png Graphic file (type png)
 <use sources/logos/logo_enac_and_marianne.png>
 Package pdftex.def Info: sources/logos/logo_enac_and_marianne.png  used on inpu
 t line 585.
 (pdftex.def)             Requested size: 125.58478pt x 56.9055pt.
- [76]
+ [78]
 Underfull \hbox (badness 4886) in paragraph at lines 606--607
 []|\T1/cmr/m/n/10 Positions SP3 in-ter-po-lées à l'ins-tant
  []
@@ -1621,7 +1627,7 @@ File: sources/logos/logo_enac_and_marianne.png Graphic file (type png)
 Package pdftex.def Info: sources/logos/logo_enac_and_marianne.png  used on inpu
 t line 129.
 (pdftex.def)             Requested size: 125.58478pt x 56.9055pt.
- [77]
+ [79]
 \openout2 = `chapters/glossary.aux'.
 
  (chapters/glossary.tex
@@ -1634,12 +1640,12 @@ File: sources/logos/logo_enac_and_marianne.png Graphic file (type png)
 Package pdftex.def Info: sources/logos/logo_enac_and_marianne.png  used on inpu
 t line 4.
 (pdftex.def)             Requested size: 125.58478pt x 56.9055pt.
-[78
+[80
 
 
 
 
-]) [79
+]) [81
 
 ]
 \openout2 = `chapters/bibliography.aux'.
@@ -1650,18 +1656,18 @@ File: sources/logos/logo_enac_and_marianne.png Graphic file (type png)
 Package pdftex.def Info: sources/logos/logo_enac_and_marianne.png  used on inpu
 t line 1.
 (pdftex.def)             Requested size: 125.58478pt x 56.9055pt.
- [80
+ [82
 
 
 
 
-] [81]))
+] [83]))
 File: sources/logos/logo_enac_and_marianne.png Graphic file (type png)
 <use sources/logos/logo_enac_and_marianne.png>
 Package pdftex.def Info: sources/logos/logo_enac_and_marianne.png  used on inpu
 t line 155.
 (pdftex.def)             Requested size: 125.58478pt x 56.9055pt.
- [82]
+ [84]
 \openout2 = `chapters/annexA.aux'.
 
 
@@ -1672,13 +1678,13 @@ File: sources/logos/logo_enac_and_marianne.png Graphic file (type png)
 Package pdftex.def Info: sources/logos/logo_enac_and_marianne.png  used on inpu
 t line 67.
 (pdftex.def)             Requested size: 125.58478pt x 56.9055pt.
-[83
+[85
 
 
 
 
 ]
-<images/Niell_Mapping_Table_1.png, id=1204, 915.42pt x 406.51875pt>
+<images/Niell_Mapping_Table_1.png, id=1230, 915.42pt x 406.51875pt>
 File: images/Niell_Mapping_Table_1.png Graphic file (type png)
 <use images/Niell_Mapping_Table_1.png>
 Package pdftex.def Info: images/Niell_Mapping_Table_1.png  used on input line 1
@@ -1689,8 +1695,8 @@ File: sources/logos/logo_enac_and_marianne.png Graphic file (type png)
 Package pdftex.def Info: sources/logos/logo_enac_and_marianne.png  used on inpu
 t line 149.
 (pdftex.def)             Requested size: 125.58478pt x 56.9055pt.
- [84]
-<images/Niell_Mapping_Table_2.png, id=1215, 914.41624pt x 146.5475pt>
+ [86]
+<images/Niell_Mapping_Table_2.png, id=1241, 914.41624pt x 146.5475pt>
 File: images/Niell_Mapping_Table_2.png Graphic file (type png)
 <use images/Niell_Mapping_Table_2.png>
 Package pdftex.def Info: images/Niell_Mapping_Table_2.png  used on input line 1
@@ -1701,19 +1707,19 @@ File: sources/logos/logo_enac_and_marianne.png Graphic file (type png)
 Package pdftex.def Info: sources/logos/logo_enac_and_marianne.png  used on inpu
 t line 205.
 (pdftex.def)             Requested size: 125.58478pt x 56.9055pt.
- [85 <./images/Niell_Mapping_Table_1.png> <./images/Niell_Mapping_Table_2.png>]
+ [87 <./images/Niell_Mapping_Table_1.png> <./images/Niell_Mapping_Table_2.png>]
 File: sources/logos/logo_enac_and_marianne.png Graphic file (type png)
 <use sources/logos/logo_enac_and_marianne.png>
 Package pdftex.def Info: sources/logos/logo_enac_and_marianne.png  used on inpu
 t line 287.
 (pdftex.def)             Requested size: 125.58478pt x 56.9055pt.
- [86])
+ [88])
 File: sources/logos/logo_enac_and_marianne.png Graphic file (type png)
 <use sources/logos/logo_enac_and_marianne.png>
 Package pdftex.def Info: sources/logos/logo_enac_and_marianne.png  used on inpu
 t line 163.
 (pdftex.def)             Requested size: 125.58478pt x 56.9055pt.
- [87]
+ [89]
 \openout2 = `chapters/annexB.aux'.
 
  (chapters/annexB.tex
@@ -1722,88 +1728,56 @@ File: sources/logos/logo_enac_and_marianne.png Graphic file (type png)
 Package pdftex.def Info: sources/logos/logo_enac_and_marianne.png  used on inpu
 t line 2.
 (pdftex.def)             Requested size: 125.58478pt x 56.9055pt.
- [88
+ [90
 
 
 
 
 ]
 Annexe B.
-
-LaTeX Warning: Reference `sec:theorie_positionnement' on page 89 undefined on i
-nput line 8.
-
-[89]
+[91]
 File: sources/logos/logo_enac_and_marianne.png Graphic file (type png)
 <use sources/logos/logo_enac_and_marianne.png>
 Package pdftex.def Info: sources/logos/logo_enac_and_marianne.png  used on inpu
 t line 161.
 (pdftex.def)             Requested size: 125.58478pt x 56.9055pt.
- [90]
+ [92]
 File: sources/logos/logo_enac_and_marianne.png Graphic file (type png)
 <use sources/logos/logo_enac_and_marianne.png>
 Package pdftex.def Info: sources/logos/logo_enac_and_marianne.png  used on inpu
 t line 275.
 (pdftex.def)             Requested size: 125.58478pt x 56.9055pt.
- [91]
-
-LaTeX Warning: Reference `sec:theorie_positionnement' on page 92 undefined on i
-nput line 314.
-
+ [93]
 File: sources/logos/logo_enac_and_marianne.png Graphic file (type png)
 <use sources/logos/logo_enac_and_marianne.png>
 Package pdftex.def Info: sources/logos/logo_enac_and_marianne.png  used on inpu
 t line 352.
 (pdftex.def)             Requested size: 125.58478pt x 56.9055pt.
-[92]
+ [94]
 File: sources/logos/logo_enac_and_marianne.png Graphic file (type png)
 <use sources/logos/logo_enac_and_marianne.png>
 Package pdftex.def Info: sources/logos/logo_enac_and_marianne.png  used on inpu
 t line 433.
 (pdftex.def)             Requested size: 125.58478pt x 56.9055pt.
- [93]
+ [95]
 File: sources/logos/logo_enac_and_marianne.png Graphic file (type png)
 <use sources/logos/logo_enac_and_marianne.png>
 Package pdftex.def Info: sources/logos/logo_enac_and_marianne.png  used on inpu
 t line 523.
 (pdftex.def)             Requested size: 125.58478pt x 56.9055pt.
- [94]
+ [96]
 File: sources/logos/logo_enac_and_marianne.png Graphic file (type png)
 <use sources/logos/logo_enac_and_marianne.png>
 Package pdftex.def Info: sources/logos/logo_enac_and_marianne.png  used on inpu
 t line 610.
 (pdftex.def)             Requested size: 125.58478pt x 56.9055pt.
- [95]
-File: sources/logos/logo_enac_and_marianne.png Graphic file (type png)
-<use sources/logos/logo_enac_and_marianne.png>
-Package pdftex.def Info: sources/logos/logo_enac_and_marianne.png  used on inpu
-t line 681.
-(pdftex.def)             Requested size: 125.58478pt x 56.9055pt.
- [96]
-File: sources/logos/logo_enac_and_marianne.png Graphic file (type png)
-<use sources/logos/logo_enac_and_marianne.png>
-Package pdftex.def Info: sources/logos/logo_enac_and_marianne.png  used on inpu
-t line 754.
-(pdftex.def)             Requested size: 125.58478pt x 56.9055pt.
- [97]
-File: sources/logos/logo_enac_and_marianne.png Graphic file (type png)
-<use sources/logos/logo_enac_and_marianne.png>
-Package pdftex.def Info: sources/logos/logo_enac_and_marianne.png  used on inpu
-t line 835.
-(pdftex.def)             Requested size: 125.58478pt x 56.9055pt.
- [98]
-File: sources/logos/logo_enac_and_marianne.png Graphic file (type png)
-<use sources/logos/logo_enac_and_marianne.png>
-Package pdftex.def Info: sources/logos/logo_enac_and_marianne.png  used on inpu
-t line 924.
-(pdftex.def)             Requested size: 125.58478pt x 56.9055pt.
- [99])
+ [97])
 File: sources/logos/logo_enac_and_marianne.png Graphic file (type png)
 <use sources/logos/logo_enac_and_marianne.png>
 Package pdftex.def Info: sources/logos/logo_enac_and_marianne.png  used on inpu
 t line 165.
 (pdftex.def)             Requested size: 125.58478pt x 56.9055pt.
- [100] (enac_project_fr.aux
+ [98] (enac_project_fr.aux
 (chapters/0-resume.aux) (chapters/0-abstract.aux)
 (chapters/0-acknowledgement.aux) (chapters/acronyms.aux)
 (chapters/0-introduction.aux) (chapters/1-chapter.aux) (chapters/2-chapter.aux)
@@ -1822,16 +1796,16 @@ LaTeX Warning: There were undefined references.
 LaTeX Warning: There were multiply-defined labels.
 
 Package rerunfilecheck Info: File `enac_project_fr.out' has not changed.
-(rerunfilecheck)             Checksum: B38F617EEAD887A29F96D635F4066C07;16766.
+(rerunfilecheck)             Checksum: 3C1F578F19A65A8CBCEB956C4E360B4B;16305.
  ) 
 Here is how much of TeX's memory you used:
- 32588 strings out of 467510
- 623973 string characters out of 5406851
- 1187971 words of memory out of 5000000
- 60681 multiletter control sequences out of 15000+600000
+ 32586 strings out of 467510
+ 623960 string characters out of 5406851
+ 1188069 words of memory out of 5000000
+ 60682 multiletter control sequences out of 15000+600000
  658712 words of font info for 128 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 90i,19n,112p,2532b,795s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 90i,25n,112p,2532b,795s stack positions out of 10000i,1000n,20000p,200000b,200000s
  <C:\Users\jbzemouli\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\
 ecbx1000.pk> <C:\Users\jbzemouli\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/
 ec/dpi600\ectt1095.pk> <C:\Users\jbzemouli\AppData\Local\MiKTeX\fonts/pk/ljfour
@@ -1873,9 +1847,9 @@ TeX/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Users/jbzemouli/AppData/Local
 ppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy8.pfb><C:/Users
 /jbzemouli/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/symbols/ms
 bm10.pfb>
-Output written on enac_project_fr.pdf (100 pages, 1059364 bytes).
+Output written on enac_project_fr.pdf (98 pages, 1055546 bytes).
 PDF statistics:
- 2212 PDF objects out of 2487 (max. 8388607)
- 523 named destinations out of 1000 (max. 500000)
- 685 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 2197 PDF objects out of 2487 (max. 8388607)
+ 520 named destinations out of 1000 (max. 500000)
+ 669 words of extra memory for PDF output out of 10000 (max. 10000000)
 

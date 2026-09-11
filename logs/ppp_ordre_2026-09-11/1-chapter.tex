@@ -596,38 +596,30 @@ c\delta t_r &
 
 La précision du SPP reste limitée par le bruit du code, les données
 diffusées et les erreurs résiduelles des corrections. Le PPP exploite la
-phase de porteuse et des données plus précises sur les positions des satellites pour réduire ces limitations.
+phase de porteuse et des données plus précis sur les positions des satellites pour réduire ces limitations.
 Le traitement par PPP permet une précision de l'ordre de quelques centimètres.
-
-
-Pour cela, il est nécessaire de tenir compte de corrections plus fines, et d'utliser des données plus précises sur 
-les positions des satellites. 
-
-
 
 \subsection{Mesure de phase et ambiguïté}
 \label{new:phase_section}
 
-Le code est transporté par une onde sinusoïdale appelée porteuse. Le
+Le code est transporté par une onde sinusoïdale appelée \emph{porteuse}. Le
 récepteur compare la phase de l'onde reçue à celle d'une réplique générée par
-son oscillateur. Une fraction de cycle peut ainsi être mesurée avec une grande
-finesse ; convertie en distance, cette observation est beaucoup plus précise
+son oscillateur local. Une fraction de cycle peut ainsi être mesurée avec une grande
+finesse ; convertie en distance, cette observation est beaucoup moins bruitée
 que la pseudo-distance.
 
-Une mesure de phase seule ne fournit en revanche pas immédiatement la distance
+Une mesure de phase seule ne fournit toutefois pas immédiatement la distance
 totale. Au moment où le suivi d'un satellite commence, le récepteur mesure la
 fraction de cycle courante, mais ignore combien de cycles entiers séparent le
-satellite du récepteur. Ce nombre inconnu est l'\emph{ambiguïté de phase}. Si
-$\varphi_{r,i}^s$ désigne la phase exprimée en radians, la mesure
-de phase exprimée en mètres s'écrit
+satellite du récepteur. Ce nombre inconnu est l'\emph{ambiguïté entière}. Après acquisition, le récepteur suit les variations de phase et compte les
+cycles successifs tant que le suivi reste continu. Ce comptage ne détermine
+pas l'ambiguïté initiale. Si $\varphi_{r,i}^s$ désigne la phase accumulée
+mesurée, en radians, sa conversion en mètres s'écrit
 
 \begin{align}
 L_{r,i}^s
 &=
-\lambda_i
-\left(
-N_{r,i}^s+\frac{\varphi_{r,i}^s}{2\pi}
-\right).
+\lambda_i\frac{\varphi_{r,i}^s}{2\pi}.
 \label{eq:carrier_phase_definition}
 \end{align}
 
@@ -636,27 +628,118 @@ avec :
 \begin{itemize}
     \item $L_{r,i}^s$ la mesure de phase convertie en mètres 
     \item $\lambda_i=c/f_i$ la longueur d'onde de la fréquence $f_i$
-    \item $N_{r,i}^s$ l'ambiguïté entière , en cycles 
-    \item $\varphi_{r,i}^s$ la phase mesurée, en radians.
+    \item $\varphi_{r,i}^s$ la phase accumulée mesurée, en radians,
+    incluant les cycles comptés depuis l'acquisition.
 \end{itemize}
+
+En reprenant les corrections déjà présentées,
+le modèle de phase s'écrit~\cite[p.~591]{capderou2012}
+
+\begin{align}
+L_{r,i}^s
+&=
+\rho_r^s
++c\left(\delta t_r-\delta t^s\right)
++T_r^s
+-I_{r,i}^s
++\lambda_i N_{r,i}^s
++\delta_{\mathrm{Sagnac},r}^s
++\varepsilon_{L,r,i}^s,
+\label{new:phase}
+\end{align}
+
+avec :
+
+\begin{itemize}
+    \item $B_{r,i}^s=\lambda_i N_{r,i}^s$ l'ambiguïté de phase exprimée
+    en mètres, où $N_{r,i}^s$ est l'ambiguïté entière en cycles 
+    \item $\delta_{\mathrm{Sagnac},r}^s$ la correction de Sagnac 
+    \item les autres termes géométriques, atmosphériques et d'horloge
+    définis dans l'équation~\eqref{new:code} ;
+    \item $\varepsilon_{L,r,i}^s$ l'erreur résiduelle de phase
+\end{itemize}
+
+Le terme ionosphérique apparaît avec un signe opposé à celui du code. En effet le plasma
+ionosphérique produit un retard de groupe sur la modulation de code, mais une
+avance de phase sur la porteuse. 
+
+Les corrections supplémentaires de Shapiro, d'antenne et de wind-up seront
+ajoutées dans la présentation du modèle PPP complet. À ce stade, comme pour
+le code, les termes supposés évalués sont placés dans le membre de gauche :
+
+\begin{align}
+\underbrace{
+L_{r,i}^s
++c\delta t^s
+-T_r^s
++I_{r,i}^s
+-\delta_{\mathrm{Sagnac},r}^s
+}_{\text{Phase corrigée }\overline L_{r,i}^s}
+&=
+\rho_r^s+c\delta t_r+\lambda_i N_{r,i}^s+\varepsilon_{L,r,i}^s.
+\label{eq:phase_corrigee}
+\end{align}
+
+avec :
+
+\begin{itemize}
+    \item $\overline L_{r,i}^s$ la phase corrigée, en mètres ;
+    \item $\lambda_i N_{r,i}^s$ une inconnue constante tant que le suivi de la porteuse
+    reste continu ;
+    \item les autres termes sont définis précédemment.
+\end{itemize}
+
+Dans une solution à ambiguïtés flottantes, $N_{r,i}^s$ est d'abord estimée
+comme un paramètre réel. Déterminer ensuite le nombre entier de cycles
+compatible avec cette estimation constitue l'étape de résolution entière des
+ambiguïtés~\cite{teunissen2017ambiguity}.
+
+
+Cette écriture de la phase corrigée suppose le retard troposphérique connu.
+Lorsqu'il est estimé en PPP, sa partie inconnue reste dans le modèle calculé.
+De même, l'identification $B_{r,i}^s=\lambda_iN_{r,i}^s$ suppose des biais
+instrumentaux traités séparément ; une ambiguïté flottante peut absorber
+les biais résiduels constants.
+
+Contrairement aux pseudo-distances, les mesures de phase d'une seule époque
+ne suffisent pas à déterminer la position lorsque chaque satellite apporte
+une ambiguïté inconnue. L'utilisation conjointe du code et de la phase permet
+d'exploiter la précision de la porteuse tout en estimant les ambiguïtés.
+Le code conserve notamment un rôle essentiel lors de l'initialisation pour
+séparer la distance, le biais d'horloge et les ambiguïtés. La fixation entière
+n'est pas nécessaire pour obtenir une solution PPP flottante.
+
+\subsubsection{Orbites, horloges et biais précis}
+
+Le PPP remplace les éphémérides et horloges diffusées par des produits précis
+issus du traitement d'un réseau de stations. Les fichiers SP3 fournissent les
+positions des satellites et les fichiers CLK leurs corrections d'horloge.
+Ces données sont interpolées pour obtenir les valeurs à l'instant d'émission.
+
+Les biais de signal doivent être cohérents avec les conventions de ces
+horloges. Les produits BIA peuvent fournir des biais différentiels (DCB ou DSB)
+ou des biais propres à une observable (OSB). Ils permettent de relier les
+observations aux références des produits précis ; le TGD diffusé n'est donc
+pas ajouté systématiquement. Il faut éviter de corriger deux fois un effet
+déjà absorbé dans l'horloge ou dans les paramètres estimés.
 
 
 \subsection{Corrections supplémentaires}
 
-La précision désormais visée impose de tenir compte d'effets jusque là négligés
-dans les équations du SPP :
+La précision désormais visée impose de tenir compte d'effets secondaires
+dans le bilan d'erreur du SPP :
 \begin{itemize}
 \item le retard de Shapiro, lié au champ gravitationnel terrestre et
-ajouté aux modèles de code et de phase 
+ajouté aux modèles de code et de phase ;
 \item les décalages et variations des centres de phase des antennes (PCO et
-PCV)
+PCV), décrits par les calibrations ANTEX ;
 \item l'effet wind-up, lié à l'orientation relative
-des antennes et affectant la phase 
+des antennes et affectant la phase ;
 \item les marées terrestres, qui déplacent la station sous l'action
 gravitationnelle de la Lune et du Soleil.
 \end{itemize}
 
-\subsubsection{Centres de phase des antennes}\label{sec:antenna_corrections}
+\subsection{Centres de phase des antennes}\label{sec:antenna_corrections}
 
 
 Pour mesurer la position d'une station GNSS avec une précision centimétrique,
@@ -680,6 +763,7 @@ en fonction de la direction du signal~\cite{schmid2007}.
     \label{fig:pco_pcv}
 \end{figure}
 
+\subsubsection{Décalage du centre de phase (PCO)}
 
 Le \textit{Phase Center Offset} correspond à un vecteur fixe, exprimé dans le
 repère propre de l'antenne, reliant le point de référence de l'antenne à son
@@ -718,6 +802,7 @@ avec :
     distance.
 \end{itemize}
 
+\subsubsection{Variation du centre de phase (PCV)}
 
 Le centre de phase réel d'une antenne ne peut cependant pas être décrit par un
 simple décalage constant. Sa position apparente varie avec la direction du
@@ -734,6 +819,7 @@ ANTEX. Ces fichiers permettent notamment d'associer à chaque modèle d'antenne
 ses offsets de centre de phase ainsi que ses variations directionnelles pour
 les différentes fréquences.
 
+\subsubsection{Application des corrections d'antenne}
 
 On note $\Delta_{\mathrm{PCV},r,i}^s$ et
 $\Delta_{\mathrm{PCV},i}^{s}$ les valeurs PCV signées conformément à la
@@ -772,7 +858,7 @@ un positionnement de précision. En effet, les décalages considérés sont
 généralement de l'ordre du centimètre à plusieurs dizaines de centimètres et
 peuvent donc devenir significatifs devant la précision recherchée.
 
-\subsubsection{Effet wind-up}\label{windup}
+\subsection{Effet wind-up}\label{windup}
 
 L'effet wind-up est un effet lié à la polarisation circulaire des signaux GNSS. Lorsque l'antenne d'émission du satellite tourne relativement à l'antenne de réception, la phase de la porteuse reçue varie d'un cycle complet pour chaque rotation de $360^\circ$. Cet effet n'affecte que les mesures de phase et peut s'accumuler sur plusieurs cycles au cours d'une session d'observation prolongée~\cite{wu1993}.
 
@@ -887,50 +973,36 @@ où
 
 Cette correction reste faible, de l'ordre de quelques centimètres, mais devient nécessaire dans les applications de positionnement centimétrique telles que le PPP.
 
-\subsubsection{Correction des marées terrestres}\label{marees}
-
-Les marées terrestres solides sont des déformations périodiques de la croûte
-terrestre induites principalement par les attractions gravitationnelles de la
-Lune et du Soleil. Elles peuvent atteindre plusieurs dizaines de centimètres
-en amplitude verticale. À la précision visée par le PPP, elles ne peuvent plus
-être négligées.
-
-Si $\Delta\mathbf r_{\mathrm{tide}}(t)$ désigne le déplacement du récepteur
-sous l'effet des marées terrestres solides, la distance géométrique corrigée
-s'écrit
-
-\begin{align}
-\rho_r^s(t)
-=
-\left\|
-\mathbf r^s(t_e)
--\left(\mathbf r_r(t_r)
-+\Delta\mathbf r_{\mathrm{tide}}(t_r)\right)
-\right\|.
-\label{eq:solid_tides_geometry}
-\end{align}
-
-avec :
-\begin{itemize}
-    \item $\Delta\mathbf r_{\mathrm{tide}}$ le déplacement de la station dû aux
-    marées solides ;
-    \item $\mathbf r_r$ la position de référence de la station ;
-    \item $\mathbf r^s$ la position du satellite à l'émission ;
-    \item $t_e$ et $t_r$ les instants d'émission et de réception.
-\end{itemize}
-
-
-Le déplacement $\Delta\mathbf r_{\mathrm{tide}}$ est calculé conformément
-aux conventions de l'IERS (\textit{International Earth Rotation and Reference
-Systems Service}), décrites dans les Conventions IERS 2010~\cite{iers2010}.
-
 \subsubsection{Estimation du retard troposphérique humide}
 
-Contrairement à la composante hydrostatique, la composante humide $ZWD$ est fortement variable dans le temps
+À l'inverse, la composante humide $ZWD$ est fortement variable dans le temps
 et plus difficile à déterminer à partir d'un modèle atmosphérique
 déterministe. Dans le traitement PPP, elle est donc introduite comme un paramètre supplémentaire du
 problème d'estimation et déterminée conjointement avec les autres inconnues
 du positionnement.
+
+Si le vecteur d'état utilisé pour le positionnement est initialement défini
+par
+\begin{align}
+\mathbf x
+=
+\begin{bmatrix}
+\mathbf r_r^{\mathsf T} & c\delta t_r &
+B_{r,\mathrm{IF}}^1 & \ldots & B_{r,\mathrm{IF}}^n
+\end{bmatrix}^{\mathsf T},
+\end{align}
+l'estimation de $ZWD$ conduit à l'étendre sous la forme
+\begin{align}
+\mathbf x
+=
+\begin{bmatrix}
+\mathbf r_r^{\mathsf T} & c\delta t_r & ZWD &
+B_{r,\mathrm{IF}}^1 & \ldots & B_{r,\mathrm{IF}}^n
+\end{bmatrix}^{\mathsf T}.
+\label{eq:state_zwd}
+\end{align}
+
+Le paramètre $ZWD$ constitue ainsi une inconnue supplémentaire du système.
 
 \subsubsection{Estimation des gradients troposphériques}
 
@@ -974,91 +1046,20 @@ avec :
 La formulation détaillée de la fonction de projection utilisée pour les gradients est
 présentée en annexe~\ref{annexe:nmf}.
 
-\subsection{Équation de phase et modèle PPP}
-\label{ppp:equations}
-
-Après application des corrections de biais instrumentaux cohérentes avec
-les horloges précises, le modèle de phase rassemble les termes présentés
-ci-dessus~\cite[p.~591]{capderou2012}
-
+L'introduction de ces deux paramètres nécessite naturellement une extension
+du vecteur d'état. Celui-ci devient
 \begin{align}
-L_{r,i}^s
-&=
-\rho_r^s
-+c\left(\delta t_r-\delta t_{\mathrm{prec}}^s\right)
-+T_r^s
--I_{r,i}^s
-+\lambda_i N_{r,i}^s
-+\delta_{\mathrm{Sagnac},r}^s
-\notag\\
-&\quad
-+\delta_{\mathrm{Shapiro},r}^s
-+\delta_{\mathrm{ant},r,i}^s+\delta_{\mathrm{ant},i}^s
-+\delta_{\mathrm{wind\text{-}up},r,i}^s
-+\varepsilon_{L,r,i}^s,
-\label{new:phase}
+\mathbf x
+=
+\begin{bmatrix}
+\mathbf r_r^{\mathsf T} & c\delta t_r & ZWD & G_N & G_E &
+B_{r,\mathrm{IF}}^1 & \ldots & B_{r,\mathrm{IF}}^n
+\end{bmatrix}^{\mathsf T}.
+\label{eq:state_zwd_grad}
 \end{align}
 
-avec :
 
-\begin{itemize}
-    \item $B_{r,i}^s=\lambda_i N_{r,i}^s$ l'ambiguïté de phase exprimée
-    en mètres, où $N_{r,i}^s$ est l'ambiguïté entière en cycles 
-    \item $\delta_{\mathrm{Sagnac},r}^s$ la correction de Sagnac ;
-    \item $\delta_{\mathrm{Shapiro},r}^s$ le retard de Shapiro ;
-    \item $\delta_{\mathrm{ant},r,i}^s$ et $\delta_{\mathrm{ant},i}^s$
-    les contributions signées des antennes réceptrice et satellite ;
-    \item $\delta_{\mathrm{wind\text{-}up},r,i}^s$ la correction d'effet wind-up ;
-    \item $\delta t_{\mathrm{prec}}^s$ le biais d'horloge précis du satellite ;
-    \item $\rho_r^s$ la distance tenant compte du déplacement de marée ;
-    \item les autres termes géométriques, atmosphériques et d'horloge
-    définis dans l'équation~\eqref{new:code} ;
-    \item $\varepsilon_{L,r,i}^s$ l'erreur résiduelle de phase
-\end{itemize}
-
-Le terme ionosphérique apparaît avec un signe opposé à celui du code. En effet le plasma
-ionosphérique produit un retard de groupe sur la modulation de code, mais une
-avance de phase sur la porteuse. 
-
-Comme pour le code, les termes supposés évalués peuvent être placés dans le
-membre de gauche :
-
-\begin{align}
-\underbrace{
-\begin{aligned}
-L_{r,i}^s
-+c\delta t_{\mathrm{prec}}^s
--T_r^s
-+I_{r,i}^s
--\delta_{\mathrm{Sagnac},r}^s
-&\\[-0.3em]
--\delta_{\mathrm{Shapiro},r}^s
--\delta_{\mathrm{ant},r,i}^s-\delta_{\mathrm{ant},i}^s
--\delta_{\mathrm{wind\text{-}up},r,i}^s
-&
-\end{aligned}
-}_{\text{Phase corrigée }\overline L_{r,i}^s}
-&=
-\rho_r^s+c\delta t_r+\lambda_i N_{r,i}^s+\varepsilon_{L,r,i}^s.
-\label{eq:phase_corrigee}
-\end{align}
-
-avec :
-
-\begin{itemize}
-    \item $\overline L_{r,i}^s$ la phase corrigée, en mètres ;
-    \item $\lambda_i N_{r,i}^s$ une inconnue constante tant que le suivi de la porteuse
-    reste continu ;
-    \item les autres termes sont définis précédemment.
-\end{itemize}
-
-Cette écriture de la phase corrigée suppose le retard troposphérique connu.
-Lorsqu'il est estimé en PPP, sa partie inconnue reste dans le modèle calculé.
-De même, l'identification $B_{r,i}^s=\lambda_iN_{r,i}^s$ suppose des biais
-instrumentaux traités séparément ; une ambiguïté flottante peut absorber
-les biais résiduels constants.
-
-\subsubsection{Combinaison iono-free}
+\subsubsection{Observations combinées et paramètres estimés}
 
 L'IF est appliquée au code et à la phase, avec les coefficients de
 l'équation~\eqref{new:if}. Après les corrections de biais et d'antenne, et de
@@ -1089,44 +1090,6 @@ une ambiguïté entière ;
 \item les $\varepsilon$ les erreurs résiduelles des observations combinées.
 \end{itemize}
 
-\subsubsection{Paramètres estimés}
-
-Si le vecteur d'état utilisé pour le positionnement est initialement défini
-par
-\begin{align}
-\mathbf x
-=
-\begin{bmatrix}
-\mathbf r_r^{\mathsf T} & c\delta t_r &
-B_{r,\mathrm{IF}}^1 & \ldots & B_{r,\mathrm{IF}}^n
-\end{bmatrix}^{\mathsf T},
-\end{align}
-l'estimation de $ZWD$ conduit à l'étendre sous la forme
-\begin{align}
-\mathbf x
-=
-\begin{bmatrix}
-\mathbf r_r^{\mathsf T} & c\delta t_r & ZWD &
-B_{r,\mathrm{IF}}^1 & \ldots & B_{r,\mathrm{IF}}^n
-\end{bmatrix}^{\mathsf T}.
-\label{eq:state_zwd}
-\end{align}
-
-Le paramètre $ZWD$ constitue ainsi une inconnue supplémentaire du système.
-
-L'introduction de ces deux paramètres nécessite naturellement une extension
-du vecteur d'état. Celui-ci devient
-\begin{align}
-\mathbf x
-=
-\begin{bmatrix}
-\mathbf r_r^{\mathsf T} & c\delta t_r & ZWD & G_N & G_E &
-B_{r,\mathrm{IF}}^1 & \ldots & B_{r,\mathrm{IF}}^n
-\end{bmatrix}^{\mathsf T}.
-\label{eq:state_zwd_grad}
-\end{align}
-
-
 Pour une constellation et un modèle troposphérique avec gradients, l'état est
 \begin{align}
 \mathbf x&=[\,\mathbf r_r^{\mathsf T}\quad c\delta t_r\quad ZWD\quad
@@ -1142,322 +1105,31 @@ avec :
 \end{itemize}
 Les ISB sont ajoutés lorsque plusieurs constellations sont utilisées.
 
-\subsection{Filtre de Kalman : mécanismes spécifiques au GNSS}
-\label{ppp:kalman}
+\subsection{Estimation séquentielle et continuité des observations}
 
-Le PPP considéré utilise un filtre de Kalman étendu. Ses équations générales,
-l'initialisation de la covariance et le cycle prédiction--mise à jour sont
-présentés en annexe~\ref{ann:Kalman}. La présente section reprend uniquement
-les mécanismes propres au traitement des observations GNSS.
+Le PPP considéré utilise un filtre de Kalman étendu. À chaque époque, le
+filtre prédit l'état et son incertitude à partir de l'époque précédente, puis
+les met à jour avec les observations disponibles. Il conserve ainsi
+l'information acquise au cours du suivi. Les équations sont données en
+annexe~\ref{ann:estimation}.
 
-L'indice $k$ désigne l'époque. Chaque paramètre reçoit une valeur initiale
-et une incertitude ; leurs méthodes d'obtention sont précisées ci-dessous.
+Chaque paramètre doit recevoir une valeur initiale et une incertitude.
+Un modèle d'évolution décrit également les variations admises entre deux
+époques. La position d'une station statique, son horloge, la troposphère et
+les ambiguïtés n'ont pas les mêmes propriétés temporelles et ne reçoivent
+donc pas le même modèle.
 
-\label{ppp:sec:ekf_gnss_features}
+La phase de convergence correspond à l'accumulation d'information permettant
+de mieux séparer ces paramètres. Le code, bien que moins précis, reste utile
+pour initialiser la position, l'horloge et les ambiguïtés.
 
-En pratique, le traitement d'observations GNSS nécessite des mécanismes qui ne
-font pas partie des équations générales d'un EKF. Le nombre de satellites et,
-par conséquent, le nombre d'ambiguïtés varient au cours du temps. Le suivi de
-la porteuse peut être interrompu, une horloge de récepteur peut évoluer trop
-rapidement pour être prédite avec fiabilité et des observations aberrantes
-peuvent apparaître. Les sections suivantes détaillent les stratégies retenues pour gérer ces situations.
-
-\subsubsection{Initialisation et réinitialisation des horloges}
-
-À la première époque, une solution ponctuelle fondée uniquement sur les
-mesures de code fournit une position approchée et une première estimation du
-biais d'horloge GPS $c\delta t_r$. En multi-constellation, le même ajustement
-estime simultanément $\mathrm{ISB}_r^{\mathrm{GAL}}$. Ces valeurs initialisent
-les composantes correspondantes de $\widehat{\mathbf x}_0$ présenté à la
-section~\ref{ann:sec:ekf_initialization}.
-
-L'horloge du récepteur peut varier fortement d'une époque à la suivante. Elle
-n'est donc pas prédite par le modèle d'évolution retenu. Avant chaque mise à
-jour ultérieure de l'EKF, une nouvelle solution ponctuelle de code estime la
-position, $c\delta t_r$ et, lorsque Galileo est utilisé,
-$\mathrm{ISB}_r^{\mathrm{GAL}}$. Seules les estimations d'horloge et d'ISB sont
-injectées dans l'état prédit ; la position issue de ce calcul auxiliaire ne
-remplace pas la position propagée par le filtre.
-
-Le bloc de covariance associé à l'horloge et à l'ISB est alors réinitialisé.
-Leurs variances initiales et leur covariance mutuelle sont rétablies, tandis
-que leurs corrélations avec la position, la troposphère et les ambiguïtés sont
-annulées. Cette opération ne remet donc pas à zéro l'ensemble du filtre : les
-autres paramètres et l'information accumulée à leur sujet sont conservés.
-
-\subsubsection{État d'ambiguïtés adapté à la visibilité}
-
-Une ambiguïté flottante est associée à chaque satellite dont la phase est
-utilisée. Lors de sa première apparition, elle est initialisée par la
-différence entre phase et code, ramenée en cycles :
-
-\begin{align}
-\widehat N_{r,i,0}^s
-&=
-\frac{L_{r,i}^s-P_{r,i}^s}{\lambda_i},
-&
-B_{r,i,0}^s
-&=
-\lambda_i\widehat N_{r,i,0}^s
-=L_{r,i}^s-P_{r,i}^s.
-\label{ppp:eq:ambiguity_initialization}
-\end{align}
-
-avec :
-
-\begin{itemize}
-    \item $\widehat N_{r,i,0}^s$ l'estimation initiale de l'ambiguïté, en
-    cycles ;
-    \item $B_{r,i,0}^s$ la même ambiguïté initiale exprimée en mètres ;
-    \item $L_{r,i}^s$ et $P_{r,i}^s$ les observations de phase et de code
-    exprimées en mètres dans une convention commune ;
-    \item $\lambda_i$ la longueur d'onde de la porteuse considérée.
-\end{itemize}
-
-L'indice $0$ désigne ici le début du premier arc de suivi du satellite, ou le
-début d'un nouvel arc après réinitialisation. Lorsque la fréquence ou la
-combinaison utilisée est implicite, cette quantité est notée $B_{r,0}^s$. Elle
-est la valeur initiale de l'ambiguïté dont l'incertitude apparaît sous la forme
-$\sigma_{B_{r,0}^s}^2$ dans la covariance initiale $\mathbf P_0$ de
-l'équation~\eqref{ann:eq:ekf_initial_covariance}.
-
-Le vecteur d'état est adapté lorsque la liste des satellites visibles change.
-Les paramètres communs et les ambiguïtés des satellites suivis sans
-interruption sont conservés, de même que les blocs de covariance associés. Une
-nouvelle ambiguïté reçoit sa valeur et sa variance initiales ; celle d'un
-satellite qui disparaît est retirée de l'état courant. Cette adaptation évite
-de faire évoluer des paramètres qui ne sont plus observables.
-
-\subsubsection{Définition d'un saut de cycle}
-
-Tant que le récepteur suit une porteuse sans interruption, l'ambiguïté entière
-$N_{r,i}^s$ reste constante. Une perte momentanée du suivi peut laisser la
-phase mesurée cohérente à une constante entière de cycles près. Entre les
-instants qui précèdent et suivent cette discontinuité,
-
-\begin{align}
-N_{r,i}^s(t^+)
-&=
-N_{r,i}^s(t^-)+\Delta N_{r,i}^s,
-&
-\Delta N_{r,i}^s
-&\in\mathbb Z\setminus\{0\},
-\\
-\Delta L_{r,i}^s
-&=
-\lambda_i\Delta N_{r,i}^s.
-\label{ppp:eq:cycle_slip_definition}
-\end{align}
-
-avec :
-
-\begin{itemize}
-    \item $t^-$ et $t^+$ les instants situés immédiatement avant et après la
-    discontinuité ;
-    \item $\Delta N_{r,i}^s$ le nombre entier de cycles perdus ou ajoutés ;
-    \item $\Delta L_{r,i}^s$ la discontinuité correspondante de la phase
-    exprimée en mètres ;
-    \item $\lambda_i$ la longueur d'onde de la porteuse.
-\end{itemize}
-
-Ce phénomène est appelé \emph{saut de cycle}. Il affecte la phase mais pas la
-mesure de code. L'ambiguïté antérieure ne peut donc plus être conservée après
-le saut, même si les autres paramètres du filtre restent valides.
-
-\subsubsection{Détection des sauts de cycle}
-
-Trois indicateurs complémentaires sont employés. Le premier est le
-\textit{Loss-of-Lock Indicator} (LLI) enregistré avec les observations de
-phase dans le fichier RINEX~\cite{rinex304}. Le verrouillage désigne la capacité de la boucle
-de poursuite du récepteur à suivre continûment la phase de la porteuse et à
-conserver le comptage des cycles. Une perte de verrouillage interrompt cette
-continuité ; après réacquisition, le nombre entier de cycles séparant les deux
-arcs est inconnu. Une ambiguïté de demi-cycle signifie que l'origine de phase
-reste incertaine de $\lambda_i/2$, généralement à cause d'une indétermination
-de $180^\circ$ dans le suivi du signal. Dans les deux cas, le modèle
-d'ambiguïté entière n'est plus garanti. Les bits correspondants du LLI
-déclenchent donc une réinitialisation, mais ils dépendent des capacités du
-récepteur et ne signalent pas nécessairement toutes les discontinuités.
-
-On utilise également des combinaisons d'observations sensibles aux sauts de
-cycle, parmi lesquelles les combinaisons \textit{geometry-free} et
-Melbourne--Wübbena~\cite{blewitt1990,melbourne1985,wubbena1985}.
-
-En bi-fréquence, la combinaison \textit{geometry-free} est définie par
-
-\begin{align}
-L_{\mathrm{GF},r}^s
-&=
-L_{r,1}^s-L_{r,2}^s
-\\
-&=
-I_{r,2}^s-I_{r,1}^s
-+B_{r,1}^s-B_{r,2}^s
-+\varepsilon_{\mathrm{GF},r}^s.
-\label{ppp:eq:geometry_free_slip}
-\end{align}
-
-avec :
-
-\begin{itemize}
-    \item $L_{r,1}^s$ et $L_{r,2}^s$ les phases exprimées en mètres sur les
-    deux fréquences ;
-    \item $I_{r,1}^s$ et $I_{r,2}^s$ les retards ionosphériques associés ;
-    \item $B_{r,1}^s$ et $B_{r,2}^s$ les ambiguïtés métriques ;
-    \item $\varepsilon_{\mathrm{GF},r}^s$ le bruit résiduel de la combinaison.
-\end{itemize}
-
-La géométrie, les horloges et la troposphère étant communes aux deux
-fréquences, elles disparaissent de cette différence. En l'absence de saut,
-$L_{\mathrm{GF},r}^s$ évolue lentement sous l'effet de l'ionosphère. Pour
-séparer cette évolution régulière d'une discontinuité, les $n_{\mathrm{GF}}$
-dernières valeurs valides du même satellite sont exprimées par rapport à
-l'époque courante $t_k$. Pour chaque époque antérieure $t_j$, on pose
-$\tau_j=t_j-t_k$. Dans ce travail, la méthode retenue consiste à ajuster un
-polynôme du second degré par moindres
-carrés sur cette fenêtre :
-
-\begin{align}
-q_k(\tau)
-&=
-a_{0,k}+a_{1,k}\tau+a_{2,k}\tau^2,
-\\
-\begin{bmatrix}
-a_{0,k} & a_{1,k} & a_{2,k}
-\end{bmatrix}
-&=
-\underset{a_0,a_1,a_2}{\operatorname{arg\,min}}
-\sum_{j=k-n_{\mathrm{GF}}}^{k-1}
-\left[
-L_{\mathrm{GF},r}^s(t_j)
--a_0-a_1\tau_j-a_2\tau_j^2
-\right]^2,
-\\
-\widehat L_{\mathrm{GF},r,k}^s
-&=
-q_k(0)=a_{0,k}.
-\label{ppp:eq:geometry_free_prediction}
-\end{align}
-
-La valeur extrapolée $\widehat L_{\mathrm{GF},r,k}^s$ est alors comparée à la
-combinaison effectivement observée à l'époque courante :
-
-\begin{align}
-r_{\mathrm{GF},k}^s
-&=
-L_{\mathrm{GF},r}^s(t_k)-\widehat L_{\mathrm{GF},r,k}^s,
-\\
-\left|r_{\mathrm{GF},k}^s\right|
-&>\eta_{\mathrm{GF}}
-\quad\Longrightarrow\quad
-\text{saut détecté}.
-\label{ppp:eq:geometry_free_detection}
-\end{align}
-
-avec :
-
-\begin{itemize}
-    \item $n_{\mathrm{GF}}$ le nombre de valeurs antérieures utilisées ;
-    \item $\tau_j$ le décalage temporel de l'observation antérieure $j$ par
-    rapport à l'époque testée ;
-    \item $q_k$ le polynôme du second degré ajusté sur la fenêtre ;
-    \item $a_{0,k}$, $a_{1,k}$ et $a_{2,k}$ ses coefficients ;
-    \item $\widehat L_{\mathrm{GF},r,k}^s$ la valeur prédite à l'époque $k$ ;
-    \item $r_{\mathrm{GF},k}^s$ l'écart entre la valeur observée et la
-    prédiction ;
-    \item $\eta_{\mathrm{GF}}$ le seuil de détection.
-\end{itemize}
-
-La valeur utilisée est $\eta_{\mathrm{GF}}=0{,}05\,\mathrm{m}$. La fenêtre
-contient $n_{\mathrm{GF}}=5$ valeurs et la prédiction ne commence qu'une fois
-ces cinq observations disponibles. La série n'est considérée continue que si
-l'intervalle temporel respecte
-$\Delta t\leq\Delta t_{\mathrm{GF},\max}$, avec
-$\Delta t_{\mathrm{GF},\max}=60\,\mathrm{s}$. Le polynôme absorbe ainsi
-l'évolution ionosphérique régulière, tandis qu'une variation brusque reste
-dans le résidu.
-
-La combinaison de Melbourne--Wübbena permet également de détecter des sauts de cycle.
-Elle est définie comme la différence entre deux combinaisons, à savoir la combinaison de phase
-\textit{wide-lane} et la combinaison de code \textit{narrow-lane} :
-
-\begin{align}
-M_{\mathrm{MW},r}^s
-=
-\frac{f_1L_{r,1}^s-f_2L_{r,2}^s}{f_1-f_2}
--
-\frac{f_1P_{r,1}^s+f_2P_{r,2}^s}{f_1+f_2}.
-\label{ppp:eq:melbourne_wubbena_slip}
-\end{align}
-
-avec :
-
-\begin{itemize}
-    \item $M_{\mathrm{MW},r}^s$ la combinaison de Melbourne--Wübbena exprimée
-    en mètres ;
-    \item $P_{r,1}^s$ et $P_{r,2}^s$ les mesures de code ;
-    \item $L_{r,1}^s$ et $L_{r,2}^s$ les mesures de phase en mètres ;
-    \item $f_1$ et $f_2$ les fréquences porteuses correspondantes.
-\end{itemize}
-
-Cette combinaison élimine au premier ordre la géométrie, les horloges, la
-troposphère et l'ionosphère. Elle contient principalement une combinaison
-d'ambiguïtés, à laquelle s'ajoute le bruit du code. La détection porte sur sa
-variation entre deux époques :
-
-\begin{align}
-r_{\mathrm{MW},k}^s
-&=
-M_{\mathrm{MW},r}^s(t_k)-M_{\mathrm{MW},r}^s(t_{k-1}),
-\\
-\left|r_{\mathrm{MW},k}^s\right|
-&>\eta_{\mathrm{MW}}
-\quad\Longrightarrow\quad
-\text{saut détecté}.
-\label{ppp:eq:melbourne_wubbena_detection}
-\end{align}
-
-avec :
-
-\begin{itemize}
-    \item $r_{\mathrm{MW},k}^s$ la variation de la combinaison entre deux
-    époques successives ;
-    \item $\eta_{\mathrm{MW}}$ le seuil de détection.
-\end{itemize}
-
-La valeur utilisée est $\eta_{\mathrm{MW}}=10\,\mathrm{m}$.
-
-\subsubsection{Réinitialisation après un saut ou une perte de suivi}
-
-Lorsqu'un saut est détecté, l'ambiguïté concernée est recalculée par
-l'équation~\eqref{ppp:eq:ambiguity_initialization} et sa variance est replacée à sa
-valeur initiale. Une absence brève ne provoque pas nécessairement cette
-opération. En revanche, si un satellite réapparaît après un nombre d'époques
-supérieur au seuil d'interruption, la continuité de phase n'est plus supposée :
-
-\begin{align}
-n_{\mathrm{gap}}^s
-&=
-k-k_{\mathrm{last}}^s,
-&
-n_{\mathrm{gap}}^s>N_{\mathrm{out}}
-&\quad\Longrightarrow\quad
-\text{ambiguïté réinitialisée}.
-\label{ppp:eq:outage_reset}
-\end{align}
-
-avec :
-
-\begin{itemize}
-    \item $k_{\mathrm{last}}^s$ la dernière époque à laquelle le satellite $s$
-    était présent ;
-    \item $n_{\mathrm{gap}}^s$ l'écart en nombre d'époques ;
-    \item $N_{\mathrm{out}}$ le seuil de réinitialisation après interruption.
-\end{itemize}
-
-La valeur utilisée est $N_{\mathrm{out}}=20$ époques. La même procédure que
-pour un saut de cycle est alors appliquée. La réinitialisation reste locale à
-l'ambiguïté concernée.
+Une perte de verrouillage est une interruption du suivi de la porteuse.
+Elle peut provoquer un saut de cycle, c'est-à-dire une discontinuité du
+comptage des cycles. L'ambiguïté antérieure n'est alors plus valable.
+Le traitement contrôle les indicateurs du récepteur et des combinaisons
+sensibles aux discontinuités. Lorsqu'un saut est détecté ou qu'une interruption
+dépasse la durée admise, l'ambiguïté concernée est réinitialisée.
+Les mécanismes détaillés sont conservés en annexe~\ref{ann:estimation}.
 
 Le tableau suivant résume les deux traitements retenus dans ce travail.
 Ces choix ne constituent pas une définition générale des estimateurs

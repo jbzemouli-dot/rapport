@@ -39,15 +39,6 @@ S.~Verhagen and P.~J.~G. Teunissen, ``Least-squares estimation and kalman
   Systems} (P.~J.~G. Teunissen and O.~Montenbruck, eds.), pp.~639--660,
   Springer, 2017.
 
-\bibitem{capderou2012}
-M.~Capderou, {\em Satellites : de Kepler au GPS}.
-\newblock Springer Paris, 2012.
-
-\bibitem{teunissen2017ambiguity}
-P.~J.~G. Teunissen, ``Carrier phase integer ambiguity resolution,'' in {\em
-  Springer Handbook of Global Navigation Satellite Systems} (P.~J.~G. Teunissen
-  and O.~Montenbruck, eds.), pp.~661--685, Springer, 2017.
-
 \bibitem{schmid2007}
 R.~Schmid, P.~Steigenberger, G.~Gendt, M.~Ge, and M.~Rothacher, ``Generation of
   a consistent absolute phase-center correction model for gps receiver and
@@ -58,14 +49,42 @@ J.~T. Wu, S.~C. Wu, G.~A. Hajj, W.~I. Bertiger, and S.~M. Lichten, ``Effects of
   antenna orientation on gps carrier phase,'' {\em Manuscripta Geodaetica},
   vol.~18, pp.~91--98, 1993.
 
+\bibitem{iers2010}
+International Earth Rotation and Reference Systems Service, {\em IERS
+  Conventions (2010)}, 2010.
+
 \bibitem{chenHerring1997}
 G.~Chen and T.~A. Herring, ``Effects of atmospheric azimuthal asymmetry on the
   analysis of space geodetic data,'' {\em Journal of Geophysical Research:
   Solid Earth}, vol.~102, no.~B9, pp.~20489--20502, 1997.
 
+\bibitem{capderou2012}
+M.~Capderou, {\em Satellites : de Kepler au GPS}.
+\newblock Springer Paris, 2012.
+
 \bibitem{rinex304}
 {IGS/RTCM RINEX Committee}, {\em {RINEX}: The Receiver Independent Exchange
   Format, Version 3.04}, Nov. 2018.
+
+\bibitem{blewitt1990}
+G.~Blewitt, ``An automatic editing algorithm for gps data,'' {\em Geophysical
+  Research Letters}, vol.~17, no.~3, pp.~199--202, 1990.
+
+\bibitem{melbourne1985}
+W.~G. Melbourne, ``The case for ranging in gps-based geodetic systems,'' in
+  {\em Proceedings of the First International Symposium on Precise Positioning
+  with the Global Positioning System}, pp.~373--386, 1985.
+
+\bibitem{wubbena1985}
+G.~W{\"u}bbena, ``Software developments for geodetic positioning with gps using
+  ti-4100 code and carrier measurements,'' in {\em Proceedings of the First
+  International Symposium on Precise Positioning with the Global Positioning
+  System}, pp.~403--412, 1985.
+
+\bibitem{teunissen2017ambiguity}
+P.~J.~G. Teunissen, ``Carrier phase integer ambiguity resolution,'' in {\em
+  Springer Handbook of Global Navigation Satellite Systems} (P.~J.~G. Teunissen
+  and O.~Montenbruck, eds.), pp.~661--685, Springer, 2017.
 
 \bibitem{hauschild2017combinations}
 A.~Hauschild, ``Combinations of observations,'' in {\em Springer Handbook of
@@ -91,21 +110,6 @@ D.~Odijk, ``Positioning model,'' in {\em Springer Handbook of Global Navigation
 P.~J.~G. Teunissen, ``Batch and recursive model validation,'' in {\em Springer
   Handbook of Global Navigation Satellite Systems} (P.~J.~G. Teunissen and
   O.~Montenbruck, eds.), pp.~687--720, Springer, 2017.
-
-\bibitem{blewitt1990}
-G.~Blewitt, ``An automatic editing algorithm for gps data,'' {\em Geophysical
-  Research Letters}, vol.~17, no.~3, pp.~199--202, 1990.
-
-\bibitem{melbourne1985}
-W.~G. Melbourne, ``The case for ranging in gps-based geodetic systems,'' in
-  {\em Proceedings of the First International Symposium on Precise Positioning
-  with the Global Positioning System}, pp.~373--386, 1985.
-
-\bibitem{wubbena1985}
-G.~W{\"u}bbena, ``Software developments for geodetic positioning with gps using
-  ti-4100 code and carrier measurements,'' in {\em Proceedings of the First
-  International Symposium on Precise Positioning with the Global Positioning
-  System}, pp.~403--412, 1985.
 
 \bibitem{zumberge1997}
 J.~F. Zumberge, M.~B. Heflin, D.~C. Jefferson, M.~M. Watkins, and F.~H. Webb,
@@ -139,10 +143,6 @@ S.~Banville, J.~Geng, S.~Loyer, S.~Schaer, T.~Springer, and S.~Strasser, ``On
 {International GNSS Service}, {\em {ANTEX}: The Antenna Exchange Format,
   Version 1.4}.
 \newblock International GNSS Service, 2010.
-
-\bibitem{iers2010}
-International Earth Rotation and Reference Systems Service, {\em IERS
-  Conventions (2010)}, 2010.
 
 \bibitem{Introduction}
 J.~F. Claerbout, {\em Geophysics: the leading edge of exploration}.

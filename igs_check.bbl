@@ -1,0 +1,177 @@
+\begin{thebibliography}{10}
+
+\bibitem{koubaHeroux2001}
+J.~Kouba and P.~H{\'e}roux, ``Precise point positioning using igs orbit and
+  clock products,'' {\em GPS Solutions}, vol.~5, pp.~12--28, 2001.
+
+\bibitem{rinex304}
+{IGS/RTCM RINEX Committee}, {\em {RINEX}: The Receiver Independent Exchange
+  Format, Version 3.04}, Nov. 2018.
+
+\bibitem{isgps200n}
+{GPS Directorate}, {\em {IS-GPS-200N}: Navstar GPS Space Segment/Navigation
+  User Interfaces}, Aug. 2022.
+
+\bibitem{ashby2003}
+N.~Ashby, ``Relativity in the global positioning system,'' {\em Living Reviews
+  in Relativity}, vol.~6, no.~1, 2003.
+
+\bibitem{hilla2016sp3d}
+S.~Hilla, {\em The Extended Standard Product 3 Orbit Format (SP3-d)}.
+\newblock National Geodetic Survey, 2016.
+
+\bibitem{rinexClock304}
+{International GNSS Service}, {\em {RINEX} Extensions to Handle Clock
+  Information, Version 3.04}, 2018.
+
+\bibitem{schaerSinexBias}
+S.~Schaer, {\em {SINEX BIAS}---Solution Independent Exchange Format for GNSS
+  Biases, Version 1.00}.
+\newblock International GNSS Service, 2016.
+
+\bibitem{galileoOsSisIcd21}
+{European Union Agency for the Space Programme}, {\em Galileo Open Service
+  Signal-in-Space Interface Control Document, Issue 2.1}, 2023.
+
+\bibitem{iers2010}
+International Earth Rotation and Reference Systems Service, {\em IERS
+  Conventions (2010)}, 2010.
+
+\bibitem{saastamoinen1972}
+J.~Saastamoinen, ``Atmospheric correction for the troposphere and stratosphere
+  in radio ranging of satellites,'' in {\em The Use of Artificial Satellites
+  for Geodesy}, vol.~15 of {\em Geophysical Monograph Series}, pp.~247--251,
+  American Geophysical Union, 1972.
+
+\bibitem{niell1996}
+A.~E. Niell, ``Global mapping functions for the atmosphere delay at radio
+  wavelengths,'' {\em Journal of Geophysical Research: Solid Earth}, vol.~101,
+  no.~B2, pp.~3227--3246, 1996.
+
+\bibitem{hauschild2017observations}
+A.~Hauschild, ``Basic observation equations,'' in {\em Springer Handbook of
+  Global Navigation Satellite Systems} (P.~J.~G. Teunissen and O.~Montenbruck,
+  eds.), pp.~561--582, Springer, 2017.
+
+\bibitem{klobuchar1987}
+J.~A. Klobuchar, ``Ionospheric time-delay algorithm for single-frequency gps
+  users,'' {\em IEEE Transactions on Aerospace and Electronic Systems},
+  vol.~AES-23, no.~3, pp.~325--331, 1987.
+
+\bibitem{verhagen2017least}
+S.~Verhagen and P.~J.~G. Teunissen, ``Least-squares estimation and kalman
+  filtering,'' in {\em Springer Handbook of Global Navigation Satellite
+  Systems} (P.~J.~G. Teunissen and O.~Montenbruck, eds.), pp.~639--660,
+  Springer, 2017.
+
+\bibitem{schmid2007}
+R.~Schmid, P.~Steigenberger, G.~Gendt, M.~Ge, and M.~Rothacher, ``Generation of
+  a consistent absolute phase-center correction model for gps receiver and
+  satellite antennas,'' {\em Journal of Geodesy}, vol.~81, pp.~781--798, 2007.
+
+\bibitem{maile2026auspos}
+T.~Maile, S.~Masoumi, C.~Wang, {\em et~al.}, ``Analysis of the {AUSPOS} v3.0
+  positioning service after alignment to {ITRF2020},'' {\em GPS Solutions},
+  vol.~30, p.~52, 2026.
+
+\bibitem{wu1993}
+J.~T. Wu, S.~C. Wu, G.~A. Hajj, W.~I. Bertiger, and S.~M. Lichten, ``Effects of
+  antenna orientation on gps carrier phase,'' {\em Manuscripta Geodaetica},
+  vol.~18, pp.~91--98, 1993.
+
+\bibitem{chenHerring1997}
+G.~Chen and T.~A. Herring, ``Effects of atmospheric azimuthal asymmetry on the
+  analysis of space geodetic data,'' {\em Journal of Geophysical Research:
+  Solid Earth}, vol.~102, no.~B9, pp.~20489--20502, 1997.
+
+\bibitem{capderou2012}
+M.~Capderou, {\em Satellites : de Kepler au GPS}.
+\newblock Springer Paris, 2012.
+
+\bibitem{melbourne1985}
+W.~G. Melbourne, ``The case for ranging in gps-based geodetic systems,'' in
+  {\em Proceedings of the First International Symposium on Precise Positioning
+  with the Global Positioning System}, pp.~373--386, 1985.
+
+\bibitem{wubbena1985}
+G.~W{\"u}bbena, ``Software developments for geodetic positioning with gps using
+  ti-4100 code and carrier measurements,'' in {\em Proceedings of the First
+  International Symposium on Precise Positioning with the Global Positioning
+  System}, pp.~403--412, 1985.
+
+\bibitem{antexFormat}
+{International GNSS Service}, {\em {ANTEX}: The Antenna Exchange Format,
+  Version 1.4}.
+\newblock International GNSS Service, 2010.
+
+\bibitem{rtklib_manual_242}
+T.~Takasu, {\em {RTKLIB} Version 2.4.2 Manual}.
+\newblock Tokyo University of Marine Science and Technology, 2013.
+
+\bibitem{cddis2026day090}
+{NASA Crustal Dynamics Data Information System}, ``Archive des données gnss
+  quotidiennes, année 2026, jour 090,'' 2026.
+\newblock Consulté le 14 septembre 2026.
+
+\bibitem{Introduction}
+J.~F. Claerbout, {\em Geophysics: the leading edge of exploration}.
+\newblock A scrutiny of the introduction, janvier 1991.
+
+\bibitem{hauschild2017combinations}
+A.~Hauschild, ``Combinations of observations,'' in {\em Springer Handbook of
+  Global Navigation Satellite Systems} (P.~J.~G. Teunissen and O.~Montenbruck,
+  eds.), pp.~583--604, Springer, 2017.
+
+\bibitem{odijk2017positioning}
+D.~Odijk, ``Positioning model,'' in {\em Springer Handbook of Global Navigation
+  Satellite Systems} (P.~J.~G. Teunissen and O.~Montenbruck, eds.),
+  pp.~605--638, Springer, 2017.
+
+\bibitem{teunissen2017ambiguity}
+P.~J.~G. Teunissen, ``Carrier phase integer ambiguity resolution,'' in {\em
+  Springer Handbook of Global Navigation Satellite Systems} (P.~J.~G. Teunissen
+  and O.~Montenbruck, eds.), pp.~661--685, Springer, 2017.
+
+\bibitem{teunissen2017validation}
+P.~J.~G. Teunissen, ``Batch and recursive model validation,'' in {\em Springer
+  Handbook of Global Navigation Satellite Systems} (P.~J.~G. Teunissen and
+  O.~Montenbruck, eds.), pp.~687--720, Springer, 2017.
+
+\bibitem{bassiriHajj1993}
+S.~Bassiri and G.~A. Hajj, ``Higher-order ionospheric effects on the global
+  positioning system observables and means of modeling them,'' {\em Manuscripta
+  Geodaetica}, vol.~18, pp.~280--289, 1993.
+
+\bibitem{odijkTeunissen2013}
+D.~Odijk and P.~J.~G. Teunissen, ``Characterization of between-receiver
+  gps--galileo inter-system biases and their effect on mixed ambiguity
+  resolution,'' {\em GPS Solutions}, vol.~17, pp.~521--533, 2013.
+
+\bibitem{kalman1960}
+R.~E. Kalman, ``A new approach to linear filtering and prediction problems,''
+  {\em Journal of Basic Engineering}, vol.~82, no.~1, pp.~35--45, 1960.
+
+\bibitem{blewitt1990}
+G.~Blewitt, ``An automatic editing algorithm for gps data,'' {\em Geophysical
+  Research Letters}, vol.~17, no.~3, pp.~199--202, 1990.
+
+\bibitem{zumberge1997}
+J.~F. Zumberge, M.~B. Heflin, D.~C. Jefferson, M.~M. Watkins, and F.~H. Webb,
+  ``Precise point positioning for the efficient and robust analysis of gps data
+  from large networks,'' {\em Journal of Geophysical Research: Solid Earth},
+  vol.~102, no.~B3, pp.~5005--5017, 1997.
+
+\bibitem{banville2020}
+S.~Banville, J.~Geng, S.~Loyer, S.~Schaer, T.~Springer, and S.~Strasser, ``On
+  the interoperability of igs products for precise point positioning with
+  ambiguity resolution,'' {\em Journal of Geodesy}, vol.~94, 2020.
+
+\bibitem{orekit131api}
+{CS Group and Orekit contributors}, {\em Orekit 13.1.6 API Documentation}.
+\newblock Orekit, 2026.
+
+\bibitem{hipparchus403}
+{Hipparchus contributors}, {\em Hipparchus 4.0.3 API Documentation}.
+\newblock Hipparchus, 2025.
+
+\end{thebibliography}

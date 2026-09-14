@@ -1,5 +1,14 @@
 \begin{thebibliography}{10}
 
+\bibitem{orekitWebsite}
+{CS Group and Orekit contributors}, ``Orekit, an accurate and efficient core
+  layer for space flight dynamics applications,'' 2026.
+\newblock Consulté le 14 septembre 2026.
+
+\bibitem{koubaHeroux2001}
+J.~Kouba and P.~H{\'e}roux, ``Precise point positioning using igs orbit and
+  clock products,'' {\em GPS Solutions}, vol.~5, pp.~12--28, 2001.
+
 \bibitem{rinex304}
 {IGS/RTCM RINEX Committee}, {\em {RINEX}: The Receiver Independent Exchange
   Format, Version 3.04}, Nov. 2018.
@@ -65,6 +74,11 @@ R.~Schmid, P.~Steigenberger, G.~Gendt, M.~Ge, and M.~Rothacher, ``Generation of
   a consistent absolute phase-center correction model for gps receiver and
   satellite antennas,'' {\em Journal of Geodesy}, vol.~81, pp.~781--798, 2007.
 
+\bibitem{maile2026auspos}
+T.~Maile, S.~Masoumi, C.~Wang, {\em et~al.}, ``Analysis of the {AUSPOS} v3.0
+  positioning service after alignment to {ITRF2020},'' {\em GPS Solutions},
+  vol.~30, p.~52, 2026.
+
 \bibitem{wu1993}
 J.~T. Wu, S.~C. Wu, G.~A. Hajj, W.~I. Bertiger, and S.~M. Lichten, ``Effects of
   antenna orientation on gps carrier phase,'' {\em Manuscripta Geodaetica},
@@ -78,10 +92,6 @@ G.~Chen and T.~A. Herring, ``Effects of atmospheric azimuthal asymmetry on the
 \bibitem{capderou2012}
 M.~Capderou, {\em Satellites : de Kepler au GPS}.
 \newblock Springer Paris, 2012.
-
-\bibitem{blewitt1990}
-G.~Blewitt, ``An automatic editing algorithm for gps data,'' {\em Geophysical
-  Research Letters}, vol.~17, no.~3, pp.~199--202, 1990.
 
 \bibitem{melbourne1985}
 W.~G. Melbourne, ``The case for ranging in gps-based geodetic systems,'' in
@@ -102,6 +112,17 @@ G.~W{\"u}bbena, ``Software developments for geodetic positioning with gps using
 \bibitem{rtklib_manual_242}
 T.~Takasu, {\em {RTKLIB} Version 2.4.2 Manual}.
 \newblock Tokyo University of Marine Science and Technology, 2013.
+
+\bibitem{cddis2026day090}
+{NASA Crustal Dynamics Data Information System}, ``Archive des données gnss
+  quotidiennes, année 2026, jour 090,'' 2026.
+\newblock Consulté le 14 septembre 2026.
+
+\bibitem{zemouliScardino2026preciseNavigation}
+J.-B. ZEMOULI-SCARDINO {\em et~al.}, ``{Precise Navigation with Orekit: From
+  Single Point Positioning to Precise Orbit Determination Operational
+  Pipelines}.'' Article coécrit dans le cadre des travaux présentés dans ce
+  mémoire, 2026.
 
 \bibitem{Introduction}
 J.~F. Claerbout, {\em Geophysics: the leading edge of exploration}.
@@ -141,15 +162,15 @@ D.~Odijk and P.~J.~G. Teunissen, ``Characterization of between-receiver
 R.~E. Kalman, ``A new approach to linear filtering and prediction problems,''
   {\em Journal of Basic Engineering}, vol.~82, no.~1, pp.~35--45, 1960.
 
+\bibitem{blewitt1990}
+G.~Blewitt, ``An automatic editing algorithm for gps data,'' {\em Geophysical
+  Research Letters}, vol.~17, no.~3, pp.~199--202, 1990.
+
 \bibitem{zumberge1997}
 J.~F. Zumberge, M.~B. Heflin, D.~C. Jefferson, M.~M. Watkins, and F.~H. Webb,
   ``Precise point positioning for the efficient and robust analysis of gps data
   from large networks,'' {\em Journal of Geophysical Research: Solid Earth},
   vol.~102, no.~B3, pp.~5005--5017, 1997.
-
-\bibitem{koubaHeroux2001}
-J.~Kouba and P.~H{\'e}roux, ``Precise point positioning using igs orbit and
-  clock products,'' {\em GPS Solutions}, vol.~5, pp.~12--28, 2001.
 
 \bibitem{banville2020}
 S.~Banville, J.~Geng, S.~Loyer, S.~Schaer, T.~Springer, and S.~Strasser, ``On

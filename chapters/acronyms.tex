@@ -2,10 +2,15 @@
 \ifthenelse{\isundefined{\fr}}
 {\chapter*{Acronyms}}
 {\chapter*{Acronymes}}
+\phantomsection
 \label{acronyms}
-\addcontentsline{toc}{chapter}{\textmd{\nameref{acronyms}}}
+\ifthenelse{\isundefined{\fr}}
+{\addcontentsline{toc}{chapter}{\textmd{Acronyms}}}
+{\addcontentsline{toc}{chapter}{\textmd{Acronymes}}}
 \thispagestyle{fancy}
-\markright{\nameref{acronyms}}
+\ifthenelse{\isundefined{\fr}}
+{\markright{Acronyms}}
+{\markright{Acronymes}}
 
 Cette liste regroupe les sigles, les acronymes et les abréviations techniques
 employés dans le rapport. Les identifiants des deux stations étudiées y sont

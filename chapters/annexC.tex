@@ -1,0 +1,165 @@
+% !TEX root = ../enac_project_fr.tex
+\chapter{Détection et traitement des sauts de cycle}
+\label{ann:cycle_slips}
+
+Cette annexe détaille la détection des sauts de cycle utilisée dans le
+traitement PPP. Elle repose sur deux informations complémentaires : les
+indicateurs LLI contenus dans les observations RINEX et la combinaison de
+Melbourne-Wübbena calculée à partir d'observations bi-fréquences.
+
+\section{Définition et conséquences}
+
+Tant que le récepteur suit une porteuse sans interruption, l'ambiguïté entière
+$N_{r,i}^s$ reste constante. Une perte momentanée du verrouillage peut modifier
+le comptage d'un nombre entier de cycles. Entre les instants immédiatement
+antérieur et postérieur à la discontinuité,
+
+\begin{align}
+N_{r,i}^s(t^+)
+&=N_{r,i}^s(t^-)+\Delta N_{r,i}^s,
+&
+\Delta N_{r,i}^s&\in\mathbb Z\setminus\{0\},
+\\
+\Delta L_{r,i}^s&=\lambda_i\Delta N_{r,i}^s.
+\label{ann:eq:cycle_slip_definition}
+\end{align}
+
+avec :
+
+\begin{itemize}
+    \item $t^-$ et $t^+$ Les instants situés avant et après la
+    discontinuité,
+    \item $\Delta N_{r,i}^s$ Le nombre entier de cycles perdus ou ajoutés,
+    \item $\Delta L_{r,i}^s$ La discontinuité de phase exprimée en mètres,
+    \item $\lambda_i$ La longueur d'onde de la porteuse.
+\end{itemize}
+
+La mesure de code n'est pas affectée par ce changement d'ambiguïté. En
+revanche, conserver l'ancienne ambiguïté dans le filtre introduirait une erreur
+systématique dans les mesures de phase. La détection est donc réalisée avant
+la construction des observations de l'époque courante.
+
+\section{Détection par LLI}
+
+Le \textit{Loss-of-Lock Indicator} est associé aux observations de phase dans
+le format RINEX~\cite{rinex304}. Il renseigne directement sur l'état du suivi
+effectué par le récepteur. Les bits exploités signalent une perte de
+verrouillage ou une possible ambiguïté de demi-cycle. Dans les deux cas, la
+continuité de l'ambiguïté entière n'est plus garantie et le critère est
+
+\begin{align}
+\mathrm{LLI}_{r,i}^s(t_k)\neq 0
+\quad\Longrightarrow\quad
+\text{saut détecté}.
+\label{ann:eq:lli_detection}
+\end{align}
+
+Le LLI constitue une information directe et peu coûteuse à exploiter. Il reste
+toutefois dépendant du récepteur et de la manière dont celui-ci renseigne le
+fichier RINEX. Il peut donc ne pas signaler certaines discontinuités, ce qui
+justifie l'emploi simultané d'un indicateur construit à partir des mesures.
+
+\section{Détection par Melbourne-Wübbena}
+
+La combinaison de Melbourne-Wübbena utilise deux fréquences. Elle correspond à
+la différence entre une combinaison de phase \textit{wide-lane} et une
+combinaison de code \textit{narrow-lane}
+~\cite{blewitt1990,melbourne1985,wubbena1985} :
+
+\begin{align}
+M_{\mathrm{MW},r}^s
+&=
+\frac{f_1L_{r,1}^s-f_2L_{r,2}^s}{f_1-f_2}
+-
+\frac{f_1P_{r,1}^s+f_2P_{r,2}^s}{f_1+f_2}.
+\label{ann:eq:melbourne_wubbena}
+\end{align}
+
+avec :
+
+\begin{itemize}
+    \item $M_{\mathrm{MW},r}^s$ La combinaison de Melbourne-Wübbena, en
+    mètres,
+    \item $L_{r,1}^s$ et $L_{r,2}^s$ Les mesures de phase, en mètres,
+    \item $P_{r,1}^s$ et $P_{r,2}^s$ Les mesures de code, en mètres,
+    \item $f_1$ et $f_2$ Les fréquences porteuses correspondantes.
+\end{itemize}
+
+Cette combinaison élimine au premier ordre la géométrie satellite-récepteur,
+les biais d'horloge, la troposphère et l'ionosphère. Elle contient donc
+principalement une combinaison d'ambiguïtés, ainsi que le bruit amplifié des
+mesures de code. En l'absence de saut, sa valeur demeure approximativement
+constante entre deux époques consécutives. On calcule le résidu
+
+\begin{align}
+r_{\mathrm{MW},k}^s
+&=M_{\mathrm{MW},r}^s(t_k)-M_{\mathrm{MW},r}^s(t_{k-1}),
+\\
+\left|r_{\mathrm{MW},k}^s\right|
+&>\eta_{\mathrm{MW}}
+\quad\Longrightarrow\quad
+\text{saut détecté}.
+\label{ann:eq:melbourne_wubbena_detection}
+\end{align}
+
+avec :
+
+\begin{itemize}
+    \item $r_{\mathrm{MW},k}^s$ La variation de la combinaison entre deux
+    époques successives,
+    \item $\eta_{\mathrm{MW}}$ Le seuil de détection.
+\end{itemize}
+
+Le seuil retenu dans ce travail est $\eta_{\mathrm{MW}}=10\,\mathrm{m}$. La
+comparaison n'est effectuée que si les deux époques appartiennent au même arc
+continu et si toutes les observations nécessaires sont disponibles.
+
+\section{Fusion des indicateurs et réinitialisation}
+
+Les critères LLI et MW sont évalués séparément pour chaque satellite. La
+décision finale suit une logique inclusive : un saut est retenu dès que l'un
+des deux indicateurs est déclenché. Le LLI détecte directement les pertes de
+verrouillage déclarées par le récepteur, tandis que MW complète cette
+information en recherchant une discontinuité dans les observations.
+
+Lorsqu'un saut est détecté, l'ambiguïté correspondante est réinitialisée à
+partir de la différence entre phase et code :
+
+\begin{align}
+\widehat N_{r,i,0}^s
+&=\frac{L_{r,i}^s-P_{r,i}^s}{\lambda_i},
+&
+B_{r,i,0}^s
+&=\lambda_i\widehat N_{r,i,0}^s.
+\label{ann:eq:ambiguity_reset}
+\end{align}
+
+Sa variance est replacée à sa valeur initiale afin que le filtre puisse
+réestimer rapidement ce paramètre. Cette opération reste locale à l'ambiguïté
+concernée : la position, l'horloge, les paramètres troposphériques et les
+ambiguïtés des autres satellites sont conservés.
+
+Une interruption prolongée est traitée de la même manière, même en l'absence
+d'un indicateur explicite :
+
+\begin{align}
+n_{\mathrm{gap}}^s
+&=k-k_{\mathrm{last}}^s,
+&
+n_{\mathrm{gap}}^s>N_{\mathrm{out}}
+&\quad\Longrightarrow\quad
+\text{ambiguïté réinitialisée}.
+\label{ann:eq:outage_reset}
+\end{align}
+
+avec :
+
+\begin{itemize}
+    \item $k_{\mathrm{last}}^s$ La dernière époque de présence du satellite,
+    \item $n_{\mathrm{gap}}^s$ La durée de l'interruption en nombre d'époques,
+    \item $N_{\mathrm{out}}$ Le seuil de réinitialisation.
+\end{itemize}
+
+La valeur retenue est $N_{\mathrm{out}}=20$ époques. Après chaque détection ou
+interruption longue, les valeurs historiques utilisées par le test MW sont
+également réinitialisées afin de commencer un nouvel arc de phase cohérent.

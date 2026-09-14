@@ -1,9 +1,25 @@
-
+% !TEX root = ../enac_project_fr.tex
+\ifthenelse{\isundefined{\fr}}
+{\chapter*{Glossary}}
+{\chapter*{Glossaire}}
+\phantomsection
 \label{glossary}
-\printnoidxglossary
-\glsenablehyper
-
-
 \ifthenelse{\isundefined{\fr}}
 {\addcontentsline{toc}{chapter}{\textmd{Glossary}}}
 {\addcontentsline{toc}{chapter}{\textmd{Glossaire}}}
+\thispagestyle{fancy}
+\markright{\nameref{glossary}}
+
+\newglossarystyle{reportglossary}{%
+    \setglossarystyle{listgroup}%
+    \renewcommand*{\glossentry}[2]{%
+        \item[\glsentryitem{##1}\glstarget{##1}{\glossentryname{##1}} :]
+        \glossentrydesc{##1}\glspostdescription\space ##2}%
+}
+
+\glsaddall
+\begingroup
+\renewcommand*{\glossarysection}[2][]{}
+\printnoidxglossary[style=reportglossary]
+\endgroup
+\glsenablehyper

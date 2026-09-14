@@ -28,45 +28,47 @@ Reallocating 'name_of_file' (item size: 1) to 20 items.
 A level-1 auxiliary file: chapters/annexA.aux
 Reallocating 'name_of_file' (item size: 1) to 20 items.
 A level-1 auxiliary file: chapters/annexB.aux
+Reallocating 'name_of_file' (item size: 1) to 20 items.
+A level-1 auxiliary file: chapters/annexC.aux
 Database file #1: references/biblio.bib
-You've used 35 entries,
+You've used 39 entries,
             1876 wiz_defined-function locations,
-            681 strings with 8524 characters,
-and the built_in function-call counts, 8954 in all, are:
-= -- 927
-> -- 260
+            699 strings with 9249 characters,
+and the built_in function-call counts, 9561 in all, are:
+= -- 983
+> -- 290
 < -- 0
-+ -- 103
-- -- 68
-* -- 569
-:= -- 1210
-add.period$ -- 43
-call.type$ -- 35
-change.case$ -- 22
++ -- 115
+- -- 76
+* -- 600
+:= -- 1308
+add.period$ -- 49
+call.type$ -- 39
+change.case$ -- 26
 chr.to.int$ -- 0
-cite$ -- 35
-duplicate$ -- 483
-empty$ -- 925
-format.name$ -- 68
-if$ -- 2212
+cite$ -- 39
+duplicate$ -- 508
+empty$ -- 989
+format.name$ -- 76
+if$ -- 2360
 int.to.chr$ -- 0
-int.to.str$ -- 35
-missing$ -- 26
-newline$ -- 116
-num.names$ -- 46
-pop$ -- 124
+int.to.str$ -- 39
+missing$ -- 27
+newline$ -- 130
+num.names$ -- 50
+pop$ -- 141
 preamble$ -- 1
 purify$ -- 0
 quote$ -- 0
-skip$ -- 320
+skip$ -- 335
 stack$ -- 0
-substring$ -- 648
-swap$ -- 208
+substring$ -- 652
+swap$ -- 213
 text.length$ -- 0
 text.prefix$ -- 0
 top$ -- 0
 type$ -- 0
 warning$ -- 0
-while$ -- 100
-width$ -- 37
-write$ -- 333
+while$ -- 105
+width$ -- 41
+write$ -- 369

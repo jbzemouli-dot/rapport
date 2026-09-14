@@ -30,10 +30,10 @@ modèles corrigés s'écrivent
 avec :
 
 \begin{itemize}
-    \item $\overline P_r^s$ et $\overline L_r^s$ les observations corrigées.
-    \item $\varepsilon_{P,r}^s$ et $\varepsilon_{L,r}^s$ leurs erreurs
-    résiduelles.
-    \item $f_s$ et $g_s$ les fonctions d'observation dont les expressions
+    \item $\overline P_r^s$ et $\overline L_r^s$ Les observations corrigées,
+    \item $\varepsilon_{P,r}^s$ et $\varepsilon_{L,r}^s$ Leurs erreurs
+    résiduelles,
+    \item $f_s$ et $g_s$ Les fonctions d'observation dont les expressions
     sont précisées ci-après.
 \end{itemize}
 
@@ -59,12 +59,12 @@ f_s(x_r,y_r,z_r,c\delta t_r)+B_r^s.
 avec :
 
 \begin{itemize}
-    \item $f_s$ la fonction reliant la pseudo-distance corrigée à la position et au biais d'horloge du récepteur.
-    \item $g_s$ la fonction reliant la phase corrigée à la position, au biais d'horloge et à l'ambiguïté métrique associée au satellite $s$.
-    \item $(x^s,y^s,z^s)$ les coordonnées connues du satellite dans le même
-    repère que le récepteur.
-    \item $(x_r,y_r,z_r)$ les coordonnées inconnues du récepteur.
-    \item $B_r^s$ l'ambiguïté métrique de la mesure de phase.
+    \item $f_s$ La fonction reliant la pseudo-distance corrigée à la position et au biais d'horloge du récepteur,
+    \item $g_s$ La fonction reliant la phase corrigée à la position, au biais d'horloge et à l'ambiguïté métrique associée au satellite $s$,
+    \item $(x^s,y^s,z^s)$ Les coordonnées connues du satellite dans le même
+    repère que le récepteur,
+    \item $(x_r,y_r,z_r)$ Les coordonnées inconnues du récepteur,
+    \item $B_r^s$ L'ambiguïté métrique de la mesure de phase.
 \end{itemize}
 
 
@@ -86,11 +86,11 @@ ordre. Les paramètres à estimer sont d'abord regroupés dans le vecteur d'éta
 avec :
 
 \begin{itemize}
-    \item $\mathbf x$ le vecteur des paramètres estimés.
-    \item $\mathbf r_r=[x_r\ y_r\ z_r]^{\mathsf T}$ la position du
-    récepteur, en mètres.
-    \item $c\delta t_r$ le biais d'horloge du récepteur, en mètres.
-    \item $B_r^s$ l'ambiguïté associée au satellite $s$, en mètres.
+    \item $\mathbf x$ Le vecteur des paramètres estimés,
+    \item $\mathbf r_r=[x_r\ y_r\ z_r]^{\mathsf T}$ La position du
+    récepteur, en mètres,
+    \item $c\delta t_r$ Le biais d'horloge du récepteur, en mètres,
+    \item $B_r^s$ L'ambiguïté associée au satellite $s$, en mètres.
 \end{itemize}
 
 
@@ -118,11 +118,11 @@ $\mathbf h(\mathbf x)$ est approché au premier ordre par
 avec :
 
 \begin{itemize}
-    \item $\mathbf y$ le vecteur des observations corrigées, en mètres.
-    \item $\mathbf h(\mathbf x_0)$ le vecteur des observations calculées à
-    partir de l'état approché.
-    \item $\mathbf H_0$ la matrice jacobienne du modèle.
-    \item $\Delta\mathbf x$ la correction apportée à l'état.
+    \item $\mathbf y$ Le vecteur des observations corrigées, en mètres,
+    \item $\mathbf h(\mathbf x_0)$ Le vecteur des observations calculées à
+    partir de l'état approché,
+    \item $\mathbf H_0$ La matrice jacobienne du modèle,
+    \item $\Delta\mathbf x$ La correction apportée à l'état.
 \end{itemize}
 
 En écriture scalaire, l'état approché autour duquel les fonctions sont
@@ -141,9 +141,9 @@ B_{r,0}^{1} & \cdots & B_{r,0}^{n}
 avec :
 
 \begin{itemize}
-    \item $(x_{r,0},y_{r,0},z_{r,0})$ la position approchée du récepteur.
-    \item $c\delta t_{r,0}$ le biais d'horloge approché.
-    \item $B_{r,0}^{s}$ l'ambiguïté métrique approchée du satellite $s$.
+    \item $(x_{r,0},y_{r,0},z_{r,0})$ La position approchée du récepteur,
+    \item $c\delta t_{r,0}$ Le biais d'horloge approché,
+    \item $B_{r,0}^{s}$ L'ambiguïté métrique approchée du satellite $s$.
 \end{itemize}
 
 La distance géométrique calculée à cette position vaut
@@ -158,10 +158,10 @@ La distance géométrique calculée à cette position vaut
 avec :
 
 \begin{itemize}
-    \item $\rho_{r,0}^s$ la distance calculée entre le satellite $s$ et la
-    position approchée du récepteur.
-    \item $(x^s,y^s,z^s)$ les coordonnées du satellite.
-    \item $(x_{r,0},y_{r,0},z_{r,0})$ les coordonnées approchées du
+    \item $\rho_{r,0}^s$ La distance calculée entre le satellite $s$ et la
+    position approchée du récepteur,
+    \item $(x^s,y^s,z^s)$ Les coordonnées du satellite,
+    \item $(x_{r,0},y_{r,0},z_{r,0})$ Les coordonnées approchées du
     récepteur.
 \end{itemize}
 
@@ -302,10 +302,10 @@ La structure de la jacobienne est la suivante :
 avec :
 
 \begin{itemize}
-    \item $\mathbf G$ la matrice géométrique reliant les observations aux
-    trois coordonnées du récepteur et à son biais d'horloge.
-    \item $\mathbf 0_{n\times n}$ la matrice nulle de taille $n\times n$.
-    \item $\mathbf I_n$ la matrice identité de taille $n\times n$.
+    \item $\mathbf G$ La matrice géométrique reliant les observations aux
+    trois coordonnées du récepteur et à son biais d'horloge,
+    \item $\mathbf 0_{n\times n}$ La matrice nulle de taille $n\times n$,
+    \item $\mathbf I_n$ La matrice identité de taille $n\times n$.
 \end{itemize}
 
 Plus la position initiale est proche de la solution, plus la linéarisation est valable. Une seule correction peut donc être insuffisante si la
@@ -348,10 +348,10 @@ de ce critère conduit à
 avec :
 
 \begin{itemize}
-    \item $\widehat{\Delta\mathbf x}$ la correction d'état estimée.
-    \item $\mathbf W$ la matrice de pondération.
-    \item $\mathbf R$ la covariance des observations.
-    \item $\mathbf H_0$ la jacobienne évaluée à l'état courant.
+    \item $\widehat{\Delta\mathbf x}$ La correction d'état estimée,
+    \item $\mathbf W$ La matrice de pondération,
+    \item $\mathbf R$ La covariance des observations,
+    \item $\mathbf H_0$ La jacobienne évaluée à l'état courant.
 \end{itemize}
 
 Le choix $\mathbf W=\mathbf R^{-1}$ donne davantage de poids aux observations
@@ -372,9 +372,9 @@ L'état est mis à jour itérativement selon
 avec :
 
 \begin{itemize}
-    \item $j$ l'indice d'itération.
-    \item $\mathbf x_j$ l'état avant mise à jour.
-    \item $\widehat{\Delta\mathbf x}_j$ la correction calculée à l'itération
+    \item $j$ L'indice d'itération,
+    \item $\mathbf x_j$ L'état avant mise à jour,
+    \item $\widehat{\Delta\mathbf x}_j$ La correction calculée à l'itération
     $j$.
 \end{itemize}
 
@@ -398,11 +398,11 @@ différents, le critère d'arrêt porte sur la correction mise à l'échelle :
 avec :
 
 \begin{itemize}
-    \item $\widehat{\Delta x}_{j,p}$ la correction du paramètre $p$ à
-    l'itération $j$.
-    \item $s_p$ l'échelle associée à ce paramètre.
-    \item $\eta_j$ la plus grande correction normalisée.
-    \item $\eta_{\mathrm{WLS}}$ le seuil de convergence.
+    \item $\widehat{\Delta x}_{j,p}$ La correction du paramètre $p$ à
+    l'itération $j$,
+    \item $s_p$ L'échelle associée à ce paramètre,
+    \item $\eta_j$ La plus grande correction normalisée,
+    \item $\eta_{\mathrm{WLS}}$ Le seuil de convergence.
 \end{itemize}
 
 Une valeur type est $\eta_{\mathrm{WLS}}=10^{-3}$. La résolution est répétée
@@ -418,22 +418,33 @@ l'introduction d'un modèle temporel.
 \label{ann:Kalman}
 
 Le filtre de Kalman étendu (ou \emph{Extended Kalman Filter}, EKF) est une autre méthode de résolution des équations établies en section~\ref{ann:resolution}.
-Il exploite la continuité temporelle : la solution
-obtenue à une époque devient l'information a priori de l'époque suivante. Il
-combine deux sources d'information. Le modèle d'évolution décrit la manière
+C'est un estimateur adapté aux modèles dynamiques : la solution
+obtenue à une époque devient l'information a priori de l'époque suivante. Le modèle d'évolution décrit la manière
 dont l'état est susceptible de changer entre deux époques, tandis que le modèle
-d'observation relie cet état aux mesures GNSS courantes. Leurs incertitudes
+d'observation relie cet état aux mesures GNSS courantes. Cette méthode d'estimation suppose que le bruit des mesures est gaussien. Leurs incertitudes
 respectives déterminent le poids accordé à la prédiction et aux observations.
 
-L'indice $k$
-désigne désormais l'époque. Un exposant $-$ désignera une quantité prédite,
-avant l'utilisation des observations de cette époque. L'absence d'exposant
-désignera la quantité corrigée.
+L'indice $k$ désigne désormais l'époque. Une quantité prédite avant
+l'utilisation des observations sera notée
+$\widehat{\mathbf x}_k^-$. La quantité corrigée correspondante sera notée $\widehat{\mathbf x}_k$.
+
+À chaque époque, le fonctionnement du filtre se décompose en quatre étapes :
+
+\begin{enumerate}
+    \item \textbf{Prédiction} : L'état et sa covariance sont propagés à partir
+    de l'estimation corrigée à l'époque précédente,
+    \item \textbf{Calcul de l'innovation} : Les observations reçues sont
+    comparées aux mesures prévues par le modèle,
+    \item \textbf{Calcul du gain de Kalman} : Le poids accordé à l'innovation
+    est déterminé à partir des incertitudes de la prédiction et des mesures,
+    \item \textbf{Correction} : L'état prédit et sa covariance sont mis à jour
+    avant de servir de point de départ à l'époque suivante.
+\end{enumerate}
 
 \subsection{Initialisation du filtre}
 \label{ann:sec:ekf_initialization}
 
-Le calcul doit commencer avec une estimation initiale
+Le calcul commence avec une estimation initiale
 $\widehat{\mathbf x}_0$ et sa covariance $\mathbf P_0$. Chaque paramètre du
 vecteur d'état doit donc recevoir une valeur initiale, même approximative. Dans
 le cas d'une covariance initiale diagonale,
@@ -458,15 +469,15 @@ le cas d'une covariance initiale diagonale,
 avec :
 
 \begin{itemize}
-    \item $\sigma_{x,0}$, $\sigma_{y,0}$ et $\sigma_{z,0}$ les écarts-types
-    initiaux des coordonnées.
-    \item $\sigma_{c\delta t,0}$ et $\sigma_{\mathrm{ISB},0}$ ceux de
-    l'horloge et, en multi-constellation, de l'ISB.
-    \item $\sigma_{B_{r,0}^s}$ celui de l'ambiguïté métrique initiale
-    $B_{r,0}^s$ du satellite $s$.
-    \item $\sigma_{ZWD,0}$ celui du retard humide zénithal lorsque ce paramètre
-    est estimé.
-    \item les points de suspension désignent les autres paramètres éventuels, dont
+    \item $\sigma_{x,0}$, $\sigma_{y,0}$ et $\sigma_{z,0}$ Les écarts-types
+    initiaux des coordonnées,
+    \item $\sigma_{c\delta t,0}$ et $\sigma_{\mathrm{ISB},0}$ Ceux de
+    l'horloge et, en multi-constellation, de l'ISB,
+    \item $\sigma_{B_{r,0}^s}$ Celui de l'ambiguïté métrique initiale
+    $B_{r,0}^s$ du satellite $s$,
+    \item $\sigma_{ZWD,0}$ Celui du retard humide zénithal lorsque ce paramètre
+    est estimé,
+    \item Les points de suspension désignent les autres paramètres éventuels, dont
     les gradients troposphériques.
 \end{itemize}
 
@@ -498,21 +509,17 @@ Le modèle suivant exprime l'état courant à partir de l'état précédent :
 avec :
 
 \begin{itemize}
-    \item $\mathbf x_k$ l'état à l'époque $k$.
-    \item $\mathbf F_k$ la matrice de transition entre les époques $k-1$ et
-    $k$.
-    \item $\mathbf w_k$ le bruit de processus.
-    \item $\mathbf Q_k$ la covariance du bruit de processus.
+    \item $\mathbf x_k$ L'état à l'époque $k$,
+    \item $\mathbf F_k$ La matrice de transition entre les époques $k-1$ et
+    $k$,
+    \item $\mathbf w_k$ Le bruit de processus,
+    \item $\mathbf Q_k$ La covariance du bruit de processus.
 \end{itemize}
 
-La matrice $\mathbf F_k$ traduit l'évolution déterministe attendue. Pour un
+La matrice $\mathbf F_k$ traduit l'évolution du modèle attendue. Pour un
 récepteur statique, les coordonnées sont supposées constantes entre deux
 époques. Leur matrice de transition est donc l'identité. Le bruit de processus
-$\mathbf w_k$ représente les variations que ce modèle idéal ne décrit pas. Sa
-covariance $\mathbf Q_k$ règle la liberté d'évolution accordée à chaque
-paramètre : une faible variance impose une forte continuité, tandis qu'une
-variance plus élevée permet une évolution plus rapide.
-
+$\mathbf w_k$ représente les variations que ce modèle ne décrit pas.
 \subsection{Modèle d'observation}
 
 À l'époque $k$, le vecteur $\mathbf y_k$ regroupe les observations disponibles.
@@ -536,10 +543,10 @@ observations est
 avec :
 
 \begin{itemize}
-    \item $\mathbf y_k$ le vecteur d'observations à l'époque $k$.
-    \item $\mathbf h_k$ le modèle d'observation GNSS.
-    \item $\mathbf v_k$ le bruit de mesure.
-    \item $\mathbf R_k$ la covariance des observations.
+    \item $\mathbf y_k$ Le vecteur d'observations à l'époque $k$,
+    \item $\mathbf h_k$ Le modèle d'observation GNSS,
+    \item $\mathbf v_k$ Le bruit de mesure,
+    \item $\mathbf R_k$ La covariance des observations.
 \end{itemize}
 
 La matrice $\mathbf R_k$ joue ici le même rôle que dans les moindres carrés
@@ -565,18 +572,17 @@ Autour de l'état prédit $\widehat{\mathbf x}_k^-$, la relation linéarisée es
 avec :
 
 \begin{itemize}
-    \item $\widehat{\mathbf x}_k^-$ l'état prédit avant traitement des
-    observations.
-    \item $\mathbf H_k$ la jacobienne du modèle à l'état prédit.
-    \item le membre de gauche l'innovation non encore pondérée.
+    \item $\widehat{\mathbf x}_k^-$ L'état prédit avant traitement des
+    observations,
+    \item $\mathbf H_k$ La jacobienne du modèle à l'état prédit,
+    \item Le membre de gauche l'innovation non encore pondérée.
 \end{itemize}
 
 \subsection{Prédiction}
 
-Avant de traiter les nouvelles mesures, le filtre propage l'estimation obtenue
-à l'époque précédente. Il propage également sa covariance, qui quantifie
-l'incertitude sur l'état. L'ajout de $\mathbf Q_k$ augmente cette incertitude
-pour tenir compte des évolutions non parfaitement connues :
+Avant de traiter les nouvelles mesures, le filtre propage l'estimation et sa covariance obtenues
+à l'époque précédente. L'ajout de $\mathbf Q_k$ augmente cette incertitude
+pour tenir compte des évolutions :
 
 \begin{align}
 \widehat{\mathbf x}_k^-
@@ -593,9 +599,9 @@ pour tenir compte des évolutions non parfaitement connues :
 avec :
 
 \begin{itemize}
-    \item $\widehat{\mathbf x}_{k-1}$ l'état corrigé à l'époque précédente.
-    \item $\mathbf P_{k-1}$ sa covariance.
-    \item $\widehat{\mathbf x}_k^-$ et $\mathbf P_k^-$ l'état prédit et sa
+    \item $\widehat{\mathbf x}_{k-1}$ L'état corrigé à l'époque précédente,
+    \item $\mathbf P_{k-1}$ Sa covariance,
+    \item $\widehat{\mathbf x}_k^-$ et $\mathbf P_k^-$ L'état prédit et sa
     covariance.
 \end{itemize}
 
@@ -622,9 +628,9 @@ sa covariance sont
 avec :
 
 \begin{itemize}
-    \item $\boldsymbol\nu_k$ le vecteur d'innovation.
-    \item $\mathbf S_k$ la covariance de l'innovation.
-    \item $\mathbf R_k$ la covariance du bruit de mesure.
+    \item $\boldsymbol\nu_k$ Le vecteur d'innovation,
+    \item $\mathbf S_k$ La covariance de l'innovation,
+    \item $\mathbf R_k$ La covariance du bruit de mesure.
 \end{itemize}
 
 La covariance $\mathbf S_k$ combine l'incertitude de l'état projetée dans
@@ -649,17 +655,12 @@ Kalman en déduit la part de l'innovation à appliquer à l'état :
 avec :
 
 \begin{itemize}
-    \item $\mathbf K_k$ le gain de Kalman.
-    \item $\widehat{\mathbf x}_k$ l'état après assimilation des observations.
-    \item $\mathbf P_k$ la covariance de l'état corrigé.
-    \item $\mathbf I$ la matrice identité de dimension adaptée.
-    \item les autres termes sont définis dans les équations précédentes.
+    \item $\mathbf K_k$ Le gain de Kalman,
+    \item $\widehat{\mathbf x}_k$ L'état après assimilation des observations,
+    \item $\mathbf P_k$ La covariance de l'état corrigé,
+    \item $\mathbf I$ La matrice identité de dimension adaptée,
+    \item Les autres termes sont définis dans les équations précédentes.
 \end{itemize}
-
-Si la prédiction est très incertaine devant les mesures, le gain accorde une
-place importante à l'innovation. À l'inverse, des observations très bruitées
-modifient peu l'état prédit. Le gain n'est pas choisi à l'avance. Il résulte
-des covariances du modèle et des observations.
 
 À l'issue de cette mise à jour, $\widehat{\mathbf x}_k$ et $\mathbf P_k$
 résument toute l'information utilisée jusqu'à l'époque $k$. Ils servent de

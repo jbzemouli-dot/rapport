@@ -15,25 +15,25 @@ solutions de surveillance de l'espace, d'observation de la Terre, de navigation
 et de télécommunication.
 Le stage s'inscrit dans le cadre des activités de recherche et développement en
 navigation par satellite. Il a été réalisé au sein de l'équipe FD NAV
-(\emph{Flight Dynamics and Navigation}) de la \emph{Business Unit} Espace de
+(\emph{Flight Dynamics and Navigation}) de la Business Unit Espace de
 l'entreprise.
 
 
 \section{Contexte technique}
 
-Le stage s'appuie sur Orekit, une bibliothèque Java développée par CS GROUP
-depuis 2002 pour les applications de dynamique du vol spatial. Elle fournit
-des outils de calcul d'orbites et de traitement de mesures.
+Le stage s'appuie sur Orekit~\cite{orekitWebsite}, une bibliothèque Java développée par CS GROUP
+depuis 2002 pour les applications de dynamique du vol. Elle fournit
+des outils de calcul d'orbites, de traitement de différentes mesures et de gestion des systèmes de temps et des repères.
 Les outils présents dans cette bibliothèque sont étudiés pour le calcul de positionnement GNSS.
 
 \subsection{GNSS (\textit{Global Navigation Satellite System})}
 
-Le terme GNSS (\textit{Global Navigation Satellite System}) désigne l'ensemble des systèmes mondiaux de navigation par satellite permettant à un utilisateur équipé d'un récepteur de déterminer sa position, sa vitesse et une référence temporelle à partir des données issues des signaux émis par des satellites.
+Le terme GNSS (\textit{Global Navigation Satellite System}) désigne l'ensemble des systèmes mondiaux de navigation par satellite permettant à un utilisateur équipé d'un récepteur de déterminer sa position et sa vitesse à partir des données issues des signaux émis par des satellites.
 
 Les principaux systèmes actuellement opérationnels sont le GPS
 (\textit{Global Positioning System}) américain, GALILEO européen, GLONASS russe
 et BEIDOU chinois. Chacun repose sur une constellation de satellites placés en
-orbite autour de la Terre et diffusant en continu des signaux de navigation dans
+orbite autour de la Terre et diffusant en continu des signaux dans
 plusieurs bandes de fréquences. Ces signaux contiennent des messages de
 navigation qui fournissent au récepteur les informations nécessaires au calcul
 de sa position.
@@ -84,12 +84,36 @@ trois distances indépendantes permettent de déterminer les trois coordonnées
 du récepteur, en écartant la solution qui ne se trouve pas au voisinage de la
 surface terrestre.
 
-En pratique, l'horloge du récepteur n'est pas parfaitement synchronisée avec
-le temps du système GNSS. Son décalage, appelé biais d'horloge, constitue une quatrième inconnue,
-commune aux mesures réalisées à une même époque. Il faut donc disposer des
-mesures d'au moins quatre satellites pour déterminer les trois coordonnées du
-récepteur et son biais d'horloge. Lorsque davantage de satellites sont
-disponibles, alors il y a plus d'observations que d'inconnues, ce qui permet d'améliorer la précision de l'estimation.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.70\textwidth]{images/trilateration.jpg}
+    \caption{Trilatération à partir de trois satellites.}
+    \label{fig:trilateration}
+\end{figure}
+
+La distance géométrique associée à un satellite $s$ peut alors s'écrire en
+fonction des coordonnées du satellite et du récepteur :
+
+\begin{align}
+\rho_r^s =
+\sqrt{
+\left(x^s-{\color{red}x_r}\right)^2
++\left(y^s-{\color{red}y_r}\right)^2
++\left(z^s-{\color{red}z_r}\right)^2
+},
+\label{new:geometric_range_coordinates}
+\end{align}
+
+où les coordonnées du récepteur sont les inconnues à déterminer. En pratique,
+l'horloge du récepteur n'est pas parfaitement synchronisée avec le temps du
+système GNSS. Son décalage, appelé biais d'horloge, constitue une quatrième
+inconnue, commune aux mesures réalisées à une même époque. Le jeu de paramètres
+à estimer est donc le quadruplet
+$({\color{red}x_r},{\color{red}y_r},{\color{red}z_r},{\color{red}c\delta t_r})$.
+Il faut donc disposer des mesures d'au moins quatre satellites pour déterminer
+les trois coordonnées du récepteur et son biais d'horloge. Lorsque davantage de
+satellites sont disponibles, alors il y a plus d'observations que d'inconnues,
+ce qui permet d'améliorer la précision de l'estimation.
 
 \subsection{Observations et méthodes de positionnement}
 
@@ -97,6 +121,7 @@ Un récepteur GNSS fournit principalement deux types d'observations utilisables
 pour le positionnement : les mesures de pseudo-distance issues du suivi des
 codes et les mesures de phase de la porteuse. Par la suite,
 les termes codes ou pseudo-distance seront considérés comme équivalents.
+Dans le cadre de ce stage, deux techniques de positionnement sont étudiées et sont détaillées dans la suite :
 
 \subsubsection{SPP (\textit{Single Point Positioning})}
 
@@ -118,6 +143,13 @@ Le PPP (\textit{Precise Point Positioning}) cherche à atteindre une précision 
 des produits précis pour les satellites, les mesures de phase de la porteuse
 et des modèles de correction plus complets.
 
+Le PPP utilise des produits précis : ce sont des fichiers qui fournissent des orbites et des corrections d'horloge
+satellite estimées par des centres d'analyse à partir des observations d'un
+réseau mondial de stations GNSS~\cite{koubaHeroux2001}. La collecte et le contrôle de ces
+observations demandent un certain délai : les produits précis ne sont
+donc disponibles qu'après la période observée, contrairement aux informations
+diffusées directement par les satellites.
+
 L'utilisation de la phase améliore fortement la précision des observations,
 mais impose d'estimer les ambiguïtés de phase qui sont des inconnues supplémentaires. Le PPP utilise
 des données précises sur les orbites et les horloges des
@@ -133,7 +165,7 @@ ainsi que des mécanismes propres à la résolution des ambiguïtés de phase.
 
 \section{Orekit et les outils existants}
 
-Aujourd'hui, Orekit est utilisé dans le secteur spatial. La bibliothèque est
+Orekit est une librairie Java largement utilisée dans le secteur spatial. La bibliothèque est
 maintenue par les développeurs de CS GROUP et par une communauté d'utilisateurs.
 La bibliothèque est \textit{open source} et distribuée sous licence Apache 2.0, une licence
 permissive permettant son utilisation dans des projets commerciaux comme non commerciaux.
@@ -142,9 +174,9 @@ Defence and Space, Thales Alenia Space, le CNES, l'ESA ou encore l'U.S. Naval Re
 
 Orekit fournit principalement des fonctions de bas niveau, conçues pour être assemblées
 et adaptées à l'application considérée. La bibliothèque couvre un
-large éventail de domaines : la dynamique du vol spatial, la propagation et la détermination
+large éventail de domaines : la dynamique du vol, la propagation et la détermination
 d'orbite, la gestion des attitudes, des dates et des systèmes de coordonnées, ou encore le
-traitement de mesures GNSS.
+traitement de différentes mesures GNSS.
 
 En ce qui concerne le GNSS, la bibliothèque met à disposition des modèles
 de propagation et des estimateurs. Ces fonctions constituent des briques
@@ -156,14 +188,18 @@ dans la section consacrée à l'implémentation.
 
 \section{Problématique générale}
 
-L'objectif du stage est de construire une chaîne de positionnement GNSS à
+L'objectif du stage est d'établir un état de l'art et une chaîne de positionnement GNSS à
 partir des fonctions disponibles dans Orekit. Le travail consiste à les
-assembler, à identifier les éléments manquants et à les développer, en allant du simple programme de SPP au PPP.
+assembler, à identifier les éléments manquants et à les développer, en allant du programme pour le SPP et le PPP.
 
 La chaîne doit permettre de choisir les observations, les constellations GNSS et
 les différents modèles de correction. Les
 fonctions existantes d'Orekit sont réutilisées dès qu'elles répondent au
 besoin. Les résultats sont ensuite comparés à ceux d'un logiciel de référence pour être validés.
+
+Le développement du PPP vise à fournir, à terme, des solutions de position,
+vitesse et temps (PVT) suffisamment précises pour alimenter une chaîne de
+détermination précise d'orbite (POD).
 
 Le chapitre suivant présente d'abord les modèles retenus, du positionnement
 sur le code au PPP, puis leur mise en œuvre avec Orekit. Les développements

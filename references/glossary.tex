@@ -1,28 +1,275 @@
-% \makeglossaries
+% Glossaire des notions techniques utilisées dans le rapport.
 \makenoidxglossaries
-\newglossaryentry{utc}{name=UTC, description={Coordinated Universal Time is \lipsum[1-1]}}
-\newglossaryentry{aadt}{name=ADT, description={Atlantic Daylight Time}}
-\newglossaryentry{aest}{name=EST, description={Eastern Standard Time}}
-\newglossaryentry{enac}{name=ENAC, description={Ecole Nationale de l'Aviation Civile is \lipsum[1-1]}}
 
-\newglossaryentry{latex}
+\newglossaryentry{ambiguite-phase}
 {
-    name=latex,
-    description={Is a mark up language specially suited for scientific documents}
+    name={Ambiguïté de phase},
+    sort={ambiguite de phase},
+    description={Inconnue associée à une mesure de phase de porteuse, correspondant au nombre entier de cycles entre le satellite et le récepteur, éventuellement exprimée en mètres lorsqu'elle est intégrée au modèle d'observation}
 }
 
-\newglossaryentry{maths}
+\newglossaryentry{biais-horloge}
 {
-    name=mathematics,
-    description={Mathematics is what mathematicians do}
+    name={Biais d'horloge},
+    sort={biais d'horloge},
+    description={Décalage entre l'horloge d'un récepteur ou d'un satellite et l'échelle de temps GNSS de référence ; dans les équations de positionnement, il est souvent multiplié par la vitesse de la lumière afin d'être exprimé en mètres}
 }
 
-\newglossaryentry{formula}
+\newglossaryentry{biais-intersystemes}
 {
-    name=formula,
-    description={A mathematical expression}
+    name={Biais inter-systèmes},
+    sort={biais inter-systemes},
+    description={Décalage à estimer ou à corriger lorsque plusieurs constellations GNSS sont traitées conjointement, par exemple GPS et GALILEO}
 }
 
-\newacronym{gcd}{GCD}{Greatest Common Divisor}
+\newglossaryentry{centre-phase}
+{
+    name={Centre de phase},
+    sort={centre de phase},
+    description={Point électrique effectif d'une antenne GNSS à partir duquel les mesures de phase sont modélisées ; sa position dépend de l'antenne et de la direction du signal}
+}
 
-\newacronym{lcm}{LCM}{Least Common Multiple}
+\newglossaryentry{code-pseudoaleatoire}
+{
+    name={Code pseudo-aléatoire},
+    sort={code pseudo-aleatoire},
+    description={Séquence numérique propre à un signal GNSS, utilisée par le récepteur pour identifier le satellite et mesurer le temps de propagation du signal}
+}
+
+\newglossaryentry{combinaison-ionofree}
+{
+    name={Combinaison iono-free},
+    sort={combinaison iono-free},
+    description={Combinaison linéaire de deux observations GNSS mesurées sur deux fréquences, construite pour supprimer le retard ionosphérique du premier ordre}
+}
+
+\newglossaryentry{constellation}
+{
+    name={Constellation},
+    sort={constellation},
+    description={Ensemble de satellites appartenant à un même système de navigation, comme GPS, GALILEO, GLONASS ou BEIDOU}
+}
+
+\newglossaryentry{convergence}
+{
+    name={Convergence},
+    sort={convergence},
+    description={Phase initiale d'un traitement, en particulier en PPP, pendant laquelle la position, l'horloge, les ambiguïtés et les paramètres atmosphériques se stabilisent progressivement}
+}
+
+\newglossaryentry{correction-antenne}
+{
+    name={Correction d'antenne},
+    sort={correction d'antenne},
+    description={Correction appliquée pour tenir compte du décalage et des variations du centre de phase des antennes satellite et récepteur}
+}
+
+\newglossaryentry{correction-relativiste}
+{
+    name={Correction relativiste},
+    sort={correction relativiste},
+    description={Terme corrigeant les effets de la relativité sur les horloges GNSS, notamment ceux liés à l'excentricité de l'orbite du satellite}
+}
+
+\newglossaryentry{covariance}
+{
+    name={Covariance},
+    sort={covariance},
+    description={Matrice qui décrit les incertitudes associées aux paramètres estimés et leurs corrélations ; elle est notamment propagée dans le filtre de Kalman}
+}
+
+\newglossaryentry{cycle-slip}
+{
+    name={Saut de cycle},
+    sort={saut de cycle},
+    description={Discontinuité dans le suivi de la phase de porteuse, provoquée par une perte temporaire de verrouillage du signal et entraînant une rupture de l'ambiguïté de phase}
+}
+
+\newglossaryentry{dop}
+{
+    name={Dilution de précision},
+    sort={dilution de precision},
+    description={Indicateur de l'effet de la géométrie des satellites visibles sur la précision de la solution de positionnement}
+}
+
+\newglossaryentry{effet-sagnac}
+{
+    name={Effet Sagnac},
+    sort={effet Sagnac},
+    description={Correction liée à la rotation de la Terre pendant le temps de propagation du signal GNSS entre le satellite et le récepteur}
+}
+
+\newglossaryentry{elevation}
+{
+    name={Élévation},
+    sort={elevation},
+    description={Angle entre la direction du satellite et le plan horizontal local du récepteur ; les satellites bas sur l'horizon sont généralement plus sensibles aux erreurs atmosphériques et aux multitrajets}
+}
+
+\newglossaryentry{enac}
+{
+    name={ENAC},
+    sort={ENAC},
+    description={École nationale de l'aviation civile, établissement de formation et de recherche spécialisé dans les domaines de l'aéronautique et du transport aérien}
+}
+
+\newglossaryentry{ephemerides-diffusees}
+{
+    name={Éphémérides diffusées},
+    sort={ephemerides diffusees},
+    description={Paramètres orbitaux et d'horloge transmis dans le message de navigation des satellites GNSS et utilisables directement par un récepteur}
+}
+
+\newglossaryentry{ephemerides-precises}
+{
+    name={Éphémérides précises},
+    sort={ephemerides precises},
+    description={Produits calculés a posteriori par des centres d'analyse, fournissant des orbites et des horloges satellites plus précises que les données diffusées}
+}
+
+\newglossaryentry{filtre-kalman}
+{
+    name={Filtre de Kalman étendu},
+    sort={filtre de Kalman etendu},
+    description={Estimateur récursif adapté aux modèles non linéaires après linéarisation, utilisé pour mettre à jour progressivement l'état GNSS à chaque époque de mesure}
+}
+
+\newglossaryentry{gradient-tropospherique}
+{
+    name={Gradient troposphérique},
+    sort={gradient tropospherique},
+    description={Paramètre représentant l'asymétrie horizontale du retard troposphérique autour de la station, généralement séparée en composantes nord et est}
+}
+
+\newglossaryentry{innovation}
+{
+    name={Innovation},
+    sort={innovation},
+    description={Écart entre une observation et sa prédiction par le modèle courant, utilisé dans le filtre de Kalman pour corriger l'état estimé}
+}
+
+\newglossaryentry{ionosphere}
+{
+    name={Ionosphère},
+    sort={ionosphere},
+    description={Région ionisée de la haute atmosphère qui modifie la propagation des signaux GNSS et introduit un retard dépendant de la fréquence}
+}
+
+\newglossaryentry{kalman-bruit-processus}
+{
+    name={Bruit de processus},
+    sort={bruit de processus},
+    description={Incertitude ajoutée au modèle d'évolution d'un paramètre dans le filtre de Kalman, afin de représenter sa variabilité non modélisée}
+}
+
+\newglossaryentry{klobuchar}
+{
+    name={Modèle de Klobuchar},
+    sort={modele de Klobuchar},
+    description={Modèle empirique diffusé dans le message de navigation GPS pour corriger une partie du retard ionosphérique à partir de coefficients transmis par les satellites}
+}
+
+\newglossaryentry{moindres-carres}
+{
+    name={Moindres carrés pondérés},
+    sort={moindres carres ponderes},
+    description={Méthode d'estimation qui recherche les paramètres minimisant les résidus des observations en tenant compte du poids ou de l'incertitude attribués à chaque mesure}
+}
+
+\newglossaryentry{observable}
+{
+    name={Observable},
+    sort={observable},
+    description={Mesure exploitable fournie par un récepteur GNSS, par exemple une pseudo-distance ou une phase de porteuse}
+}
+
+\newglossaryentry{orbite-precise}
+{
+    name={Orbite précise},
+    sort={orbite precise},
+    description={Position du satellite fournie par un produit précis, souvent au format SP3, permettant d'améliorer les traitements PPP}
+}
+
+\newglossaryentry{phase-porteuse}
+{
+    name={Phase de porteuse},
+    sort={phase de porteuse},
+    description={Observation GNSS fondée sur la phase de l'onde porteuse du signal ; elle est beaucoup plus précise que le code mais introduit une ambiguïté de phase}
+}
+
+\newglossaryentry{pseudo-distance}
+{
+    name={Pseudo-distance},
+    sort={pseudo-distance},
+    description={Distance apparente entre un satellite et un récepteur, déduite du temps de propagation du code GNSS et affectée par les biais d'horloge et les erreurs de propagation}
+}
+
+\newglossaryentry{repere-ecef}
+{
+    name={Repère ECEF},
+    sort={repere terrestre centre Terre},
+    description={Repère cartésien lié à la rotation de la Terre, utilisé pour exprimer les coordonnées des stations et des satellites dans les traitements GNSS}
+}
+
+\newglossaryentry{repere-enu}
+{
+    name={Repère ENU},
+    sort={repere local est-nord-haut},
+    description={Repère local centré sur la station, utilisé pour analyser les erreurs de position selon les directions est, nord et verticale}
+}
+
+\newglossaryentry{residu}
+{
+    name={Résidu},
+    sort={residu},
+    description={Différence entre une observation corrigée et la valeur calculée par le modèle pour l'état estimé}
+}
+
+\newglossaryentry{retard-ionospherique}
+{
+    name={Retard ionosphérique},
+    sort={retard ionospherique},
+    description={Allongement apparent du trajet du signal GNSS causé par l'ionosphère ; il dépend de la fréquence du signal}
+}
+
+\newglossaryentry{retard-tropospherique}
+{
+    name={Retard troposphérique},
+    sort={retard tropospherique},
+    description={Retard de propagation introduit par la troposphère, séparé en composantes hydrostatique et humide puis projeté selon l'élévation du satellite}
+}
+
+\newglossaryentry{saastamoinen}
+{
+    name={Modèle de Saastamoinen},
+    sort={modele de Saastamoinen},
+    description={Modèle empirique couramment utilisé pour calculer le retard troposphérique à partir de paramètres atmosphériques et de la géométrie satellite-récepteur}
+}
+
+\newglossaryentry{trilateration}
+{
+    name={Trilatération},
+    sort={trilateration},
+    description={Détermination d'une position à partir de plusieurs distances à des points connus, ici les satellites GNSS}
+}
+
+\newglossaryentry{vecteur-etat}
+{
+    name={Vecteur d'état},
+    sort={vecteur d'etat},
+    description={Ensemble des paramètres estimés simultanément, comme la position du récepteur, son biais d'horloge, les biais inter-systèmes, les ambiguïtés et les paramètres troposphériques}
+}
+
+\newglossaryentry{wind-up}
+{
+    name={Wind-up de phase},
+    sort={wind-up de phase},
+    description={Correction de phase liée à l'orientation relative des antennes satellite et récepteur}
+}
+
+\newglossaryentry{ztd}
+{
+    name={Retard zénithal total},
+    sort={retard zenithal total},
+    description={Retard troposphérique total dans la direction du zénith, estimé ou corrigé dans les traitements GNSS précis}
+}

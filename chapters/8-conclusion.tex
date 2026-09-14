@@ -8,23 +8,23 @@
 
 \section{Réponse à la problématique}
 
-Ce travail devait répondre au besoin suivant : organiser les fonctions GNSS
-d'Orekit pour construire une chaîne de positionnement allant du SPP au PPP.
-Les développements réalisés et
-leur comparaison avec RTKLIB montrent que le programme remplit
-les exigences demandées, dans le cadre des données étudiées.
+Le travail réalisé au cours du stage
+avait pour objectif de transformer les fonctions GNSS disponibles
+dans Orekit en une chaîne de positionnement complète, depuis une solution SPP
+jusqu'à un traitement PPP. Les développements réalisés et leur comparaison avec
+RTKLIB montrent les programmes développés remplissent les exigences demandées, dans le cadre des données étudiées.
 
 La chaîne obtenue couvre l'ensemble du traitement :
 
 \begin{itemize}
-    \item lecture des observations RINEX et des données de navigation.
-    \item lecture des produits précis nécessaires au PPP.
-    \item sélection des satellites, des constellations et des signaux.
-    \item construction des mesures de code et de phase.
-    \item application des corrections ionosphériques, troposphériques,
-    géométriques et instrumentales.
-    \item résolution par moindres carrés pondérés ou par filtre de Kalman.
-    \item export des positions et des paramètres estimés dans des fichiers
+    \item Lecture des observations RINEX et des données de navigation,
+    \item Lecture des produits précis nécessaires au PPP,
+    \item Sélection des satellites, des constellations et des signaux,
+    \item Construction des mesures de code et de phase,
+    \item Application des corrections ionosphériques, troposphériques,
+    géométriques et instrumentales,
+    \item Résolution par moindres carrés pondérés ou par filtre de Kalman,
+    \item Export des positions et des paramètres estimés dans des fichiers
     exploitables.
 \end{itemize}
 
@@ -33,27 +33,25 @@ possible de changer la station, le jour, les observations, les
 constellations, les modèles atmosphériques, les éphémérides et les réglages des
 estimateurs sans modifier le code.
 
-Orekit a fourni les fonctions générales de gestion du temps et des repères,
-de propagation GNSS, de lecture des produits, de calcul des dérivées et
-d'estimation. Ces fonctions ne formaient pas une
-application de positionnement au sol. Plusieurs adaptations ont donc été
-nécessaires :
+La difficulté principale n'était donc pas de réécrire les modèles physiques
+déjà présents dans Orekit, mais de les organiser autour d'un récepteur fixe et
+de conventions GNSS cohérentes. Plusieurs adaptations ont été nécessaires :
 
 \begin{itemize}
-    \item représentation d'un récepteur statique dans un estimateur prévu pour
-    la détermination d'orbite.
-    \item utilisation des mesures unidirectionnelles entre un satellite et un
-    récepteur.
-    \item ajout de modificateurs propres aux corrections absentes ou non
-    utilisables sans adaptation.
-    \item gestion des biais entre systèmes, des ambiguïtés et des sauts de
-    cycle.
-    \item assemblage cohérent des produits et des corrections du PPP.
+    \item Représentation d'un récepteur statique dans un estimateur prévu pour
+    la détermination d'orbite,
+    \item Utilisation des mesures unidirectionnelles entre un satellite et un
+    récepteur,
+    \item Ajout de modificateurs propres aux corrections absentes ou non
+    utilisables sans adaptation,
+    \item Gestion des biais entre systèmes, des ambiguïtés et des sauts de
+    cycle,
+    \item Assemblage cohérent des produits et des corrections du PPP.
 \end{itemize}
 
-Le résultat n'est donc pas une réécriture complète des outils d'Orekit. Il
-s'agit d'une chaîne applicative qui réutilise les briques existantes et ajoute
-les éléments propres au positionnement d'un récepteur terrestre.
+Le résultat est une chaîne de traitement qui conserve les briques générales de la
+bibliothèque et ajoute les éléments propres au positionnement d'un récepteur
+terrestre.
 
 \section{Résultats obtenus}
 
@@ -61,36 +59,36 @@ La validation a été menée en comparant les solutions Java/Orekit à celles de
 RTKLIB avec les mêmes observations et des configurations aussi proches que
 possible.
 
-En SPP, les résultats retrouvent les ordres de grandeur attendus : environ un
-mètre dans le plan horizontal et quelques mètres en 3D. Pour la configuration
-témoin, les RMSE 2D valent $1{,}210$~m avec Java et $1{,}212$~m avec RTKLIB.
-Les RMSE 3D valent respectivement $2{,}783$ et $2{,}764$~m. La proximité est
-conservée lorsque la station, le modèle ionosphérique ou les constellations
-changent. L'ajout de GALILEO améliore la géométrie et réduit la dispersion. Le
-traitement reste également cohérent au jour 019, malgré une activité
-géomagnétique plus forte.
+En SPP, les solutions sont dans les ordres de grandeur attendus pour un
+positionnement par code : environ un mètre dans le plan horizontal et de quelques
+mètres en 3D. La configuration témoin donne des RMSE très proches entre Java et
+RTKLIB, aussi bien en 2D qu'en 3D. Les variantes étudiées confirment que cette
+proximité ne dépend pas uniquement d'un cas particulier : elle se maintient
+lorsque la station, le modèle ionosphérique, les constellations ou le jour
+d'observation changent. Les essais multiconstellations retrouvent également
+l'effet attendu d'une géométrie plus favorable.
 
-En PPP, l'utilisation des phases et des produits précis apporte un gain net.
-À TLSG avec GPS, les RMSE Java atteignent $0{,}126$~m en 2D et $0{,}186$~m en
-3D. Avec GPS et GALILEO, elles diminuent à $0{,}069$~m et $0{,}084$~m. Après
-convergence, la dispersion observée pendant la dernière heure devient
-centimétrique. Le filtre fournit une solution plus régulière et moins bruitée
-que le calcul indépendant réalisé à chaque époque en SPP.
+En PPP, le gain apporté par les phases et les produits précis apparaît
+clairement. Les erreurs diminuent jusqu'au domaine décimétrique sur l'ensemble
+du traitement, puis deviennent centimétriques après convergence dans les essais
+les plus favorables. L'ajout de GALILEO améliore encore la stabilité de la
+solution, tandis que le filtre de Kalman fournit une estimation continue des
+paramètres.
 
 La validation ne porte pas uniquement sur la position. Les comparaisons ont
 aussi montré que Java et RTKLIB produisent des évolutions proches pour :
 
 \begin{itemize}
-    \item les biais d'horloge du récepteur.
-    \item le biais entre GALILEO et GPS.
-    \item les covariances formelles de la position.
-    \item le ZTD et les gradients troposphériques.
+    \item Les biais d'horloge du récepteur,
+    \item Le biais entre GALILEO et GPS,
+    \item Les covariances formelles de la position,
+    \item Le ZTD et les gradients troposphériques.
 \end{itemize}
 
-Les essais confirment les deux résultats recherchés. La précision obtenue
-est conforme à la théorie du SPP et du PPP, et l'implémentation Java reproduit
-les résultats d'une chaîne de référence indépendante. La chaîne développée
-répond donc au besoin initial pour le positionnement statique en
+Ces résultats valident les deux points essentiels du travail : les performances
+obtenues sont cohérentes avec les méthodes de positionnement retenues, et
+l'implémentation Java reproduit une chaîne de référence indépendante. La chaîne
+développée répond ainsi au besoin initial pour le positionnement statique en
 post-traitement.
 
 \section{Limites}
@@ -99,11 +97,11 @@ Les résultats doivent être interprétés dans le périmètre de la validation
 réalisée :
 
 \begin{itemize}
-    \item les essais portent principalement sur deux stations fixes et sur un
-    nombre limité de journées.
-    \item les ambiguïtés sont conservées flottantes. Les modes de fixation
-    entière n'ont pas été implémentés ni évalués.
-    \item les estimations troposphériques Java et RTKLIB sont proches, mais
+    \item Les essais portent principalement sur deux stations fixes et sur un
+    nombre limité de journées,
+    \item Les ambiguïtés sont conservées flottantes. Les modes de fixation
+    entière n'ont pas été implémentés ni évalués,
+    \item Les estimations troposphériques Java et RTKLIB sont proches, mais
     elles ne suivent pas exactement les valeurs du fichier \texttt{.TRO}, en
     particulier pour les gradients.
 \end{itemize}
@@ -117,20 +115,24 @@ nécessaires avant une utilisation plus générale.
 Plusieurs prolongements peuvent être envisagés :
 
 \begin{itemize}
-    \item étendre la validation à davantage de stations.
-    \item tester un plus grand nombre de signaux et de configurations
-    multiconstellations.
-    \item ajouter et valider la résolution entière des ambiguïtés.
-    \item adapter la chaîne au positionnement cinématique puis au traitement en
-    temps réel.
-    \item approfondir l'estimation troposphérique par une comparaison sur un
-    plus grand ensemble de produits \texttt{.TRO}.
+    \item Étendre la validation à davantage de stations,
+    \item Tester un plus grand nombre de signaux et de configurations
+    multiconstellations,
+    \item Ajouter et valider la résolution entière des ambiguïtés,
+    \item Adapter la chaîne PPP validée au traitement de mesures afin de produire les solutions PVT précises nécessaires
+    à la détermination précise d'orbite,
+    \item Intégrer à terme cette chaîne de POD dans Oreflids, le système de
+    dynamique du vol de CS GROUP.
 \end{itemize}
 
-Ce travail fournit une base fonctionnelle et configurable pour le
-positionnement GNSS avec Orekit. Il montre que la bibliothèque peut servir de
-socle à une chaîne allant du SPP au PPP, à condition d'adapter ses estimateurs au
-récepteur terrestre et de compléter certains modèles de mesure.
-Par ailleurs, le développement de ce programme a nécessité la création de
-composants qui pourraient être intégrés à la bibliothèque, en particulier les
-nouveaux modificateurs de mesures.
+Ce travail fournit ainsi une base fonctionnelle et configurable pour le
+positionnement GNSS avec Orekit. Les développements réalisés montrent aussi
+qu'une partie des composants ajoutés, en particulier les nouveaux modificateurs
+de mesure, pourrait être réutilisée dans d'autres traitements GNSS ou intégrée à
+la bibliothèque.
+
+Ces travaux ont également donné lieu à la coécriture de l'article intitulé \textit{Precise Navigation with Orekit: From
+Single Point Positioning to Precise Orbit Determination Operational
+Pipelines}~\cite{zemouliScardino2026preciseNavigation}. Celui-ci présente la
+continuité entre les chaînes SPP et PPP validées au sol et leur utilisation
+ultérieure dans une chaîne opérationnelle de POD.

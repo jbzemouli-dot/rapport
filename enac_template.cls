@@ -186,7 +186,7 @@
 
 % Acronyms and glossaries
 % \RequirePackage[toc]{glossaries}
-\RequirePackage[printonlyused]{acronym} % remove [printonlyused] to get all acronyms even if there are not used in the project
+\RequirePackage[nohyperlinks]{acronym} % show all acronyms listed in references/acronym.tex
 % \RequirePackage[nonumberlist,style=listgroup,style=listhypergroup]{glossaries}
 \RequirePackage[nonumberlist,style=listgroup]{glossaries}
 
@@ -1693,5 +1693,3 @@
 %                                     END
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-

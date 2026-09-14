@@ -3,3 +3,781 @@
 % Chapter 3 - Résultats
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\chapter{Résultats et validation}
+\label{resultats_validation}
+
+
+Ce chapitre évalue les solutions produites par l'application Java/Orekit et
+les compare à celles d'un logiciel indépendant, présenté à la
+section~\ref{sec:rtklib_reference}.
+\section{Objectif de la validation}
+\label{sec:validation_objective}
+
+
+Deux propriétés sont
+distinguées. La fidélité de reproduction mesure la proximité entre les
+résultats Java/Orekit et RTKLIB pour une même configuration. L'exactitude
+mesure l'écart de chaque solution à la position connue de la
+station.
+
+\subsection{RTKLIB}
+\label{sec:rtklib_reference}
+
+RTKLIB est un logiciel libre consacré au traitement des données GNSS. Il prend
+plusieurs modes de traitement~\cite{rtklib_manual_242} :
+
+\begin{itemize}
+    \item le positionnement ponctuel et différentiel.
+    \item le SPP et le PPP.
+    \item les traitements statiques et cinématiques.
+    \item le temps réel et le post-traitement.
+    \item les principaux formats d'observations et de produits GNSS.
+\end{itemize}
+
+\long\def\PPPValidationSection{%
+\section{Validation du positionnement PPP}
+\label{sec:validation_ppp}
+
+\subsection{Configuration témoin}
+
+La configuration PPP témoin conserve la station TLSG et le jour 090. Elle
+utilise :
+
+\begin{itemize}
+    \item les mesures de code et de phase.
+    \item un filtre de Kalman étendu.
+    \item la constellation GPS seulement.
+    \item la combinaison iono-free.
+    \item l'estimation du ZTD et des gradients horizontaux.
+    \item les orbites, les horloges et les biais précis.
+    \item les corrections d'antenne, de marées solides et de wind-up.
+    \item des ambiguïtés flottantes.
+\end{itemize}
+
+Le traitement précis fournit 2 554 époques communes entre Java et RTKLIB. La
+différence avec les 2 880 époques du fichier d'observation vient des époques
+qui ne fournissent pas une solution exploitable dans les deux traitements.
+
+\subsubsection{Position et convergence}
+
+La figure~\ref{fig:ppp_convergence_enu} présente les erreurs ENU de la
+configuration témoin pendant toute la journée.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{images/chapter2/ppp_precise_gps_enu.png}
+    \caption{Convergence des erreurs ENU du PPP précis à TLSG.}
+    \label{fig:ppp_convergence_enu}
+\end{figure}
+
+Les erreurs convergent progressivement vers zéro. Le début du traitement
+correspond à l'initialisation de la position, de l'horloge, de la troposphère
+et des ambiguïtés. Une fois ces paramètres stabilisés, les variations sont
+faibles et les courbes Java et RTKLIB restent presque superposées.
+
+Le gain par rapport au SPP est net. Pour la configuration GPS à TLSG, la RMSE
+2D Java passe de $1{,}210$~m en SPP à $0{,}126$~m en PPP précis. La RMSE 3D
+passe de $2{,}783$ à $0{,}186$~m. La solution PPP est aussi moins bruitée et
+plus régulière. Ce lissage vient du traitement temporel réalisé par le filtre
+de Kalman. Le gain de précision repose également sur les mesures de phase et
+sur les produits précis.
+
+La figure~\ref{fig:ppp_last_hour_gps} se limite à la dernière heure. Elle
+montre la précision atteinte par le filtre
+une fois qu'il a convergé.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.65\textwidth]{images/chapter2/ppp_precise_gps_last_hour.png}
+    \caption{Dispersion horizontale pendant la dernière heure du PPP précis
+    GPS.}
+    \label{fig:ppp_last_hour_gps}
+\end{figure}
+
+Les trajectoires sont à quelques millimètres de la position de
+référence. À ce niveau de précision, l'ellipse d'incertitude à 95~\% de la
+position de référence de la station doit également être représentée.
+
+
+\subsubsection{Covariance formelle}
+
+La figure~\ref{fig:ppp_sigma} compare les écarts-types fournis par les deux
+filtres.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{images/chapter2/ppp_precise_gps_sigma.png}
+    \caption{Écarts-types formels ENU du PPP précis.}
+    \label{fig:ppp_sigma}
+\end{figure}
+
+Les incertitudes diminuent rapidement pendant l'initialisation. Les courbes
+Java et RTKLIB sont presque confondues, ce qui valide la propagation de la
+covariance et les réglages stochastiques. Elle décrit la confiance du
+filtre dans son propre modèle.
+Le filtre converge au bout des 4 premires heures de la journée.
+
+\subsubsection{Paramètres troposphériques}
+
+Le ZTD et les gradients nord et est sont estimés avec la position. La
+figure~\ref{fig:ppp_tropo} compare Java, RTKLIB et le produit troposphérique
+IGS.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{images/chapter2/ppp_precise_gps_tropo.png}
+    \caption{ZTD et gradients troposphériques du PPP précis à TLSG.}
+    \label{fig:ppp_tropo}
+\end{figure}
+
+Java et RTKLIB fournissent des estimations troposphériques très proches. Les
+courbes de ZTD se suivent presque sur toute la journée. Le même comportement
+est observé pour les gradients nord et est.
+
+Ces estimations sont aussi comparées au fichier troposphérique \texttt{.TRO}.
+Ce fichier contient, à différentes époques, des valeurs de référence du ZTD et
+des gradients pour la station. Elles proviennent d'une solution externe et
+servent ici de référence.
+
+Les estimations de Java et de RTKLIB ne suivent pas exactement cette référence.
+Les écarts atteignent quelques centimètres pour le ZTD. Pour les gradients, ils
+restent compris entre quelques millimètres et environ un centimètre. Ces
+différences ont peu d'effet sur le résultat recherché : après convergence, les
+erreurs de position restent très faibles. La proximité entre Java et RTKLIB
+montre surtout que les paramètres troposphériques sont traités de manière
+cohérente dans les deux logiciels.
+
+Les essais suivants partent de cette configuration témoin. Un seul groupe de
+paramètres est modifié à la fois afin d'en mesurer l'effet.
+
+\subsection{Apport des produits précis}
+
+Le premier changement modifie le choix des éphémérides. Le
+traitement diffusé utilise les paramètres orbitaux du message de navigation.
+Le traitement précis utilise les orbites SP3 et les horloges CLK, nettement
+plus précises que les données diffusées.
+
+\begin{figure}[H]
+    \centering
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \textbf{Produits diffusés}\par\medskip
+        \includegraphics[width=\linewidth]{images/chapter2/ppp_broadcast_gps_scatter.png}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \textbf{Produits précis}\par\medskip
+        \includegraphics[width=\linewidth]{images/chapter2/ppp_precise_gps_scatter.png}
+    \end{minipage}
+    \caption{Dispersion horizontale de l'EKF avec les produits diffusés et
+    précis.}
+    \label{fig:ppp_broadcast_precise}
+\end{figure}
+
+Le nuage horizontal se resserre fortement avec les produits précis. La RMSE 2D
+Java passe de $0{,}448$ à $0{,}126$~m. La RMSE 3D passe de $0{,}916$ à
+$0{,}186$~m. RTKLIB présente la même amélioration, avec une RMSE 3D qui passe
+de $0{,}898$ à $0{,}184$~m. L'écart entre les deux logiciels reste inférieur à
+2~cm sur ces deux configurations.
+
+\subsection{Apport de GALILEO en PPP}
+
+La constellation GALILEO est ajoutée à la configuration précise GPS. La RMSE
+2D Java passe de $0{,}126$ à $0{,}069$~m et la RMSE 3D de $0{,}186$ à
+$0{,}084$~m. RTKLIB présente des valeurs très proches : $0{,}067$~m en 2D et
+$0{,}087$~m en 3D.
+
+La figure~\ref{fig:ppp_constellations_last_hour} compare les nuages obtenus
+pendant la dernière heure.
+
+\begin{figure}[H]
+    \centering
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \textbf{GPS}\par\medskip
+        \includegraphics[width=\linewidth]{images/chapter2/ppp_precise_gps_last_hour.png}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \textbf{GPS + GALILEO}\par\medskip
+        \includegraphics[width=\linewidth]{images/chapter2/ppp_precise_gpsgal_last_hour.png}
+    \end{minipage}
+    \caption{Effet de GALILEO sur la dispersion horizontale du PPP précis
+    pendant la dernière heure.}
+    \label{fig:ppp_constellations_last_hour}
+\end{figure}
+
+L'ajout de GALILEO réduit la dispersion et rapproche le centre du nuage de la
+position de référence. Comme en SPP, les observations supplémentaires
+améliorent la géométrie. En PPP, elles renforcent aussi l'estimation commune de
+la position, de l'horloge et de la troposphère.
+
+La figure~\ref{fig:ppp_gpsgal_cdf} confirme que cette amélioration concerne la
+majeure partie des époques et pas seulement la dernière heure.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\textwidth]{images/chapter2/ppp_precise_gpsgal_cdf.png}
+    \caption{Fonctions de répartition des erreurs du PPP précis GPS+GALILEO.}
+    \label{fig:ppp_gpsgal_cdf}
+\end{figure}
+
+Les CDF Java et RTKLIB sont proches pour les erreurs horizontale et
+tridimensionnelle. Les deux traitements atteignent le même ordre de
+précision sur l'ensemble de la solution.
+
+L'ajout de GALILEO introduit aussi un biais d'horloge entre les systèmes
+GALILEO et GPS. La figure~\ref{fig:ppp_clocks} compare l'horloge GPS du
+récepteur et cet ISB.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{images/chapter2/ppp_precise_gpsgal_clocks.png}
+    \caption{Horloge GPS du récepteur et ISB GALILEO-GPS estimés par Java et
+    RTKLIB.}
+    \label{fig:ppp_clocks}
+\end{figure}
+
+Les deux logiciels reproduisent les mêmes variations lentes et les mêmes
+changements rapides. Les courbes sont presque superposées sur l'ensemble de la
+journée.
+
+\subsection{Influence de la station en PPP}
+
+La dernière comparaison applique la configuration précise GPS+GALILEO à YEBE.
+La figure~\ref{fig:ppp_station_last_hour} compare les dernières heures des deux
+stations.
+
+\begin{figure}[H]
+    \centering
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \textbf{TLSG}\par\medskip
+        \includegraphics[width=\linewidth]{images/chapter2/ppp_precise_gpsgal_last_hour.png}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \textbf{YEBE}\par\medskip
+        \includegraphics[width=\linewidth]{images/chapter2/ppp_yebe_gpsgal_last_hour.png}
+    \end{minipage}
+    \caption{Dispersion horizontale du PPP précis GPS+GALILEO à TLSG et YEBE
+    pendant la dernière heure.}
+    \label{fig:ppp_station_last_hour}
+\end{figure}
+
+La RMSE 3D Java vaut $0{,}084$~m à TLSG et $0{,}079$~m à YEBE. Pour RTKLIB,
+elle vaut respectivement $0{,}087$ et $0{,}079$~m. La précision obtenue est donc
+stable lors du changement de station.
+
+\subsection{Bilan des essais PPP}
+
+Le tableau~\ref{tab:ppp_validation_rmse} rassemble les résultats des
+configurations PPP retenues. Les statistiques portent sur toutes les époques
+communes, y compris la convergence initiale.
+
+\begin{table}[H]
+\centering
+\small
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{lrrrr}
+\hline
+& \multicolumn{2}{c}{\textbf{RMSE 2D (m)}} &
+  \multicolumn{2}{c}{\textbf{RMSE 3D (m)}} \\
+\textbf{Configuration} & \textbf{Java} & \textbf{RTKLIB} &
+\textbf{Java} & \textbf{RTKLIB} \\
+\hline
+TLSG, GPS, diffusées       & 0,448 & 0,456 & 0,916 & 0,898 \\
+TLSG, GPS, précises        & 0,126 & 0,126 & 0,186 & 0,184 \\
+TLSG, GPS+GAL, diffusées   & 0,351 & 0,361 & 0,760 & 0,758 \\
+TLSG, GPS+GAL, précises    & 0,069 & 0,067 & 0,084 & 0,087 \\
+YEBE, GPS, diffusées       & 0,390 & 0,495 & 0,556 & 0,609 \\
+YEBE, GPS, précises        & 0,103 & 0,104 & 0,148 & 0,145 \\
+YEBE, GPS+GAL, précises    & 0,053 & 0,052 & 0,079 & 0,079 \\
+\hline
+\end{tabular}
+\caption{RMSE obtenues pour les configurations PPP étudiées.}
+\label{tab:ppp_validation_rmse}
+\end{table}
+
+Les essais PPP conduisent aux résultats suivants :
+
+\begin{itemize}
+    \item le passage aux produits précis réduit nettement l'erreur.
+    \item les trajectoires de convergence Java et RTKLIB sont proches.
+    \item les horloges, l'ISB et les covariances présentent la même évolution.
+    \item l'ajout de GALILEO améliore la précision et la convergence.
+    \item la précision décimétrique sur l'ensemble du traitement et
+    centimétrique après convergence est retrouvée aux deux stations.
+    \item les gradients troposphériques restent le point le moins bien validé
+    par la comparaison au produit IGS.
+\end{itemize}
+}
+
+RTKLIB a été retenu pour trois raisons :
+
+\begin{itemize}
+    \item il constitue une chaîne de calcul indépendante d'Orekit.
+    \item ses modèles et ses paramètres sont décrits dans son manuel et son
+    fichier de configuration.
+    \item il permet de reproduire les modes utilisés par
+    l'application Java.
+\end{itemize}
+
+Pour chaque essai, les deux logiciels utilisent les mêmes observations, les
+mêmes produits orbitaux et des options aussi proches que possible. Deux modes
+RTKLIB servent à la comparaison :
+
+\begin{itemize}
+    \item \textbf{Single} pour le SPP fondé sur les mesures de code.
+    \item \textbf{PPP Static} pour le traitement du code et de la phase avec
+    un filtre de Kalman.
+\end{itemize}
+
+\section{Comparaison}
+\label{sec:validation_protocol}
+
+Cette section décrit la méthode employée pour comparer les résultats de RTKLIB
+à ceux du programme développé en Java avec Orekit.
+
+\subsection{Données utilisées}
+\label{sec:validation_data}
+
+Les essais utilisent des observations enregistrées sur une journée complète.
+Les fichiers étudiés possèdent un pas d'échantillonnage de 30~s. Une journée
+peut donc contenir jusqu'à 2 880 époques avant le filtrage des mesures.
+
+La campagne disponible couvre :
+
+\begin{itemize}
+    \item le jour 090 de l'année 2026 pour les stations TLSG et YEBE.
+    \item le jour 019 de l'année 2026 pour certains essais WLS à TLSG.
+\end{itemize}
+
+Pour une même configuration, Java-Orekit et RTKLIB reçoivent :
+
+\begin{itemize}
+    \item le même fichier RINEX d'observation.
+    \item le même fichier RINEX de navigation.
+    \item les mêmes produits précis lorsque ce mode est utilisé.
+    \item la même position de référence de la station.
+    \item les mêmes seuils de sélection lorsque les deux logiciels proposent
+    des paramètres équivalents.
+\end{itemize}
+
+
+\subsection{Rappel des paramètres configurables}
+\label{sec:validation_configuration}
+
+Le fichier JSON permet de modifier la session, les modèles physiques et les
+paramètres numériques sans changer le code Java. Le
+tableau~\ref{tab:validation_configuration_options} récapitule ces réglages.
+
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}p{0.25\textwidth}|
+                                  >{\raggedright\arraybackslash}X|}
+\hline
+\textbf{Groupe} & \textbf{Paramètres configurables} \\
+\hline
+Session & Station, jour, constellations, seuil de SNR et masque d'élévation. \\
+\hline
+Observations & Code seul ou code et phase. Sélection automatique des signaux
+ou choix des observables RINEX pour chaque constellation. \\
+\hline
+Ionosphère & Modèle de Klobuchar ou combinaison iono-free. \\
+\hline
+Troposphère & Modèle de Saastamoinen, estimation du ZTD, ou estimation du ZTD
+et des gradients horizontaux. \\
+\hline
+Éphémérides & Messages diffusés ou produits précis SP3 et CLK. \\
+\hline
+Corrections & Activation des marées terrestres, des biais observables et des
+corrections d'antenne du satellite ou du récepteur. \\
+\hline
+Estimateur & Moindres carrés pondérés (WLS) ou filtre de Kalman étendu
+(EKF). \\
+\hline
+Contrôle qualité & Nombre minimal de satellites, GDOP maximal, seuils de
+SNR et d'élévation, durée d'interruption et paramètres de détection des sauts
+de cycle. \\
+\hline
+Moindres carrés & Durée des fenêtres, échelle des paramètres, seuil de
+convergence, nombre maximal d'itérations et d'évaluations. \\
+\hline
+Filtre de Kalman & Incertitudes des mesures, covariance initiale et bruits de
+processus de la position, de l'horloge, des ISB, des ambiguïtés et de la
+troposphère. \\
+\hline
+Ambiguïtés & Mode de résolution, nombre minimal d'ambiguïtés, durée minimale de
+suivi, élévation minimale et seuils de validation. \\
+\hline
+Entrées et sorties & Chemins des produits, dossier de sortie et noms des
+fichiers CSV. \\
+\hline
+\end{tabularx}
+\caption{Paramètres modifiables dans la configuration de l'application.}
+\label{tab:validation_configuration_options}
+\end{table}
+
+Ces paramètres sont configurables dans le programme Java et dans RTKLIB. Pour
+comparer deux sessions, le même jeu de paramètres est utilisé dans les deux
+logiciels.
+
+
+
+La validation suit la démarche suivante. Deux configurations témoins
+sont d'abord retenues :
+
+\begin{itemize}
+    \item \textbf{témoin SPP} : jour 090, TLSG, WLS, GPS, combinaison iono-free,
+    Saastamoinen, éphémérides diffusées et ambiguïtés désactivées.
+    \item \textbf{témoin PPP} : jour 090, TLSG, EKF, GPS, combinaison iono-free,
+    ZTD et gradients estimés, produits précis et ambiguïtés flottantes.
+\end{itemize}
+
+À partir de ces témoins, la station, le jour, les constellations, le modèle
+ionosphérique, le modèle troposphérique ou les éphémérides sont modifiés un à
+un lorsque les résultats correspondants sont disponibles. Le passage d'un
+traitement diffusé au PPP précis constitue une exception : les orbites, les
+horloges, les biais et les corrections fines forment un ensemble cohérent et
+sont donc activés ensemble.
+
+\subsection{Indicateurs de comparaison}
+\label{sec:validation_indicators}
+
+À chaque époque $k$, la position calculée est comparée à la position de
+référence dans le repère local Est, Nord et Vertical. Les composantes obtenues
+sont notées $e_{E,k}$, $e_{N,k}$ et $e_{U,k}$.
+
+Les erreurs horizontale et tridimensionnelle sont définies par
+
+\begin{equation}
+e_{2D,k}=\sqrt{e_{E,k}^{2}+e_{N,k}^{2}},
+\qquad
+e_{3D,k}=\sqrt{e_{E,k}^{2}+e_{N,k}^{2}+e_{U,k}^{2}}.
+\label{eq:validation_errors}
+\end{equation}
+
+La RMSE d'une erreur $e$ sur $n$ époques vaut
+
+\begin{equation}
+\operatorname{RMSE}(e)=
+\sqrt{\frac{1}{n}\sum_{k=1}^{n}e_k^2}.
+\label{eq:validation_rmse}
+\end{equation}
+
+Les indicateurs retenus sont :
+
+\begin{itemize}
+    \item les erreurs Est, Nord et Vertical au cours du temps.
+    \item les RMSE des composantes ENU et des erreurs 2D et 3D.
+    \item la moyenne et l'écart-type des erreurs.
+    \item la répartition cumulée des erreurs au moyen des courbes de distribution cumulées (CDF).
+    \item la dispersion de la solution dans le plan horizontal.
+    \item le nombre de satellites et les facteurs DOP.
+    \item les biais d'horloge et les paramètres troposphériques dans les modes
+    où ils sont estimés.
+    \item les écarts-types fournis par l'estimateur.
+\end{itemize}
+
+L'écart entre les deux logiciels est calculé par
+
+\begin{equation}
+\Delta e_{X,k}=e_{X,k}^{\mathrm{Java}}-e_{X,k}^{\mathrm{RTKLIB}},
+\qquad X\in\{E,N,U\}.
+\label{eq:validation_java_rtklib_delta}
+\end{equation}
+
+\section{Validation du positionnement SPP}
+\label{sec:validation_spp}
+
+\subsection{Configuration témoin}
+
+La configuration témoin utilise les choix suivants :
+
+\begin{itemize}
+    \item station TLSG, jour 090.
+    \item mesures de code.
+    \item résolution des équations par WLS.
+    \item constellation GPS seulement.
+    \item combinaison iono-free.
+    \item modèle de Saastamoinen pour la troposphère
+    \item éphémérides diffusées
+\end{itemize}
+
+Les 2 880 époques produites par Java sont appariées aux 2 880 époques de
+RTKLIB. La figure~\ref{fig:spp_ref_enu} montre les erreurs ENU pendant la
+journée.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{images/chapter2/spp_ref_enu.png}
+    \caption{Évolution des erreurs ENU de la configuration SPP témoin.}
+    \label{fig:spp_ref_enu}
+\end{figure}
+
+Les courbes des deux logiciels sont presque superposées. Les variations lentes
+et les changements rapides apparaissent aux mêmes instants.
+
+La figure~\ref{fig:spp_ref_delta} représente la différence entre
+les deux solutions.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{images/chapter2/spp_ref_delta.png}
+    \caption{Différences ENU entre Java-Orekit et RTKLIB pour la
+    configuration SPP témoin.}
+    \label{fig:spp_ref_delta}
+\end{figure}
+
+Les différences horizontales restent faibles et sont nulles en moyenne en Nord et Est
+La composante verticale présente un
+décalage moyen de $11{,}7$~cm et un écart-type de $5{,}3$~cm. Cet écart est dû à une différence
+de convention de la correction de Saastamoinen entre Orekit et RTKLIB.
+La configuration témoin est
+donc reproduite avec une bonne fidélité.
+
+\subsection{Influence du modèle ionosphérique}
+
+Le premier changement remplace la combinaison iono-free par le modèle de
+Klobuchar. Tous les autres paramètres sont conservés. Les fonctions de
+répartition sont comparées dans la figure~\ref{fig:spp_iono_cdf}.
+
+\begin{figure}[H]
+    \centering
+    \makebox[\textwidth][c]{%
+    \begin{minipage}[t]{0.64\textwidth}
+        \centering
+        \textbf{Configuration témoin : IF}\par\medskip
+        \includegraphics[width=\linewidth]{images/chapter2/spp_if_cdf.png}
+    \end{minipage}
+    \hspace{0.01\textwidth}
+    \begin{minipage}[t]{0.64\textwidth}
+        \centering
+        \textbf{Variante : Klobuchar}\par\medskip
+        \includegraphics[width=\linewidth]{images/chapter2/spp_klo_cdf.png}
+    \end{minipage}}
+    \caption{Fonctions de répartition des erreurs avec les traitements
+    ionosphériques IF et Klobuchar.}
+    \label{fig:spp_iono_cdf}
+\end{figure}
+
+Dans les deux cas, les courbes Java et RTKLIB restent proches. Le changement de
+modèle produit également le même effet dans les deux logiciels. Pour cette
+journée, la RMSE 2D diminue de $1{,}210$ à $0{,}856$~m dans Java et de
+$1{,}212$ à $0{,}859$~m dans RTKLIB.
+
+La combinaison IF supprime le retard ionosphérique du premier ordre, mais elle
+augmente le bruit du code en combinant deux fréquences. Klobuchar conserve le
+bruit plus faible d'une mesure monofréquence, mais laisse une erreur ionosphérique
+résiduelle. Ce résultat dépend donc des données et ne montre pas que Klobuchar
+est toujours plus précis. Il valide en revanche la cohérence des deux
+traitements implémentés.
+
+Le même test a été réalisé dans d'autres configurations. À YEBE, la RMSE 2D
+Java passe de $1{,}363$~m en IF à $0{,}884$~m avec Klobuchar. RTKLIB passe de
+$1{,}365$ à $0{,}887$~m. Avec GPS et GALILEO à TLSG, les valeurs Java sont
+$0{,}770$~m en IF et $0{,}793$~m avec Klobuchar. Dans tous ces cas, l'écart
+entre Java et RTKLIB reste inférieur au centimètre sur la RMSE 2D.
+
+\subsection{Influence des constellations}
+
+Les observations GALILEO sont d'abord ajoutées au GPS. La figure
+\ref{fig:spp_constellations_scatter} compare la dispersion horizontale avant
+et après cet ajout.
+
+La figure~\ref{fig:spp_constellations_geometry} présente la répartition des
+satellites GPS et GALILEO dans le ciel ainsi que les DOP obtenus avec GPS seul
+et avec les deux constellations.
+
+\begin{figure}[H]
+    \centering
+    \makebox[\textwidth][c]{%
+    \begin{minipage}[c]{0.34\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{images/chapter2/spp_gpsgal_skyplot.png}
+    \end{minipage}%
+    \hspace{0.01\textwidth}%
+    \begin{minipage}[c]{0.64\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{images/chapter2/spp_gps_vs_gpsgal_dop.png}
+    \end{minipage}}
+    \caption{Répartition des satellites et effet de l'ajout de GALILEO sur
+    le GDOP et le PDOP à TLSG.}
+    \label{fig:spp_constellations_geometry}
+\end{figure}
+
+Le nombre moyen de satellites passe de $7{,}32$ avec GPS à $14{,}01$ avec GPS
+et GALILEO. Le GDOP moyen diminue de $3{,}02$ à $1{,}83$. L'ajout de GALILEO fournit
+donc davantage de
+directions d'observation différentes.
+
+\begin{figure}[H]
+    \centering
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \textbf{GPS}\par\medskip
+        \includegraphics[width=\linewidth]{images/chapter2/spp_gps_scatter.png}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \textbf{GPS + GALILEO}\par\medskip
+        \includegraphics[width=\linewidth]{images/chapter2/spp_gpsgal_scatter.png}
+    \end{minipage}
+    \caption{Effet de l'ajout de GALILEO sur la solution SPP à TLSG.}
+    \label{fig:spp_constellations_scatter}
+\end{figure}
+
+Le nuage devient moins dispersé. La RMSE 2D Java diminue de
+$1{,}210$ à $0{,}770$~m. Celle de RTKLIB passe de $1{,}212$ à $0{,}774$~m.
+Les deux logiciels reproduisent le gain apporté par cette configuration
+multiconstellation.
+
+La baisse des DOP et le resserrement du nuage horizontal sont observés
+simultanément. L'amélioration de la position vient donc d'une géométrie plus
+favorable, obtenue grâce aux directions d'observation supplémentaires de
+GALILEO.
+
+\subsection{Influence de la station}
+
+La configuration témoin est ici comparée à la station YEBE. Seule la station change.
+La figure~\ref{fig:spp_yebe_scatter} place les deux résultats côte à côte.
+
+\begin{figure}[H]
+    \centering
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \textbf{TLSG}\par\medskip
+        \includegraphics[width=\linewidth]{images/chapter2/spp_gps_scatter.png}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \textbf{YEBE}\par\medskip
+        \includegraphics[width=\linewidth]{images/chapter2/spp_yebe_scatter.png}
+    \end{minipage}
+    \caption{Influence de la station sur la dispersion horizontale de la
+    solution SPP.}
+    \label{fig:spp_yebe_scatter}
+\end{figure}
+
+La forme du nuage change avec la géométrie satellite-récepteur et les
+conditions locales. L'ordre de grandeur reste le même : la RMSE 2D Java vaut
+$1{,}363$~m à YEBE contre $1{,}210$~m à TLSG. Les valeurs RTKLIB sont
+respectivement $1{,}365$ et $1{,}212$~m. Les deux implémentations restent donc
+cohérentes après le changement de station.
+
+\subsection{Influence du jour}
+
+Le jour 019 a été choisi pour tester le traitement dans des conditions
+ionosphériques plus difficiles. L'indice planétaire Kp a atteint 7. Cet indice
+mesure, sur une échelle de 0 à 9, l'intensité des perturbations du champ
+géomagnétique terrestre.
+
+Les figures~\ref{fig:spp_robustness_scatter} et
+\ref{fig:spp_robustness_cdf} comparent ensuite les positions des deux jours
+pour les modes IF et Klobuchar.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{images/chapter2/spp_robustness_scatter_019_090.png}
+    \caption{Dispersion horizontale aux jours 019 et 090 avec les modèles IF
+    et Klobuchar.}
+    \label{fig:spp_robustness_scatter}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{images/chapter2/spp_robustness_cdf_019_090.png}
+    \caption{Fonctions de répartition des erreurs aux jours 019 et 090.}
+    \label{fig:spp_robustness_cdf}
+\end{figure}
+
+Les nuages rouges, associés au jour 019, sont légèrement plus étalés que ceux
+du jour 090. Les CDF rouges sont également décalées vers des erreurs plus
+élevées. Cette dégradation est attendue pendant une journée où l'ionosphère est
+fortement perturbée. La
+RMSE 2D Java passe de $1{,}210$ à $1{,}385$~m entre les jours 090 et 019, tandis
+que celle de RTKLIB passe de $1{,}212$ à $1{,}389$~m.
+
+L'écart entre les deux jours est plus visible sur l'erreur 3D que sur l'erreur
+2D. L'erreur ionosphérique résiduelle se reporte en effet davantage sur la
+composante verticale, moins bien contrainte par la géométrie des satellites.
+Les coordonnées horizontales restent donc relativement stables alors que
+l'erreur verticale augmente plus nettement.
+
+Le traitement fondé sur Klobuchar est plus sensible à cette journée perturbée.
+Ce modèle utilise quelques coefficients diffusés pour représenter un
+comportement ionosphérique moyen. Lors d'une forte activité géomagnétique, ces
+coefficients peuvent décrire moins fidèlement les variations réelles du retard.
+La combinaison IF élimine l'essentiel du terme ionosphérique du
+premier ordre à partir de deux fréquences. Elle est donc plus robuste dans ce
+cas.
+
+Java et RTKLIB présentent les mêmes tendances pour les deux jours et les deux
+traitements ionosphériques. La dégradation observée provient donc principalement
+des conditions de mesure et non d'un comportement propre à l'implémentation
+Java.
+
+\subsection{Bilan des essais SPP}
+
+Le tableau~\ref{tab:spp_validation_rmse} rassemble les statistiques utilisées
+dans cette section. Toutes les valeurs sont calculées sur les époques communes
+aux deux logiciels.
+
+\begin{table}[H]
+\centering
+\small
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{lrrrr}
+\hline
+& \multicolumn{2}{c}{\textbf{RMSE 2D (m)}} &
+  \multicolumn{2}{c}{\textbf{RMSE 3D (m)}} \\
+\textbf{Configuration} & \textbf{Java} & \textbf{RTKLIB} &
+\textbf{Java} & \textbf{RTKLIB} \\
+\hline
+TLSG 090, GPS, IF, SAAS          & 1,210 & 1,212 & 2,783 & 2,764 \\
+TLSG 090, GPS, KLO, SAAS         & 0,856 & 0,859 & 2,229 & 2,292 \\
+TLSG 090, GPS+GAL, IF, SAAS      & 0,770 & 0,774 & 1,735 & 1,676 \\
+TLSG 090, GPS+GAL, KLO, SAAS     & 0,793 & 0,795 & 2,136 & 2,180 \\
+YEBE 090, GPS, IF, SAAS          & 1,363 & 1,365 & 2,811 & 2,802 \\
+YEBE 090, GPS, KLO, SAAS         & 0,884 & 0,887 & 2,532 & 2,645 \\
+YEBE 090, GPS+GAL, IF, SAAS      & 0,837 & 0,834 & 1,720 & 1,703 \\
+TLSG 019, GPS, IF, SAAS          & 1,385 & 1,389 & 3,152 & 3,133 \\
+\hline
+\end{tabular}
+\caption{RMSE obtenues pour les configurations SPP étudiées.}
+\label{tab:spp_validation_rmse}
+\end{table}
+
+Les RMSE du tableau restent proches des ordres de grandeur attendus pour un
+positionnement SPP : environ un mètre dans le plan horizontal et trois mètres
+en 3D. Les résultats les plus favorables, en particulier en multiconstellation,
+sont même inférieurs à ces valeurs. Cette cohérence avec la précision prévue
+par la théorie confirme que la chaîne de traitement produit des solutions
+réalistes.
+
+Pour chaque configuration, les RMSE de Java et de RTKLIB sont également très
+proches. Les écarts sont généralement de quelques millimètres à quelques
+centimètres. Cette concordance est rassurante : les deux logiciels retrouvent
+à la fois la même précision globale et les mêmes variations lorsque la
+configuration change.
+
+Les essais SPP conduisent aux conclusions suivantes :
+
+\begin{itemize}
+    \item Java/Orekit reproduit RTKLIB avec des écarts faibles pour les
+    configurations SPP étudiées.
+    \item cette fidélité est conservée lorsque le jour, la station, le modèle
+    ionosphérique ou les constellations changent.
+    \item l'ajout de GALILEO améliore la géométrie et réduit la dispersion.
+    \item la comparaison des jours 019 et 090 confirme la robustesse de la
+    solution lorsque l'activité ionosphérique augmente.
+\end{itemize}
+
+\PPPValidationSection

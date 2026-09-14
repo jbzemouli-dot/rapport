@@ -6,38 +6,52 @@
 \thispagestyle{fancy}
 
 
-Ce rapport présente un travail réalisé pour CS Group, qui est une entreprise française qui offre des services dans de nombreux domaines liés à la défense, l'aéronautique, le transport, l'énergie et le spatial.
-Parmi ces différents domaine, l'entreprise est particulièrement active depuis plus de 40 ans dans le secteur du spatial, dont elle développe et fournit des solutions de surveillance spatiale, d'observation terrestre, de navigation et télécommunication.
-Le stage s'inscrit dans le cadre des activités de recherche et développement en navigation par satellites, j'ai pour cela eu la chance d'être intégré à l'équipe FD NAV (\emph{Flight Dynamics and Navigation}) de la \emph{Buisiness Unit} Espace de l'entreprise.
+Ce rapport présente un travail réalisé au sein de CS GROUP, entreprise
+française qui propose des services dans de nombreux domaines liés à la défense,
+à l'aéronautique, au transport, à l'énergie et au spatial.
+Parmi ces différents domaines, l'entreprise est particulièrement active depuis
+plus de 40 ans dans le secteur spatial. Elle développe et fournit des
+solutions de surveillance de l'espace, d'observation de la Terre, de navigation
+et de télécommunication.
+Le stage s'inscrit dans le cadre des activités de recherche et développement en
+navigation par satellite. Il a été réalisé au sein de l'équipe FD NAV
+(\emph{Flight Dynamics and Navigation}) de la \emph{Business Unit} Espace de
+l'entreprise.
 
 
 \section{Contexte technique}
 
 Le stage s'appuie sur Orekit, une bibliothèque Java développée par CS GROUP
 depuis 2002 pour les applications de dynamique du vol spatial. Elle fournit
-notamment des outils de calcul d'orbites et de traitement de mesures.
+des outils de calcul d'orbites et de traitement de mesures.
 Les outils présents dans cette bibliothèque sont étudiés pour le calcul de positionnement GNSS.
 
 \subsection{GNSS (\textit{Global Navigation Satellite System})}
 
 Le terme GNSS (\textit{Global Navigation Satellite System}) désigne l'ensemble des systèmes mondiaux de navigation par satellite permettant à un utilisateur équipé d'un récepteur de déterminer sa position, sa vitesse et une référence temporelle à partir des données issues des signaux émis par des satellites.
 
-Les principaux systèmes actuellement opérationnels sont le GPS (\textit{Global Positioning System}) américain, GALILEO européen, GLONASS russe et BEIDOU chinois. Chacun repose sur une constellation de satellites placés en orbite autour de la Terre et diffusant en continu des signaux de navigation dans plusieurs bandes de fréquences. Ces signaux contiennent des messages de navigation permettant au récepteur d'exploiter les informations nécessaires au calcul de sa position. 
+Les principaux systèmes actuellement opérationnels sont le GPS
+(\textit{Global Positioning System}) américain, GALILEO européen, GLONASS russe
+et BEIDOU chinois. Chacun repose sur une constellation de satellites placés en
+orbite autour de la Terre et diffusant en continu des signaux de navigation dans
+plusieurs bandes de fréquences. Ces signaux contiennent des messages de
+navigation qui fournissent au récepteur les informations nécessaires au calcul
+de sa position.
 
 Les satellites GNSS émettent dans plusieurs bandes de fréquences situées dans
 la bande L. Le GPS utilise par exemple les fréquences L1 à
 $1575{,}42~\mathrm{MHz}$, L2 à $1227{,}60~\mathrm{MHz}$ et L5 à
-$1176{,}45~\mathrm{MHz}$. Galileo émet notamment sur E1 à
+$1176{,}45~\mathrm{MHz}$. GALILEO émet par exemple sur E1 à
 $1575{,}42~\mathrm{MHz}$, E5a à $1176{,}45~\mathrm{MHz}$, E5b à
 $1207{,}14~\mathrm{MHz}$ et E6 à $1278{,}75~\mathrm{MHz}$. Certaines
-fréquences sont donc communes à plusieurs systèmes, comme GPS L1 et Galileo E1.
+fréquences sont donc communes à plusieurs systèmes, comme GPS L1 et GALILEO E1.
 
-Chaque signal repose sur une porteuse radiofréquence modulée par une séquence pseudo-aléatoire, 
+Chaque signal repose sur une porteuse radiofréquence modulée par une séquence pseudo-aléatoire,
 appelée code PRN
 (\textit{Pseudo-Random Noise}). Cette séquence est connue du récepteur. Elle
 permet d'identifier et de suivre les signaux reçus.
 
-Pour le GPS et Galileo, plusieurs satellites d'une même constellation peuvent
+Pour le GPS et GALILEO, plusieurs satellites d'une même constellation peuvent
 émettre simultanément dans une même bande de fréquences. Leur séparation
 repose sur le CDMA (\textit{Code Division Multiple Access}) :
 les signaux sont associés à des codes PRN différents, choisis pour présenter
@@ -62,9 +76,9 @@ l'instant $t_r$, la distance parcourue est
 où $\rho_r^s$ est la distance géométrique entre le satellite et le récepteur et
 $c$ la vitesse de la lumière dans le vide.
 
-Cette relation conduit au principe de trilatération. Connaître la distance entre 
-un satellite et le récepteur permet de déterminer que le récepteur se situe quelque 
-part sur une sphère centrée sur ce satellite, dont le rayon est égal à la distance 
+Cette relation conduit au principe de trilatération. Connaître la distance entre
+un satellite et le récepteur permet de déterminer que le récepteur se situe quelque
+part sur une sphère centrée sur ce satellite, dont le rayon est égal à la distance
 mesurée. Dans un cas idéal,
 trois distances indépendantes permettent de déterminer les trois coordonnées
 du récepteur, en écartant la solution qui ne se trouve pas au voisinage de la
@@ -81,7 +95,7 @@ disponibles, alors il y a plus d'observations que d'inconnues, ce qui permet d'a
 
 Un récepteur GNSS fournit principalement deux types d'observations utilisables
 pour le positionnement : les mesures de pseudo-distance issues du suivi des
-codes et les mesures de phase de la porteuse. Par la suite, 
+codes et les mesures de phase de la porteuse. Par la suite,
 les termes codes ou pseudo-distance seront considérés comme équivalents.
 
 \subsubsection{SPP (\textit{Single Point Positioning})}
@@ -93,8 +107,8 @@ et des informations de navigation diffusées par les satellites.
 
 À chaque époque, les trois coordonnées du récepteur et son biais d'horloge sont
 estimés à partir des observations disponibles. Sa
-précision reste cependant limitée par la précision des données diffusées et
-par les erreurs des mesures et des modèles. En général, la précision obtenue est généralement de l'ordre de
+précision reste limitée par la précision des données diffusées et
+par les erreurs des mesures et des modèles. La précision obtenue est généralement de l'ordre de
 quelques mètres. Dans ce travail, la résolution SPP utilise les moindres carrés pondérés (\textit{Weighted Least Squares}, WLS).
 
 
@@ -108,28 +122,28 @@ L'utilisation de la phase améliore fortement la précision des observations,
 mais impose d'estimer les ambiguïtés de phase qui sont des inconnues supplémentaires. Le PPP utilise
 des données précises sur les orbites et les horloges des
 satellites afin que leur incertitude ne limite pas l'exploitation des mesures
-de phase. 
+de phase.
 
 La solution PPP nécessite généralement une phase de convergence pendant
 laquelle les différents paramètres sont estimés. Une fois cette convergence
-atteinte, la précision peut atteindre quelques centimètres. Cela nécesite de 
-prendre en compte des corrections supplémentaires très fines sur les mesures, 
+atteinte, la précision peut atteindre quelques centimètres. Cela nécessite de
+prendre en compte des corrections supplémentaires très fines sur les mesures,
 ainsi que des mécanismes propres à la résolution des ambiguïtés de phase.
 
 
 \section{Orekit et les outils existants}
 
-Aujourd'hui, Orekit est largement utilisée dans le secteur spatial et est activement 
-maintenue par les développeurs de CS GROUP ainsi que par une communauté d'utilisateurs. 
-La bibliothèque est \textit{open source} et distribuée sous licence Apache 2.0, une licence 
-permissive permettant son utilisation dans des projets commerciaux comme non commerciaux. 
-Elle est notamment utilisée ou développée par des acteurs majeurs du secteur tels qu'Airbus 
+Aujourd'hui, Orekit est utilisé dans le secteur spatial. La bibliothèque est
+maintenue par les développeurs de CS GROUP et par une communauté d'utilisateurs.
+La bibliothèque est \textit{open source} et distribuée sous licence Apache 2.0, une licence
+permissive permettant son utilisation dans des projets commerciaux comme non commerciaux.
+Elle est utilisée ou développée par plusieurs acteurs du secteur tels qu'Airbus
 Defence and Space, Thales Alenia Space, le CNES, l'ESA ou encore l'U.S. Naval Research Laboratory.
 
-Orekit fournit principalement des fonctions de bas niveau, conçues pour être assemblées 
-et adaptées en fonction de l'application considérée. La bibliothèque couvre ainsi un 
-large éventail de domaines : la dynamique du vol spatial, la propagation et la détermination 
-d'orbite, la gestion des attitudes, des dates et des systèmes de coordonnées, ou encore le 
+Orekit fournit principalement des fonctions de bas niveau, conçues pour être assemblées
+et adaptées à l'application considérée. La bibliothèque couvre un
+large éventail de domaines : la dynamique du vol spatial, la propagation et la détermination
+d'orbite, la gestion des attitudes, des dates et des systèmes de coordonnées, ou encore le
 traitement de mesures GNSS.
 
 En ce qui concerne le GNSS, la bibliothèque met à disposition des modèles

@@ -1,118 +1,163 @@
 \relax 
 \providecommand\hyper@newdestlabel[2]{}
+\citation{rinex304}
 \@writefile{toc}{\contentsline {chapter}{\numberline {1}Modélisation et mise en œuvre du positionnement GNSS}{21}{chapter.1}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
 \newlabel{chap:modelisation}{{1}{21}{Modélisation et mise en œuvre du positionnement GNSS}{chapter.1}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {1.1}Positionnement par SPP}{21}{section.1.1}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {1.1.1}Principe théorique}{21}{subsection.1.1.1}\protected@file@percent }
-\newlabel{new:code}{{1.1}{21}{Principe théorique}{equation.1.1}{}}
 \citation{isgps200n}
 \citation{ashby2003}
+\newlabel{new:code}{{1.1}{22}{Principe théorique}{equation.1.1}{}}
 \newlabel{eq:termes_eval}{{1.2}{22}{Principe théorique}{equation.1.2}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {1.1.2}Corrections utilisées en SPP}{22}{subsection.1.1.2}\protected@file@percent }
 \newlabel{new:corrections}{{1.1.2}{22}{Corrections utilisées en SPP}{subsection.1.1.2}{}}
 \@writefile{toc}{\contentsline {subsubsection}{\numberline {1.1.2.1}Horloge satellite}{22}{subsubsection.1.1.2.1}\protected@file@percent }
 \citation{isgps200n}
+\citation{hilla2016sp3d}
+\citation{rinexClock304}
+\citation{schaerSinexBias}
 \citation{galileoOsSisIcd21}
-\citation{ashby2003}
 \newlabel{eq:broadcast_satellite_clock}{{1.6}{23}{Horloge satellite}{equation.1.6}{}}
 \newlabel{eq:tgd_signal_clock}{{1.7}{23}{Horloge satellite}{equation.1.7}{}}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {1.1.2.2}Horloge récepteur}{23}{subsubsection.1.1.2.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {1.1.2.3}Effet Sagnac}{23}{subsubsection.1.1.2.3}\protected@file@percent }
-\newlabel{sagnac}{{1.1.2.3}{23}{Effet Sagnac}{subsubsection.1.1.2.3}{}}
+\citation{iers2010}
+\citation{iers2010}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {1.1.2.2}Horloge récepteur}{24}{subsubsection.1.1.2.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {1.1.2.3}Repères utilisés}{24}{subsubsection.1.1.2.3}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {1.1}{\ignorespaces Principe de l'International Terrestrial Reference Frame.}}{24}{figure.caption.9}\protected@file@percent }
+\providecommand*\caption@xref[2]{\@setref\relax\@undefined{#1}}
+\newlabel{fig:itrf_frame}{{1.1}{24}{Principe de l'International Terrestrial Reference Frame}{figure.caption.9}{}}
+\citation{ashby2003}
+\@writefile{lof}{\contentsline {figure}{\numberline {1.2}{\ignorespaces Principe du Geocentric Celestial Reference Frame.}}{25}{figure.caption.10}\protected@file@percent }
+\newlabel{fig:gcrf_frame}{{1.2}{25}{Principe du Geocentric Celestial Reference Frame}{figure.caption.10}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {1.3}{\ignorespaces Définition des axes du repère ECEF et ENU.}}{25}{figure.caption.11}\protected@file@percent }
+\newlabel{fig:ecef_frame}{{1.3}{25}{Définition des axes du repère ECEF et ENU}{figure.caption.11}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {1.1.2.4}Effet Sagnac}{25}{subsubsection.1.1.2.4}\protected@file@percent }
+\newlabel{sagnac}{{1.1.2.4}{25}{Effet Sagnac}{subsubsection.1.1.2.4}{}}
 \citation{saastamoinen1972}
 \citation{niell1996}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {1.1.2.4}Modélisation de la troposphère}{24}{subsubsection.1.1.2.4}\protected@file@percent }
-\newlabel{eq:ztd_decomposition}{{1.9}{24}{Modélisation de la troposphère}{equation.1.9}{}}
-\newlabel{eq:tropo_no_grad}{{1.10}{24}{Modélisation de la troposphère}{equation.1.10}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {1.1.2.5}Modélisation de la troposphère}{26}{subsubsection.1.1.2.5}\protected@file@percent }
+\newlabel{eq:ztd_decomposition}{{1.9}{26}{Modélisation de la troposphère}{equation.1.9}{}}
+\newlabel{eq:tropo_no_grad}{{1.10}{26}{Modélisation de la troposphère}{equation.1.10}{}}
 \citation{hauschild2017observations}
 \citation{klobuchar1987}
-\newlabel{eq:zhd}{{1.11}{25}{Modélisation de la troposphère}{equation.1.11}{}}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {1.1.2.5}Correction ionosphérique}{25}{subsubsection.1.1.2.5}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {1.1.2.6}Modèle de Klobuchar}{25}{subsubsection.1.1.2.6}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {1.1.2.7}Combinaison iono-free}{26}{subsubsection.1.1.2.7}\protected@file@percent }
-\newlabel{eq:code_iono_free}{{1.13}{26}{Combinaison iono-free}{equation.1.13}{}}
-\newlabel{eq:phase_iono_free}{{1.14}{26}{Combinaison iono-free}{equation.1.14}{}}
-\newlabel{eq:common_nondispersive_term}{{1.16}{26}{Combinaison iono-free}{equation.1.16}{}}
+\newlabel{eq:zhd}{{1.11}{27}{Modélisation de la troposphère}{equation.1.11}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {1.1.2.6}Correction ionosphérique}{27}{subsubsection.1.1.2.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {1.1.2.7}Modèle de Klobuchar}{27}{subsubsection.1.1.2.7}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {1.1.2.8}Combinaison iono-free}{28}{subsubsection.1.1.2.8}\protected@file@percent }
+\newlabel{eq:code_iono_free}{{1.13}{28}{Combinaison iono-free}{equation.1.13}{}}
+\newlabel{eq:phase_iono_free}{{1.14}{28}{Combinaison iono-free}{equation.1.14}{}}
+\newlabel{eq:common_nondispersive_term}{{1.16}{28}{Combinaison iono-free}{equation.1.16}{}}
 \citation{verhagen2017least}
 \citation{galileoOsSisIcd21}
-\newlabel{new:if}{{1.20}{27}{Combinaison iono-free}{equation.1.20}{}}
-\newlabel{new:if_variance}{{1.21}{27}{Combinaison iono-free}{equation.1.21}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {1.1.3}Estimation de la position SPP}{27}{subsection.1.1.3}\protected@file@percent }
-\newlabel{new:wls}{{1.23}{27}{Estimation de la position SPP}{equation.1.23}{}}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {1.1.3.1}Traitement multi-constellation}{27}{subsubsection.1.1.3.1}\protected@file@percent }
-\newlabel{eq:ggto}{{1.24}{28}{Traitement multi-constellation}{equation.1.24}{}}
-\newlabel{eq:ggto_observation_correction}{{1.25}{28}{Traitement multi-constellation}{equation.1.25}{}}
-\newlabel{eq:isb_definition}{{1.27}{28}{Traitement multi-constellation}{equation.1.27}{}}
-\newlabel{eq:multiconstellation_state}{{1.28}{28}{Traitement multi-constellation}{equation.1.28}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {1.2}Positionnement par PPP}{29}{section.1.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {1.2.1}Mesure de phase et ambiguïté}{29}{subsection.1.2.1}\protected@file@percent }
-\newlabel{new:phase_section}{{1.2.1}{29}{Mesure de phase et ambiguïté}{subsection.1.2.1}{}}
-\newlabel{eq:carrier_phase_definition}{{1.29}{29}{Mesure de phase et ambiguïté}{equation.1.29}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {1.2.2}Corrections supplémentaires}{29}{subsection.1.2.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {1.2.2.1}Centres de phase des antennes}{29}{subsubsection.1.2.2.1}\protected@file@percent }
-\newlabel{sec:antenna_corrections}{{1.2.2.1}{29}{Centres de phase des antennes}{subsubsection.1.2.2.1}{}}
+\newlabel{new:if}{{1.20}{29}{Combinaison iono-free}{equation.1.20}{}}
+\newlabel{new:if_variance}{{1.21}{29}{Combinaison iono-free}{equation.1.21}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.1.3}Estimation de la position SPP}{29}{subsection.1.1.3}\protected@file@percent }
+\newlabel{new:wls}{{1.23}{29}{Estimation de la position SPP}{equation.1.23}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {1.1.3.1}Traitement multi-constellation}{29}{subsubsection.1.1.3.1}\protected@file@percent }
+\newlabel{eq:ggto}{{1.24}{30}{Traitement multi-constellation}{equation.1.24}{}}
+\newlabel{eq:ggto_observation_correction}{{1.25}{30}{Traitement multi-constellation}{equation.1.25}{}}
+\newlabel{eq:isb_definition}{{1.27}{30}{Traitement multi-constellation}{equation.1.27}{}}
+\newlabel{eq:multiconstellation_state}{{1.28}{30}{Traitement multi-constellation}{equation.1.28}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {1.2}Positionnement par PPP}{31}{section.1.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.2.1}Mesure de phase et ambiguïté}{31}{subsection.1.2.1}\protected@file@percent }
+\newlabel{new:phase_section}{{1.2.1}{31}{Mesure de phase et ambiguïté}{subsection.1.2.1}{}}
+\newlabel{eq:carrier_phase_definition}{{1.29}{31}{Mesure de phase et ambiguïté}{equation.1.29}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.2.2}Corrections supplémentaires}{31}{subsection.1.2.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {1.2.2.1}Centres de phase des antennes}{31}{subsubsection.1.2.2.1}\protected@file@percent }
+\newlabel{sec:antenna_corrections}{{1.2.2.1}{31}{Centres de phase des antennes}{subsubsection.1.2.2.1}{}}
 \citation{schmid2007}
-\@writefile{lof}{\contentsline {figure}{\numberline {1.1}{\ignorespaces Schéma de principe réalisé pour ce rapport, illustrant le décalage entre le point de référence d'une antenne et son centre de phase.}}{30}{figure.caption.9}\protected@file@percent }
-\providecommand*\caption@xref[2]{\@setref\relax\@undefined{#1}}
-\newlabel{fig:pco_pcv}{{1.1}{30}{Schéma de principe réalisé pour ce rapport, illustrant le décalage entre le point de référence d'une antenne et son centre de phase}{figure.caption.9}{}}
-\newlabel{eq:antenna_pco_signs}{{1.30}{30}{Centres de phase des antennes}{equation.1.30}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {1.4}{\ignorespaces Schéma de principe réalisé pour ce rapport, illustrant le décalage entre le point de référence d'une antenne et son centre de phase.}}{32}{figure.caption.12}\protected@file@percent }
+\newlabel{fig:pco_pcv}{{1.4}{32}{Schéma de principe réalisé pour ce rapport, illustrant le décalage entre le point de référence d'une antenne et son centre de phase}{figure.caption.12}{}}
+\newlabel{eq:antenna_pco_signs}{{1.30}{32}{Centres de phase des antennes}{equation.1.30}{}}
 \citation{wu1993}
-\newlabel{eq:antenna_signed_corrections}{{1.32}{31}{Centres de phase des antennes}{equation.1.32}{}}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {1.2.2.2}Effet wind-up}{31}{subsubsection.1.2.2.2}\protected@file@percent }
-\newlabel{windup}{{1.2.2.2}{31}{Effet wind-up}{subsubsection.1.2.2.2}{}}
+\newlabel{eq:antenna_signed_corrections}{{1.32}{33}{Centres de phase des antennes}{equation.1.32}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {1.2.2.2}Effet wind-up}{33}{subsubsection.1.2.2.2}\protected@file@percent }
+\newlabel{windup}{{1.2.2.2}{33}{Effet wind-up}{subsubsection.1.2.2.2}{}}
 \citation{ashby2003}
-\newlabel{eq:windup}{{1.38}{32}{Effet wind-up}{equation.1.38}{}}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {1.2.2.3}Retard de Shapiro}{32}{subsubsection.1.2.2.3}\protected@file@percent }
-\newlabel{shapiro}{{1.2.2.3}{32}{Retard de Shapiro}{subsubsection.1.2.2.3}{}}
+\newlabel{eq:windup}{{1.38}{34}{Effet wind-up}{equation.1.38}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {1.2.2.3}Retard de Shapiro}{34}{subsubsection.1.2.2.3}\protected@file@percent }
+\newlabel{shapiro}{{1.2.2.3}{34}{Retard de Shapiro}{subsubsection.1.2.2.3}{}}
 \citation{iers2010}
 \citation{chenHerring1997}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {1.2.2.4}Correction des marées terrestres}{33}{subsubsection.1.2.2.4}\protected@file@percent }
-\newlabel{marees}{{1.2.2.4}{33}{Correction des marées terrestres}{subsubsection.1.2.2.4}{}}
-\newlabel{eq:solid_tides_geometry}{{1.40}{33}{Correction des marées terrestres}{equation.1.40}{}}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {1.2.2.5}Estimation du retard troposphérique humide}{33}{subsubsection.1.2.2.5}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {1.2.2.6}Estimation des gradients troposphériques}{33}{subsubsection.1.2.2.6}\protected@file@percent }
-\newlabel{eq:tropo_grad}{{1.41}{33}{Estimation des gradients troposphériques}{equation.1.41}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {1.2.2.4}Correction des marées terrestres}{35}{subsubsection.1.2.2.4}\protected@file@percent }
+\newlabel{marees}{{1.2.2.4}{35}{Correction des marées terrestres}{subsubsection.1.2.2.4}{}}
+\newlabel{eq:solid_tides_geometry}{{1.40}{35}{Correction des marées terrestres}{equation.1.40}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {1.2.2.5}Estimation du retard troposphérique humide}{35}{subsubsection.1.2.2.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {1.2.2.6}Estimation des gradients troposphériques}{35}{subsubsection.1.2.2.6}\protected@file@percent }
+\newlabel{eq:tropo_grad}{{1.41}{35}{Estimation des gradients troposphériques}{equation.1.41}{}}
 \citation{capderou2012}
-\@writefile{toc}{\contentsline {subsection}{\numberline {1.2.3}Équation de phase et modèle PPP}{34}{subsection.1.2.3}\protected@file@percent }
-\newlabel{ppp:equations}{{1.2.3}{34}{Équation de phase et modèle PPP}{subsection.1.2.3}{}}
-\newlabel{new:phase}{{1.42}{34}{Équation de phase et modèle PPP}{equation.1.42}{}}
-\newlabel{eq:phase_corrigee}{{1.43}{34}{Équation de phase et modèle PPP}{equation.1.43}{}}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {1.2.3.1}Combinaison iono-free}{35}{subsubsection.1.2.3.1}\protected@file@percent }
-\newlabel{new:ppp_model}{{1.47}{35}{Combinaison iono-free}{equation.1.47}{}}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {1.2.3.2}Paramètres estimés}{35}{subsubsection.1.2.3.2}\protected@file@percent }
-\newlabel{eq:state_zwd}{{1.49}{35}{Paramètres estimés}{equation.1.49}{}}
-\newlabel{eq:state_zwd_grad}{{1.50}{35}{Paramètres estimés}{equation.1.50}{}}
-\newlabel{new:ppp_state}{{1.51}{35}{Paramètres estimés}{equation.1.51}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {1.2.4}Filtre de Kalman : mécanismes spécifiques au GNSS}{36}{subsection.1.2.4}\protected@file@percent }
-\newlabel{ppp:kalman}{{1.2.4}{36}{Filtre de Kalman : mécanismes spécifiques au GNSS}{subsection.1.2.4}{}}
-\newlabel{ppp:sec:ekf_gnss_features}{{1.2.4}{36}{Filtre de Kalman : mécanismes spécifiques au GNSS}{subsection.1.2.4}{}}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {1.2.4.1}Initialisation et réinitialisation des horloges}{36}{subsubsection.1.2.4.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {1.2.4.2}État d'ambiguïtés adapté à la visibilité}{36}{subsubsection.1.2.4.2}\protected@file@percent }
-\newlabel{ppp:eq:ambiguity_initialization}{{1.52}{36}{État d'ambiguïtés adapté à la visibilité}{equation.1.52}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.2.3}Équation de phase et modèle PPP}{36}{subsection.1.2.3}\protected@file@percent }
+\newlabel{ppp:equations}{{1.2.3}{36}{Équation de phase et modèle PPP}{subsection.1.2.3}{}}
+\newlabel{new:phase}{{1.42}{36}{Équation de phase et modèle PPP}{equation.1.42}{}}
+\newlabel{eq:phase_corrigee}{{1.43}{36}{Équation de phase et modèle PPP}{equation.1.43}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {1.2.3.1}Combinaison iono-free}{37}{subsubsection.1.2.3.1}\protected@file@percent }
+\newlabel{new:ppp_model}{{1.47}{37}{Combinaison iono-free}{equation.1.47}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {1.2.3.2}Paramètres estimés}{37}{subsubsection.1.2.3.2}\protected@file@percent }
+\newlabel{new:ppp_state}{{1.48}{37}{Paramètres estimés}{equation.1.48}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.2.4}Filtre de Kalman : mécanismes spécifiques au GNSS}{37}{subsection.1.2.4}\protected@file@percent }
+\newlabel{ppp:kalman}{{1.2.4}{37}{Filtre de Kalman : mécanismes spécifiques au GNSS}{subsection.1.2.4}{}}
+\newlabel{ppp:sec:ekf_gnss_features}{{1.2.4}{37}{Filtre de Kalman : mécanismes spécifiques au GNSS}{subsection.1.2.4}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {1.2.4.1}Initialisation et réinitialisation des horloges}{38}{subsubsection.1.2.4.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {1.2.4.2}État d'ambiguïtés adapté à la visibilité}{38}{subsubsection.1.2.4.2}\protected@file@percent }
+\newlabel{ppp:eq:ambiguity_initialization}{{1.49}{38}{État d'ambiguïtés adapté à la visibilité}{equation.1.49}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {1.2.4.3}Définition d'un saut de cycle}{38}{subsubsection.1.2.4.3}\protected@file@percent }
+\newlabel{ppp:eq:cycle_slip_definition}{{1.51}{38}{Définition d'un saut de cycle}{equation.1.51}{}}
 \citation{rinex304}
 \citation{blewitt1990}
 \citation{melbourne1985}
 \citation{wubbena1985}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {1.2.4.3}Définition d'un saut de cycle}{37}{subsubsection.1.2.4.3}\protected@file@percent }
-\newlabel{ppp:eq:cycle_slip_definition}{{1.54}{37}{Définition d'un saut de cycle}{equation.1.54}{}}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {1.2.4.4}Détection des sauts de cycle}{37}{subsubsection.1.2.4.4}\protected@file@percent }
-\newlabel{ppp:eq:geometry_free_slip}{{1.56}{37}{Détection des sauts de cycle}{equation.1.56}{}}
-\newlabel{ppp:eq:geometry_free_prediction}{{1.59}{38}{Détection des sauts de cycle}{equation.1.59}{}}
-\newlabel{ppp:eq:geometry_free_detection}{{1.61}{38}{Détection des sauts de cycle}{equation.1.61}{}}
-\newlabel{ppp:eq:melbourne_wubbena_slip}{{1.62}{38}{Détection des sauts de cycle}{equation.1.62}{}}
-\newlabel{ppp:eq:melbourne_wubbena_detection}{{1.64}{39}{Détection des sauts de cycle}{equation.1.64}{}}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {1.2.4.5}Réinitialisation après un saut ou une perte de suivi}{39}{subsubsection.1.2.4.5}\protected@file@percent }
-\newlabel{ppp:eq:outage_reset}{{1.65}{39}{Réinitialisation après un saut ou une perte de suivi}{equation.1.65}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {1.3}Implémentation avec Orekit}{39}{section.1.3}\protected@file@percent }
-\newlabel{sec:implementation_nouvelle}{{1.3}{39}{Implémentation avec Orekit}{section.1.3}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {1.1}{\ignorespaces Principales différences entre les traitements SPP et PPP retenus.}}{40}{table.caption.10}\protected@file@percent }
-\newlabel{new:summary}{{1.1}{40}{Principales différences entre les traitements SPP et PPP retenus}{table.caption.10}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {1.2.4.4}Détection des sauts de cycle}{39}{subsubsection.1.2.4.4}\protected@file@percent }
+\newlabel{ppp:eq:geometry_free_slip}{{1.53}{39}{Détection des sauts de cycle}{equation.1.53}{}}
+\newlabel{ppp:eq:geometry_free_prediction}{{1.56}{39}{Détection des sauts de cycle}{equation.1.56}{}}
+\newlabel{ppp:eq:geometry_free_detection}{{1.58}{40}{Détection des sauts de cycle}{equation.1.58}{}}
+\newlabel{ppp:eq:melbourne_wubbena_slip}{{1.59}{40}{Détection des sauts de cycle}{equation.1.59}{}}
+\newlabel{ppp:eq:melbourne_wubbena_detection}{{1.61}{40}{Détection des sauts de cycle}{equation.1.61}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {1.2.4.5}Réinitialisation après un saut ou une perte de suivi}{41}{subsubsection.1.2.4.5}\protected@file@percent }
+\newlabel{ppp:eq:outage_reset}{{1.62}{41}{Réinitialisation après un saut ou une perte de suivi}{equation.1.62}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {1.1}{\ignorespaces Tableau récapitulatif des différences entre le SPP et le PPP.}}{41}{table.caption.13}\protected@file@percent }
+\newlabel{new:summary}{{1.1}{41}{Tableau récapitulatif des différences entre le SPP et le PPP}{table.caption.13}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {1.3}Implémentation avec Orekit}{41}{section.1.3}\protected@file@percent }
+\newlabel{sec:implementation_nouvelle}{{1.3}{41}{Implémentation avec Orekit}{section.1.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.3.1}Fonctions GNSS présentes dans Orekit}{41}{subsection.1.3.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {1.3.1.1}Contenu du package \texttt  {org.orekit.gnss}}{42}{subsubsection.1.3.1.1}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {1.2}{\ignorespaces Classes de description des systèmes et des signaux dans \texttt  {org.orekit.gnss}.}}{42}{table.caption.14}\protected@file@percent }
+\newlabel{tab:orekit_gnss_identification}{{1.2}{42}{Classes de description des systèmes et des signaux dans \texttt {org.orekit.gnss}}{table.caption.14}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {1.3}{\ignorespaces Classes de description des observations et des temps dans \texttt  {org.orekit.gnss}.}}{42}{table.caption.15}\protected@file@percent }
+\newlabel{tab:orekit_gnss_observations}{{1.3}{42}{Classes de description des observations et des temps dans \texttt {org.orekit.gnss}}{table.caption.15}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {1.4}{\ignorespaces Outils généraux du package \texttt  {org.orekit.gnss}.}}{43}{table.caption.16}\protected@file@percent }
+\newlabel{tab:orekit_gnss_tools}{{1.4}{43}{Outils généraux du package \texttt {org.orekit.gnss}}{table.caption.16}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {1.3.1.2}Packages GNSS complémentaires}{43}{subsubsection.1.3.1.2}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {1.5}{\ignorespaces Principaux packages Orekit liés au GNSS.}}{43}{table.caption.17}\protected@file@percent }
+\newlabel{tab:orekit_gnss_packages}{{1.5}{43}{Principaux packages Orekit liés au GNSS}{table.caption.17}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.3.2}Exigences du programme}{44}{subsection.1.3.2}\protected@file@percent }
+\newlabel{sec:implementation_requirements}{{1.3.2}{44}{Exigences du programme}{subsection.1.3.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.3.3}Fichiers d'entrée}{44}{subsection.1.3.3}\protected@file@percent }
+\newlabel{sec:implementation_input_files}{{1.3.3}{44}{Fichiers d'entrée}{subsection.1.3.3}{}}
+\citation{rinex304}
+\citation{hilla2016sp3d}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {1.3.3.1}Fichier RINEX Observation}{45}{subsubsection.1.3.3.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {1.3.3.2}Fichier RINEX Navigation}{45}{subsubsection.1.3.3.2}\protected@file@percent }
+\citation{rinexClock304}
+\citation{schaerSinexBias}
+\citation{antexFormat}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {1.3.3.3}Produits du traitement précis}{46}{subsubsection.1.3.3.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {1.3.3.4}Configuration et position de référence}{46}{subsubsection.1.3.3.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.3.4}Chaîne de traitement}{46}{subsection.1.3.4}\protected@file@percent }
+\newlabel{sec:implementation_processing_chain}{{1.3.4}{46}{Chaîne de traitement}{subsection.1.3.4}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {1.6}{\ignorespaces Fichiers d'entrée de l'application.}}{47}{table.caption.18}\protected@file@percent }
+\newlabel{tab:implementation_input_files}{{1.6}{47}{Fichiers d'entrée de l'application}{table.caption.18}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.3.5}Adaptations et développements autour d'Orekit}{48}{subsection.1.3.5}\protected@file@percent }
+\newlabel{sec:implementation_adaptations}{{1.3.5}{48}{Adaptations et développements autour d'Orekit}{subsection.1.3.5}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {1.3.5.1}Adaptation des mesures et du filtre de Kalman}{49}{subsubsection.1.3.5.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {1.3.5.2}Nouveaux modules de correction}{49}{subsubsection.1.3.5.2}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {1.7}{\ignorespaces Répartition entre les fonctions d'Orekit et les développements de l'application.}}{50}{table.caption.19}\protected@file@percent }
+\newlabel{tab:implementation_new_modules}{{1.7}{50}{Répartition entre les fonctions d'Orekit et les développements de l'application}{table.caption.19}{}}
 \@setckpt{chapters/1-chapter}{
-\setcounter{page}{41}
-\setcounter{equation}{65}
-\setcounter{enumi}{0}
+\setcounter{page}{51}
+\setcounter{equation}{62}
+\setcounter{enumi}{10}
 \setcounter{enumii}{0}
 \setcounter{enumiii}{0}
 \setcounter{enumiv}{0}
@@ -121,12 +166,12 @@
 \setcounter{part}{0}
 \setcounter{chapter}{1}
 \setcounter{section}{3}
-\setcounter{subsection}{0}
-\setcounter{subsubsection}{0}
+\setcounter{subsection}{5}
+\setcounter{subsubsection}{2}
 \setcounter{paragraph}{0}
 \setcounter{subparagraph}{0}
-\setcounter{figure}{1}
-\setcounter{table}{1}
+\setcounter{figure}{4}
+\setcounter{table}{7}
 \setcounter{caption@flags}{2}
 \setcounter{continuedfloat}{0}
 \setcounter{KVtest}{0}
@@ -140,8 +185,8 @@
 \setcounter{LT@tables}{0}
 \setcounter{LT@chunks}{0}
 \setcounter{float@type}{4}
-\setcounter{section@level}{1}
-\setcounter{Item}{0}
+\setcounter{section@level}{3}
+\setcounter{Item}{13}
 \setcounter{Hfootnote}{0}
-\setcounter{bookmark@seq@number}{22}
+\setcounter{bookmark@seq@number}{27}
 }

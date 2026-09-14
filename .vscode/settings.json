@@ -3,7 +3,7 @@
     "latex-workshop.latex.tools": [
         {
             "name": "pdflatex",
-            "command": "C:/Users/jbzemouli/AppData/Local/Programs/MiKTeX/miktex/bin/x64/pdflatex",
+            "command": "C:/Users/jbzem/AppData/Local/Programs/MiKTeX/miktex/bin/x64/pdflatex.exe",
             "args": [
                 "-synctex=1",
                 "-interaction=nonstopmode",
@@ -14,7 +14,7 @@
         },
         {
             "name": "bibtex",
-            "command": "C:/Users/jbzemouli/AppData/Local/Programs/MiKTeX/miktex/bin/x64/bibtex",
+            "command": "C:/Users/jbzem/AppData/Local/Programs/MiKTeX/miktex/bin/x64/bibtex.exe",
             "args": [
                 "%DOCFILE%"
             ],

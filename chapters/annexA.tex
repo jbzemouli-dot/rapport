@@ -13,7 +13,7 @@
 
 Dans cette étude, les fonctions de projection utilisées pour modéliser le
 retard troposphérique sont celles du modèle \textit{Niell Mapping Function}
-(NMF), proposé par Niell~\cite{niell1996}. Il permet ainsi de déterminer
+(NMF), proposé par Niell~\cite{niell1996}. Il sert à déterminer
 séparément les facteurs de projection associés aux composantes hydrostatique
 et humide du retard troposphérique.
 
@@ -82,7 +82,7 @@ m(E,a_{ht},b_{ht},c_{ht})
 où $H$ est la hauteur du récepteur, exprimée en kilomètres.
 Les paramètres $a_d$, $b_d$ et $c_d$ sont les coefficients de la composante
 hydrostatique, tandis que $a_{ht}$, $b_{ht}$ et $c_{ht}$ sont les coefficients
-utilisés pour la correction d'altitude. \cite{niell1996}
+utilisés pour la correction d'altitude~\cite{niell1996}.
 
 Les coefficients hydrostatiques dépendent de la latitude du récepteur et,
 pour tenir compte de la variation saisonnière de l'atmosphère, du temps.
@@ -108,7 +108,7 @@ correspond au 28e jour de l'année.
 Les valeurs de $\xi_{\mathrm{avg}}$ et $\xi_{\mathrm{amp}}$ sont obtenues par
 interpolation linéaire entre les deux latitudes tabulées encadrant la
 latitude du récepteur. Les coefficients $a_{ht}$, $b_{ht}$ et $c_{ht}$ sont,
-quant à eux, directement donnés par les valeurs tabulées.
+quant à eux, donnés par les valeurs tabulées.
 
 \subsection*{Fonction de projection humide}
 
@@ -163,7 +163,7 @@ suivants.
 \section{Modèle ionosphérique de Klobuchar} \label{Klobuchar}
 
 Le modèle de Klobuchar est un modèle empirique de correction du retard
-ionosphérique diffusé dans le message de navigation GPS et permet de fournir une estimation
+ionosphérique diffusé dans le message de navigation GPS et fournit une estimation
 du retard ionosphérique à partir de huit coefficients $\alpha_i$ et
 $\beta_i$ transmis par les satellites GPS~\cite{klobuchar1987}.
 
@@ -172,7 +172,7 @@ concentrés dans une couche mince située à une altitude d'environ $350$~km.
 Le retard selon la ligne de visée est alors obtenu à partir du retard
 vertical au point de percement ionosphérique (\textit{Ionospheric Pierce
 Point}, IPP), auquel est appliqué un facteur de projection dépendant de
-l'élévation du satellite 
+l'élévation du satellite
 
 \subsection{Calcul du point de percement ionosphérique}
 
@@ -312,4 +312,4 @@ selon
 \label{eq:klobuchar_frequency}
 \end{align}
 
- 
+

@@ -1,20 +1,20 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.29 (MiKTeX 26.5) (preloaded format=pdflatex 2026.7.1)  11 SEP 2026 15:54
+This is pdfTeX, Version 3.141592653-2.6-1.40.29 (MiKTeX 26.5) (preloaded format=pdflatex 2026.9.12)  14 SEP 2026 03:48
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
  %&-line parsing enabled.
-**c:/Users/jbzemouli/Documents/report_template_fr/enac_project_fr.tex
-(c:/Users/jbzemouli/Documents/report_template_fr/enac_project_fr.tex
+**c:/Users/jbzem/rapport/enac_project_fr.tex
+(c:/Users/jbzem/rapport/enac_project_fr.tex
 LaTeX2e <2026-06-01>
-L3 programming layer <2026-06-18>
+L3 programming layer <2026-08-10>
 (enac_template.cls
 Document Class: enac_template 18/01/2022 ENAC Template, V3.0
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/latex/base\ifthen.sty
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/latex/base\ifthen.sty
 Package: ifthen 2024/03/16 v1.1e Standard LaTeX ifthen package (DPC)
 )
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/latex/base\book.cls
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/latex/base\book.cls
 Document Class: book 2025/01/22 v1.4n Standard LaTeX document class
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/latex/base\bk11.clo
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/latex/base\bk11.clo
 File: bk11.clo 2025/01/22 v1.4n Standard LaTeX file (size option)
 )
 \c@part=\count276
@@ -30,53 +30,52 @@ File: bk11.clo 2025/01/22 v1.4n Standard LaTeX file (size option)
 \belowcaptionskip=\skip50
 \bibindent=\dimen150
 )
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/generic/babel\babel.sty
-Package: babel 2026/06/14 v26.9 The multilingual framework for LuaLaTeX, pdfLaT
-eX and XeLaTeX
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/generic/babel\babel.sty
+Package: babel 2026/08/21 v26.11 The multilingual framework for LuaLaTeX, pdfLa
+TeX and XeLaTeX
 \babel@savecnt=\count285
 LaTeX Encoding Info:    Redeclaring text command \ij (encoding OT1) on input li
-ne 2084.
+ne 2105.
 LaTeX Encoding Info:    Redeclaring text command \IJ (encoding OT1) on input li
-ne 2086.
+ne 2107.
 LaTeX Encoding Info:    Redeclaring text command \ij (encoding T1) on input lin
-e 2088.
+e 2109.
 LaTeX Encoding Info:    Redeclaring text command \IJ (encoding T1) on input lin
-e 2089.
+e 2110.
 LaTeX Encoding Info:    Ignoring declaration for text command \ij (encoding ?) 
-on input line 2090.
+on input line 2111.
 LaTeX Encoding Info:    Ignoring declaration for text command \IJ (encoding ?) 
-on input line 2092.
+on input line 2113.
 LaTeX Encoding Info:    Ignoring declaration for text command \SS (encoding ?) 
-on input line 2117.
+on input line 2138.
 \U@D=\dimen151
 \l@unhyphenated=\language79
 
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/generic/babel\txtbabel.de
-f)
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/generic/babel\txtbabel.def)
 \bbl@readstream=\read2
 \bbl@dirlevel=\count286
 Package babel Info: Configuration files are deprecated, as
 (babel)             they can break document portability.
-(babel)             Reported on input line 4252.
+(babel)             Reported on input line 4332.
 
 *************************************
 * Local config file bblopts.cfg used
 *
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/latex/arabi\bblopts.cfg
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/latex/arabi\bblopts.cfg
 File: bblopts.cfg 2005/09/08 v0.1 add Arabic and Farsi to "declared" options of
  babel
 )
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/generic/babel/locale/fr\b
-abel-french.tex)
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/generic/babel/locale/fr\babel
+-french.tex)
 Package babel Info: Importing font and identification data for 'french'
-(babel)             from babel-fr.ini. Reported on input line 4380.
+(babel)             from babel-fr.ini. Reported on input line 4460.
 
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/generic/babel-french\fren
-ch.ldf
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/generic/babel-french\french.l
+df
 Language: french 2026-06-06 v4.1a French support from the babel system
 
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/generic/babel-french\fren
-ch3.ldf
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/generic/babel-french\french3.
+ldf
 Language: french 2026-06-06 v3.7f French support from the babel system
 \FB@stdchar=\count287
 Package babel Info: Making : an active character on input line 266.
@@ -99,17 +98,14 @@ Package babel Info: Making ? an active character on input line 269.
 \parindentFFN=\dimen158
 \FBfnindent=\dimen159
 )))
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/latex/carlisle\scalefnt.s
-ty)
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/latex/newunicodechar\newu
-nicodechar.sty
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/latex/carlisle\scalefnt.sty)
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/latex/newunicodechar\newunico
+dechar.sty
 Package: newunicodechar 2018/04/08 v1.2 Defining Unicode characters
-)
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/latex/ucs\ucs.sty
+) (C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/latex/ucs\ucs.sty
 Package: ucs 2023/11/09 v2.4 UCS: Unicode input support
 
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/latex/ucs/data\uni-global
-.def
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/latex/ucs/data\uni-global.def
 File: uni-global.def 2022/08/07 UCS: Unicode global data
 LaTeX Encoding Info:    Ignoring declaration for text command \textcommabelow (
 encoding ?) on input line 7.
@@ -126,52 +122,46 @@ s (encoding ?) on input line 15.
 \uc@combtoks=\toks18
 \uc@combtoksb=\toks19
 \uc@temptokena=\toks20
-)
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/latex/base\fontenc.sty
+) (C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/latex/base\fontenc.sty
 Package: fontenc 2025/07/18 v2.1d Standard LaTeX package
 )
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/latex/graphics\graphicx.s
-ty
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/latex/graphics\graphicx.sty
 Package: graphicx 2026-05-17 v1.2e Enhanced LaTeX Graphics (DPC,SPQR)
 
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/latex/graphics\keyval.sty
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/latex/graphics\keyval.sty
 Package: keyval 2026-05-17 v1.15 key=value parser (DPC)
 \KV@toks@=\toks21
 )
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/latex/graphics\graphics.s
-ty
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/latex/graphics\graphics.sty
 Package: graphics 2026-05-17 v1.4h Standard LaTeX Graphics (DPC,SPQR)
 
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/latex/graphics\trig.sty
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/latex/graphics\trig.sty
 Package: trig 2023/12/02 v1.11 sin cos tan (DPC)
 )
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/latex/graphics-cfg\graphi
-cs.cfg
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/latex/graphics-cfg\graphics.c
+fg
 File: graphics.cfg 2016/06/04 v1.11 sample graphics configuration
 )
 Package graphics Info: Driver file: pdftex.def on input line 106.
 
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/latex/graphics-def\pdftex
-.def
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/latex/graphics-def\pdftex.def
 File: pdftex.def 2025/09/29 v1.2d Graphics/color driver for pdftex
 ))
 \Gin@req@height=\dimen160
 \Gin@req@width=\dimen161
-)
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/latex/psfrag\psfrag.sty
+) (C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/latex/psfrag\psfrag.sty
 Package: psfrag 1998/04/11 v3.04 PSfrag (MCG)
 \pfg@pcount=\count295
 \pfg@scount=\count296
 \pfg@temp=\write3
 )
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/latex/subfig\subfig.sty
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/latex/subfig\subfig.sty
 Package: subfig 2005/06/28 ver: 1.3 subfig package
 
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/latex/caption\caption.sty
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/latex/caption\caption.sty
 Package: caption 2023/08/05 v3.6o Customizing captions (AR)
 
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/latex/caption\caption3.st
-y
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/latex/caption\caption3.sty
 Package: caption3 2023/07/31 v2.4d caption3 kernel (AR)
 \caption@tempdima=\dimen162
 \captionmargin=\dimen163
@@ -200,19 +190,16 @@ Package caption Info: french babel package is loaded.
 \c@lotdepth=\count305
 \sf@top=\skip54
 \sf@bottom=\skip55
-)
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/latex/pstricks\pstricks.s
-ty
+) (C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/latex/pstricks\pstricks.sty
 Package: pstricks 2024/02/02 v0.75 LaTeX wrapper for `PSTricks' (RN,HV)
 
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/generic/iftex\iftex.sty
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/generic/iftex\iftex.sty
 Package: iftex 2024/12/12 v1.0g TeX engine tests
 )
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/latex/xcolor\xcolor.sty
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/latex/xcolor\xcolor.sty
 Package: xcolor 2024/09/29 v3.02 LaTeX color extensions (UK)
 
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/latex/graphics-cfg\color.
-cfg
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/latex/graphics-cfg\color.cfg
 File: color.cfg 2016/01/02 v1.6 sample color configuration
 )
 
@@ -220,9 +207,7 @@ Package xcolor Warning: Package option `usenames' is obsolete and ignored on in
 put line 265.
 
 Package xcolor Info: Driver file: pdftex.def on input line 274.
-
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/latex/graphics\mathcolor.
-ltx)
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/latex/graphics\mathcolor.ltx)
 Package xcolor Info: Model `cmy' substituted by `cmy0' on input line 1349.
 Package xcolor Info: Model `hsb' substituted by `rgb' on input line 1353.
 Package xcolor Info: Model `RGB' extended on input line 1365.
@@ -232,32 +217,26 @@ Package xcolor Info: Model `tHsb' substituted by `hsb' on input line 1369.
 Package xcolor Info: Model `HSB' substituted by `hsb' on input line 1370.
 Package xcolor Info: Model `Gray' substituted by `gray' on input line 1371.
 Package xcolor Info: Model `wave' substituted by `hsb' on input line 1372.
-)
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/latex/graphics\dvipsnam.d
-ef
+) (C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/latex/graphics\dvipsnam.def
 File: dvipsnam.def 2026-05-17 v3.0m Driver-dependent file (DPC,SPQR)
 )
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/generic/xkeyval\pst-xkey.
-tex
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/generic/xkeyval\pst-xkey.tex
 File: pst-xkey.tex 2005/11/25 v1.6 PSTricks specialization of xkeyval (HA)
 
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/latex/xkeyval\xkeyval.sty
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/latex/xkeyval\xkeyval.sty
 Package: xkeyval 2022/06/16 v2.9 package option processing (HA)
 
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/generic/xkeyval\xkeyval.t
-ex
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/generic/xkeyval\xkvutils.
-tex
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/generic/xkeyval\xkeyval.tex
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/generic/xkeyval\xkvutils.tex
 \XKV@toks=\toks22
 \XKV@tempa@toks=\toks23
 )
 \XKV@depth=\count306
 File: xkeyval.tex 2014/12/03 v2.7a key=value parser (HA)
 )))
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/generic/pstricks\pstricks
-.tex
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/generic/pstricks\pst-fp.t
-ex `pst-fp' v0.06, 2020/11/20 (hv)
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/generic/pstricks\pstricks.tex
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/generic/pstricks\pst-fp.tex
+`pst-fp' v0.06, 2020/11/20 (hv)
 \pstFP@xs=\count307
 \pstFP@xia=\count308
 \pstFP@xib=\count309
@@ -268,43 +247,41 @@ ex `pst-fp' v0.06, 2020/11/20 (hv)
 \pstFP@regs=\count314
 \pstFP@times=\count315
 )
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/latex/pgf/utilities\pgffo
-r.sty
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/latex/pgf/utilities\pgfrc
-s.sty
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/generic/pgf/utilities\pgf
-util-common.tex
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/latex/pgf/utilities\pgffor.st
+y
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/latex/pgf/utilities\pgfrcs.st
+y
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/generic/pgf/utilities\pgfutil
+-common.tex
 \pgfutil@everybye=\toks24
 \pgfutil@tempdima=\dimen171
 \pgfutil@tempdimb=\dimen172
 )
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/generic/pgf/utilities\pgf
-util-latex.def
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/generic/pgf/utilities\pgfutil
+-latex.def
 \pgfutil@abb=\box53
 )
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/generic/pgf/utilities\pgf
-rcs.code.tex
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/generic/pgf\pgf.revision.
-tex)
-Package: pgfrcs 2025-08-29 v3.1.11a (3.1.11a)
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/generic/pgf/utilities\pgfrcs.
+code.tex
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/generic/pgf\pgf.revision.tex)
+Package: pgfrcs 2026-08-01 v3.1.12 (3.1.12)
 ))
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/latex/pgf/utilities\pgfke
-ys.sty
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/generic/pgf/utilities\pgf
-keys.code.tex
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/latex/pgf/utilities\pgfkeys.s
+ty
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/generic/pgf/utilities\pgfkeys
+.code.tex
 \pgfkeys@pathtoks=\toks25
 \pgfkeys@temptoks=\toks26
 
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/generic/pgf/utilities\pgf
-keyslibraryfiltered.code.tex
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/generic/pgf/utilities\pgfkeys
+libraryfiltered.code.tex
 \pgfkeys@tmptoks=\toks27
 )))
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/latex/pgf/math\pgfmath.st
-y
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmath.
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/latex/pgf/math\pgfmath.sty
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmath.code
+.tex
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathutil.
 code.tex
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathu
-til.code.tex
 \pgf@x=\dimen173
 \pgf@xa=\dimen174
 \pgf@xb=\dimen175
@@ -318,8 +295,8 @@ til.code.tex
 \c@pgf@countc=\count318
 \c@pgf@countd=\count319
 )
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathp
-arser.code.tex
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathparse
+r.code.tex
 \pgfmath@dimen=\dimen181
 \pgfmath@count=\count320
 \pgfmath@box=\box54
@@ -327,33 +304,33 @@ arser.code.tex
 \pgfmath@stack@operand=\toks29
 \pgfmath@stack@operation=\toks30
 )
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathf
-unctions.code.tex)
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathf
-unctions.basic.code.tex)
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathf
-unctions.trigonometric.code.tex)
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathf
-unctions.random.code.tex)
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathf
-unctions.comparison.code.tex)
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathf
-unctions.base.code.tex)
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathf
-unctions.round.code.tex)
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathf
-unctions.misc.code.tex)
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathf
-unctions.integerarithmetics.code.tex)
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathc
-alc.code.tex)
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathf
-loat.code.tex
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathfunct
+ions.code.tex)
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathfunct
+ions.basic.code.tex)
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathfunct
+ions.trigonometric.code.tex)
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathfunct
+ions.random.code.tex)
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathfunct
+ions.comparison.code.tex)
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathfunct
+ions.base.code.tex)
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathfunct
+ions.round.code.tex)
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathfunct
+ions.misc.code.tex)
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathfunct
+ions.integerarithmetics.code.tex)
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathcalc.
+code.tex)
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathfloat
+.code.tex
 \c@pgfmathroundto@lastzeros=\count321
 )))
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/generic/pgf/utilities\pgf
-for.code.tex
-Package: pgffor 2025-08-29 v3.1.11a (3.1.11a)
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/generic/pgf/utilities\pgffor.
+code.tex
+Package: pgffor 2026-08-01 v3.1.12 (3.1.12)
 \pgffor@iter=\dimen182
 \pgffor@skip=\dimen183
 \pgffor@stack=\toks31
@@ -389,10 +366,10 @@ Package: pgffor 2025-08-29 v3.1.11a (3.1.11a)
 \pst@toks=\toks33
 --- We are running latex or xelatex ---
 
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/generic/pstricks\pstricks
-.con)
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/generic/pstricks\pstricks
--color.tex)
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/generic/pstricks\pstricks.con
+)
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/generic/pstricks\pstricks-col
+or.tex)
 \psunit=\dimen194
 \psxunit=\dimen195
 \psyunit=\dimen196
@@ -401,54 +378,53 @@ Package: pgffor 2025-08-29 v3.1.11a (3.1.11a)
 \psk@startLW=\dimen198
 \psk@endLW=\dimen199
 
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/generic/pstricks\pstricks
--arrows.tex
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/generic/pstricks\pstricks-arr
+ows.tex
 \pshooklength=\dimen256
 \pshookwidth=\dimen257
 )
 \pst@customdefs=\toks34
 
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/generic/pstricks\pstricks
--dots.tex)
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/generic/pstricks\pstricks-dot
+s.tex)
 \pslinearc=\dimen258
 \pst@symbolStep=\dimen259
 \pst@symbolWidth=\dimen260
 \pst@symbolLinewidth=\dimen261
 
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/generic/pstricks\pst-code
--grid.tex)
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/generic/pstricks\pst-code
--box.tex
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/generic/pstricks\pst-code-gri
+d.tex)
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/generic/pstricks\pst-code-box
+.tex
 \everypsbox=\toks35
 \psframesep=\dimen262
 )
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/generic/pstricks\pst-code
--arc.tex)
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/generic/pstricks\pst-code
--circle_ellipse.tex)
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/generic/pstricks\pst-code
--ref_rot.tex)
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/generic/pstricks\pst-code
--put.tex
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/generic/pstricks\pst-code-arc
+.tex)
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/generic/pstricks\pst-code-cir
+cle_ellipse.tex)
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/generic/pstricks\pst-code-ref
+_rot.tex)
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/generic/pstricks\pst-code-put
+.tex
 \pslabelsep=\dimen263
 )
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/generic/pstricks\pst-code
--pspicture.tex
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/generic/pstricks\pst-code-psp
+icture.tex
 \sh@wgridXunit=\dimen264
 \sh@wgridYunit=\dimen265
 \pst@shift=\dimen266
 \ps@imagectr=\count335
 )
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/generic/pstricks\pstricks
-.con))
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/generic/pstricks\pstricks.con
+))
 File: pstricks.tex 2025/12/13 v3.22A `PSTricks' (tvz,hv)
 
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/generic/pstricks\pst-fp.t
-ex `pst-fp' v0.06, 2020/11/20 (hv))
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/generic/pstricks\pst-fp.tex
+`pst-fp' v0.06, 2020/11/20 (hv))
 File: pst-fp.tex 2020/11/20 v0.06 `PST-fp' (hv)
 )
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/latex/enumitem\enumitem.s
-ty
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/latex/enumitem\enumitem.sty
 Package: enumitem 2025/02/06 v3.11 Customized lists
 \labelindent=\skip56
 \enit@outerparindent=\dimen267
@@ -457,10 +433,10 @@ Package: enumitem 2025/02/06 v3.11 Customized lists
 \enit@count@id=\count336
 \enitdp@description=\count337
 )
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/latex/tools\tabularx.sty
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/latex/tools\tabularx.sty
 Package: tabularx 2023/12/11 v2.12a `tabularx' package (DPC)
 
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/latex/tools\array.sty
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/latex/tools\array.sty
 Package: array 2026/02/24 v2.7b Tabular extension package (FMi)
 \col@sep=\dimen268
 \ar@mcellbox=\box59
@@ -478,27 +454,26 @@ Package: array 2026/02/24 v2.7b Tabular extension package (FMi)
 \TX@cols=\count338
 \TX@ftn=\toks38
 )
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/latex/multirow\multirow.s
-ty
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/latex/multirow\multirow.sty
 Package: multirow 2024/11/12 v2.9 Span multiple rows of a table
 \multirow@colwidth=\skip59
 \multirow@cntb=\count339
 \multirow@dima=\skip60
 \bigstrutjot=\dimen275
 )
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/latex/diagbox\diagbox.sty
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/latex/diagbox\diagbox.sty
 Package: diagbox 2020/02/09 v2.3 Making table heads with diagonal lines
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/latex/pict2e\pict2e.sty
+
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/latex/pict2e\pict2e.sty
 Package: pict2e 2020/09/30 v0.4b Improved picture commands (HjG,RN,JT)
 
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/latex/pict2e\pict2e.cfg
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/latex/pict2e\pict2e.cfg
 File: pict2e.cfg 2016/02/05 v0.1u pict2e configuration for teTeX/TeXLive
 )
 Package pict2e Info: Driver file: pdftex.def on input line 112.
 Package pict2e Info: Driver file for pict2e: p2e-pdftex.def on input line 114.
 
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/latex/pict2e\p2e-pdftex.d
-ef
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/latex/pict2e\p2e-pdftex.def
 File: p2e-pdftex.def 2016/02/05 v0.1u Driver-dependant file (RN,HjG,JT)
 )
 \pIIe@GRAPH=\toks39
@@ -510,7 +485,7 @@ File: p2e-pdftex.def 2016/02/05 v0.1u Driver-dependant file (RN,HjG,JT)
 \pIIe@tempdimd=\dimen281
 \pIIe@tempdime=\dimen282
 \pIIe@tempdimf=\dimen283
-) (C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/latex/tools\calc.sty
+) (C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/latex/tools\calc.sty
 Package: calc 2025/03/01 v4.3b Infix arithmetic (KKT,FJ)
 \calc@Acount=\count340
 \calc@Bcount=\count341
@@ -533,8 +508,7 @@ LaTeX Info: Redefining \addtolength on input line 87.
 \diagbox@outsepl=\dimen290
 \diagbox@outsepr=\dimen291
 )
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/latex/fancyhdr\fancyhdr.s
-ty
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/latex/fancyhdr\fancyhdr.sty
 Package: fancyhdr 2025/02/07 v5.2 Extensive control of page headers and footers
 
 \f@nch@headwidth=\skip64
@@ -553,8 +527,7 @@ Package: fancyhdr 2025/02/07 v5.2 Extensive control of page headers and footers
 \f@nch@widthR=\skip77
 \@temptokenb=\toks40
 )
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\amsfonts.s
-ty
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\amsfonts.sty
 Package: amsfonts 2013/01/14 v3.01 Basic AMSFonts support
 \@emptytoks=\toks41
 \symAMSa=\mathgroup4
@@ -563,28 +536,27 @@ LaTeX Font Info:    Redeclaring math symbol \hbar on input line 98.
 LaTeX Font Info:    Overwriting math alphabet `\mathfrak' in version `bold'
 (Font)                  U/euf/m/n --> U/euf/b/n on input line 106.
 )
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/latex/amsmath\amsgen.sty
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/latex/amsmath\amsgen.sty
 File: amsgen.sty 1999/11/30 v2.0 generic functions
 \@emptytoks=\toks42
 \ex@=\dimen292
-) (C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/latex/amsmath\amsbsy.st
-y
+)
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/latex/amsmath\amsbsy.sty
 Package: amsbsy 1999/11/29 v1.2d Bold Symbols
 \pmbraise@=\dimen293
 )
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\amssymb.st
-y
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\amssymb.sty
 Package: amssymb 2013/01/14 v3.01 AMS font symbols
 )
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/latex/amsmath\amsmath.sty
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/latex/amsmath\amsmath.sty
 Package: amsmath 2026/05/19 v2.18d AMS math features
 \@mathmargin=\skip78
-For additional information on amsmath, use the `?' option.
 
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/latex/amsmath\amstext.sty
+For additional information on amsmath, use the `?' option.
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/latex/amsmath\amstext.sty
 Package: amstext 2024/11/17 v2.01 AMS text
 )
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/latex/amsmath\amsopn.sty
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/latex/amsmath\amsopn.sty
 Package: amsopn 2022/04/08 v2.04 operator names
 )
 \inf@bad=\count343
@@ -634,31 +606,30 @@ LaTeX Info: Redefining \Relbar on input line 970.
 \mathdisplay@stack=\toks46
 LaTeX Info: Redefining \[ on input line 2965.
 LaTeX Info: Redefining \] on input line 2966.
-) (C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/latex/bbm\bbm.sty
+)
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/latex/bbm\bbm.sty
 Package: bbm 1999/03/15 V 1.2 provides fonts for set symbols - TH
 LaTeX Font Info:    Overwriting math alphabet `\mathbbm' in version `bold'
 (Font)                  U/bbm/m/n --> U/bbm/bx/n on input line 33.
 LaTeX Font Info:    Overwriting math alphabet `\mathbbmss' in version `bold'
 (Font)                  U/bbmss/m/n --> U/bbmss/bx/n on input line 35.
 )
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/latex/esint\esint.sty
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/latex/esint\esint.sty
 Package: esint 
 \symlargesymbolsA=\mathgroup6
 )
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/latex/preprint\fullpage.s
-ty
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/latex/preprint\fullpage.sty
 Package: fullpage 1999/02/23 1.1 (PWD)
 \FP@margin=\skip81
 )
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/latex/acronym\acronym.sty
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/latex/acronym\acronym.sty
 Package: acronym 2025/01/17 v1.50 Support for acronyms (Tobias Oetiker)
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/latex/bigfoot\suffix.sty
+
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/latex/bigfoot\suffix.sty
 Package: suffix 2006/07/15 1.5a Variant command support
 )
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/latex/xstring\xstring.sty
-
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/generic/xstring\xstring.t
-ex
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/latex/xstring\xstring.sty
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/generic/xstring\xstring.tex
 \xs_counta=\count355
 \xs_countb=\count356
 )
@@ -666,46 +637,43 @@ Package: xstring 2023/08/22 v1.86 String manipulations (CT)
 )
 \AC@clearlist=\toks47
 )
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/latex/glossaries/base\glo
-ssaries.sty
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/latex/glossaries/base\glossar
+ies.sty
 Package: glossaries 2026/04/21 v5.1 (NLCT)
 
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/latex/mfirstuc\mfirstuc.s
-ty
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/latex/mfirstuc\mfirstuc.sty
 Package: mfirstuc 2025/04/03 v2.09 (NLCT)
 
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/latex/etoolbox\etoolbox.s
-ty
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/latex/etoolbox\etoolbox.sty
 Package: etoolbox 2025/10/02 v2.5m e-TeX tools for LaTeX (JAW)
 \etb@tempcnta=\count357
 )
 \@glsmfirst=\toks48
 \@glsmrest=\toks49
-) (C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/latex/xfor\xfor.sty
+) (C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/latex/xfor\xfor.sty
 Package: xfor 2009/02/05 v1.05 (NLCT)
 )
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/latex/tracklang\tracklang
-.sty
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/latex/tracklang\tracklang.sty
 Package: tracklang 2026/05/24 v1.6.8 (NLCT) Track Languages
 
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/generic/tracklang\trackla
-ng.tex)
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/generic/tracklang\tracklang.t
+ex)
 Package tracklang Info: Tracking dialect `french' (language `french') on input 
 line 264.
 Package tracklang Info: Tracking dialect `french' (language `french') on input 
 line 264.
 )
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/latex/translator\translat
-or.sty
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/latex/translator\translator.s
+ty
 Package: translator 2021-05-31 v1.12d Easy translation of strings in LaTeX
 )
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/latex/glossaries-french\g
-lossaries-french.ldf
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/latex/glossaries-french\gloss
+aries-french.ldf
 File: glossaries-french.ldf 2016/12/12 v1.1
 )
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/latex/datatool\datatool-b
-ase.sty
-Package: datatool-base 2025/12/04 v3.4.3 (NLCT)
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/latex/datatool\datatool-base.
+sty
+Package: datatool-base 2026/07/31 v3.4.4 (NLCT)
 \l__datatool_tmpa_int=\count358
 \l__datatool_tmpb_int=\count359
 \l__datatool_tmpc_int=\count360
@@ -715,9 +683,9 @@ Package: datatool-base 2025/12/04 v3.4.3 (NLCT)
 \l__datatool_tmpa_dim=\dimen301
 \l__datatool_tmpb_dim=\dimen302
 
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/latex/datatool\datatool-l
-3fp.def
-File: datatool-l3fp.def 2025/12/04 v3.4.3 (NLCT)
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/latex/datatool\datatool-l3fp.
+def
+File: datatool-l3fp.def 2026/07/31 v3.4.4 (NLCT)
 )
 \@dtl@toks=\toks50
 \@dtl@tmpcount=\count364
@@ -725,9 +693,9 @@ File: datatool-l3fp.def 2025/12/04 v3.4.3 (NLCT)
 \l__datatool_measure_box=\box66
 \dtl@sortresult=\count365
 
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/latex/datatool\datatool-u
-tf8.ldf
-File: datatool-utf8.ldf 2025/12/04 v3.4.3 (NLCT)
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/latex/datatool\datatool-utf8.
+ldf
+File: datatool-utf8.ldf 2026/07/31 v3.4.4 (NLCT)
 )
 \@dtl@datatype=\count366
 \c_datatool_unknown_int=\count367
@@ -762,20 +730,20 @@ Package tracklang Warning: No `datatool' support for dialect `french'  on input
 \glsshorttok=\toks54
 \glslongtok=\toks55
 
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/latex/glossaries/styles\g
-lossary-hypernav.sty
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/latex/glossaries/styles\gloss
+ary-hypernav.sty
 Package: glossary-hypernav 2026/04/21 v5.1 (NLCT)
 )
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/latex/glossaries/styles\g
-lossary-list.sty
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/latex/glossaries/styles\gloss
+ary-list.sty
 Package: glossary-list 2026/04/21 v5.1 (NLCT)
 \glslistdottedwidth=\skip84
 )
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/latex/glossaries/styles\g
-lossary-long.sty
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/latex/glossaries/styles\gloss
+ary-long.sty
 Package: glossary-long 2026/04/21 v5.1 (NLCT)
 
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/latex/tools\longtable.sty
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/latex/tools\longtable.sty
 Package: longtable 2026-01-28 v4.27 Multi-page Table package (DPC)
 \LTleft=\skip85
 \LTright=\skip86
@@ -797,12 +765,12 @@ Package: longtable 2026-01-28 v4.27 Multi-page Table package (DPC)
 \glsdescwidth=\skip89
 \glspagelistwidth=\skip90
 )
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/latex/glossaries/styles\g
-lossary-super.sty
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/latex/glossaries/styles\gloss
+ary-super.sty
 Package: glossary-super 2026/04/21 v5.1 (NLCT)
 
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/latex/supertabular\supert
-abular.sty
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/latex/supertabular\supertabul
+ar.sty
 Package: supertabular 2025/06/26 v4.2d the supertabular environment
 \c@tracingst=\count389
 \ST@wd=\dimen306
@@ -820,8 +788,8 @@ Package: supertabular 2025/06/26 v4.2d the supertabular environment
 \ST@dimen=\dimen315
 \ST@pbox=\box72
 ))
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/latex/glossaries/styles\g
-lossary-tree.sty
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/latex/glossaries/styles\gloss
+ary-tree.sty
 Package: glossary-tree 2026/04/21 v5.1 (NLCT)
 \l__glossaries_tree_max_known_level_int=\count390
 \l__glossaries_tree_offset_dim=\dimen316
@@ -836,10 +804,10 @@ Package: glossary-tree 2026/04/21 v5.1 (NLCT)
 \l__glossaries_tree_level_int=\count391
 \glstreeindent=\skip94
 ))
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/latex/setspace\setspace.s
-ty
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/latex/setspace\setspace.sty
 Package: setspace 2022/12/04 v6.7b set line spacing
-) (C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/latex/float\float.sty
+)
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/latex/float\float.sty
 Package: float 2001/11/08 v1.3d Float enhancements (AL)
 \c@float@type=\count392
 \float@exts=\toks57
@@ -847,81 +815,71 @@ Package: float 2001/11/08 v1.3d Float enhancements (AL)
 \@float@everytoks=\toks58
 \@floatcapt=\box74
 )
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\hyperref.s
-ty
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\hyperref.sty
 Package: hyperref 2026-06-17 v7.01r Hypertext links for LaTeX
 
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/latex/kvsetkeys\kvsetkeys
-.sty
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/latex/kvsetkeys\kvsetkeys.sty
 Package: kvsetkeys 2022-10-05 v1.19 Key value parser (HO)
 )
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/generic/kvdefinekeys\kvde
-finekeys.sty
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/generic/kvdefinekeys\kvdefine
+keys.sty
 Package: kvdefinekeys 2019-12-19 v1.6 Define keys (HO)
 )
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/generic/pdfescape\pdfesca
-pe.sty
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/generic/pdfescape\pdfescape.s
+ty
 Package: pdfescape 2019/12/09 v1.15 Implements pdfTeX's escape features (HO)
 
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/generic/ltxcmds\ltxcmds.s
-ty
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/generic/ltxcmds\ltxcmds.sty
 Package: ltxcmds 2023-12-04 v1.26 LaTeX kernel commands for general use (HO)
 )
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/generic/pdftexcmds\pdftex
-cmds.sty
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/generic/pdftexcmds\pdftexcmds
+.sty
 Package: pdftexcmds 2020-06-27 v0.33 Utility functions of pdfTeX for LuaTeX (HO
 )
 
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/generic/infwarerr\infware
-rr.sty
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/generic/infwarerr\infwarerr.s
+ty
 Package: infwarerr 2019/12/03 v1.5 Providing info/warning/error messages (HO)
 )
 Package pdftexcmds Info: \pdf@primitive is available.
 Package pdftexcmds Info: \pdf@ifprimitive is available.
 Package pdftexcmds Info: \pdfdraftmode found.
 ))
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/latex/hycolor\hycolor.sty
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/latex/hycolor\hycolor.sty
 Package: hycolor 2020-01-27 v1.10 Color options for hyperref/bookmark (HO)
 )
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\nameref.st
-y
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\nameref.sty
 Package: nameref 2026-01-29 v2.58 Cross-referencing by name of section
 
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/latex/refcount\refcount.s
-ty
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/latex/refcount\refcount.sty
 Package: refcount 2019/12/15 v3.6 Data extraction from label references (HO)
 )
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/generic/gettitlestring\ge
-ttitlestring.sty
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/generic/gettitlestring\gettit
+lestring.sty
 Package: gettitlestring 2019/12/15 v1.6 Cleanup title references (HO)
 
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/latex/kvoptions\kvoptions
-.sty
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/latex/kvoptions\kvoptions.sty
 Package: kvoptions 2022-06-15 v3.15 Key value format for package options (HO)
 ))
 \c@section@level=\count393
 )
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/generic/stringenc\stringe
-nc.sty
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/generic/stringenc\stringenc.s
+ty
 Package: stringenc 2019/11/29 v1.12 Convert strings between diff. encodings (HO
 )
 )
 \@linkdim=\dimen325
 \Hy@linkcounter=\count394
 \Hy@pagecounter=\count395
-
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\pd1enc.def
+ (C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\pd1enc.def
 File: pd1enc.def 2026-06-17 v7.01r Hyperref: PDFDocEncoding definition (HO)
 Now handling font encoding PD1 ...
 ... no UTF-8 mapping file for font encoding PD1
-)
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/generic/intcalc\intcalc.s
-ty
+) (C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/generic/intcalc\intcalc.sty
 Package: intcalc 2019/12/15 v1.3 Expandable calculations with integers (HO)
 )
 \Hy@SavedSpaceFactor=\count396
-
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\puenc.def
+ (C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\puenc.def
 File: puenc.def 2026-06-17 v7.01r Hyperref: PDF Unicode definition (HO)
 Now handling font encoding PU ...
 ... no UTF-8 mapping file for font encoding PU
@@ -934,18 +892,19 @@ Package hyperref Info: Backreferencing OFF on input line 4219.
 Package hyperref Info: Implicit mode ON; LaTeX internals redefined.
 Package hyperref Info: Bookmarks ON on input line 4466.
 \c@Hy@tempcnt=\count397
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/latex/url\url.sty
+
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/latex/url\url.sty
 \Urlmuskip=\muskip18
 Package: url 2013/09/16  ver 3.4  Verb mode for urls, etc.
 )
 LaTeX Info: Redefining \url on input line 4805.
 \XeTeXLinkMargin=\dimen326
 
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/generic/bitset\bitset.sty
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/generic/bitset\bitset.sty
 Package: bitset 2019/12/09 v1.3 Handle bit-vector datatype (HO)
 
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/generic/bigintcalc\bigint
-calc.sty
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/generic/bigintcalc\bigintcalc
+.sty
 Package: bigintcalc 2019/12/15 v1.5 Expandable calculations on big integers (HO
 )
 ))
@@ -965,18 +924,17 @@ Package hyperref Info: PDF/A mode OFF on input line 6121.
 )
 Package hyperref Info: Driver (autodetected): hpdftex.
 
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\hpdftex.de
-f
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\hpdftex.def
 File: hpdftex.def 2026-06-17 v7.01r Hyperref driver for pdfTeX
 \Fld@listcount=\count402
 \c@bookmark@seq@number=\count403
 
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/latex/rerunfilecheck\reru
-nfilecheck.sty
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/latex/rerunfilecheck\rerunfil
+echeck.sty
 Package: rerunfilecheck 2025-06-21 v1.11 Rerun checks for auxiliary files (HO)
 
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/generic/uniquecounter\uni
-quecounter.sty
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/generic/uniquecounter\uniquec
+ounter.sty
 Package: uniquecounter 2019/12/15 v1.4 Provide unlimited unique counter (HO)
 )
 Package uniquecounter Info: New unique counter `rerunfilecheck' on input line 2
@@ -984,24 +942,24 @@ Package uniquecounter Info: New unique counter `rerunfilecheck' on input line 2
 )
 \Hy@SectionHShift=\skip95
 )
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/latex/subfiles\subfiles.s
-ty
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/latex/subfiles\subfiles.sty
 Package: subfiles 2020/11/14 v2.2 Multi-file projects (package)
 
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/latex/import\import.sty
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/latex/import\import.sty
 Package: import 2020/04/01  v 6.2
 ))
 \minindent=\skip96
-) (references/glossary.tex)
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/latex/lipsum\lipsum.sty
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/latex/l3packages/l3keys2e
-\l3keys2e.sty
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/latex/l3kernel\expl3.sty
-Package: expl3 2026-06-18 L3 programming layer (loader) 
+)
+(references/glossary.tex)
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/latex/lipsum\lipsum.sty
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/latex/l3packages/l3keys2e\l3k
+eys2e.sty
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/latex/l3kernel\expl3.sty
+Package: expl3 2026-08-10 L3 programming layer (loader) 
 
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/latex/l3backend\l3backend
--pdftex.def
-File: l3backend-pdftex.def 2026-02-18 L3 backend support: PDF output (pdfTeX)
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/latex/l3kernel\l3backend-pdft
+ex.def
+File: l3backend-pdftex.def 2026-08-10 L3 backend support: PDF output (pdfTeX)
 \l__color_backend_stack_int=\count404
 ))
 Package: l3keys2e 2025-10-09 LaTeX2e option processing using LaTeX3 keys
@@ -1011,15 +969,14 @@ Package: lipsum 2021-09-20 v2.7 150 paragraphs of Lorem Ipsum dummy text
 \l__lipsum_a_int=\count406
 \l__lipsum_b_int=\count407
 
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/latex/lipsum\lipsum.ltd.t
-ex))
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/latex/lipsum\lipsum.ltd.tex))
 Package french3.ldf Info: Setting StandardItemizeEnv=true for
 (french3.ldf)             compatibility with enumitem package,
 (french3.ldf)             reported on input line 41.
 Package french3.ldf Info: Setting StandardEnumerateEnv=true for
 (french3.ldf)             compatibility with enumitem package,
 (french3.ldf)             reported on input line 41.
- (enac_project_fr.aux
+(enac_project_fr.aux
 Package babel Info: 'french' activates 'french' shorthands.
 (babel)             Reported on input line 15.
  (chapters/0-resume.aux) (chapters/0-abstract.aux)
@@ -1027,95 +984,8 @@ Package babel Info: 'french' activates 'french' shorthands.
 \g__glossaries_gls_ref_main_int=\count408
 ) (chapters/acronyms.aux)
 (chapters/0-introduction.aux) (chapters/1-chapter.aux) (chapters/2-chapter.aux)
-(chapters/3-chapter.aux
-
-LaTeX Warning: Label `eq:termes_eval' multiply defined.
-
-
-LaTeX Warning: Label `eq:carrier_phase_definition' multiply defined.
-
-
-LaTeX Warning: Label `eq:phase_corrigee' multiply defined.
-
-) (chapters/4-chapter.aux
-
-LaTeX Warning: Label `eq:broadcast_satellite_clock' multiply defined.
-
-
-LaTeX Warning: Label `eq:tgd_signal_clock' multiply defined.
-
-
-LaTeX Warning: Label `sagnac' multiply defined.
-
-
-LaTeX Warning: Label `shapiro' multiply defined.
-
-
-LaTeX Warning: Label `eq:ztd_decomposition' multiply defined.
-
-
-LaTeX Warning: Label `eq:tropo_no_grad' multiply defined.
-
-
-LaTeX Warning: Label `eq:zhd' multiply defined.
-
-
-LaTeX Warning: Label `eq:state_zwd' multiply defined.
-
-
-LaTeX Warning: Label `eq:tropo_grad' multiply defined.
-
-
-LaTeX Warning: Label `eq:state_zwd_grad' multiply defined.
-
-
-LaTeX Warning: Label `eq:code_iono_free' multiply defined.
-
-
-LaTeX Warning: Label `eq:phase_iono_free' multiply defined.
-
-
-LaTeX Warning: Label `eq:common_nondispersive_term' multiply defined.
-
-
-LaTeX Warning: Label `eq:ggto' multiply defined.
-
-
-LaTeX Warning: Label `eq:ggto_observation_correction' multiply defined.
-
-
-LaTeX Warning: Label `eq:isb_definition' multiply defined.
-
-
-LaTeX Warning: Label `eq:multiconstellation_state' multiply defined.
-
-) (chapters/5-chapter.aux
-
-LaTeX Warning: Label `sec:antenna_corrections' multiply defined.
-
-
-LaTeX Warning: Label `fig:pco_pcv' multiply defined.
-
-
-LaTeX Warning: Label `eq:antenna_pco_signs' multiply defined.
-
-
-LaTeX Warning: Label `eq:antenna_signed_corrections' multiply defined.
-
-
-LaTeX Warning: Label `windup' multiply defined.
-
-
-LaTeX Warning: Label `eq:windup' multiply defined.
-
-
-LaTeX Warning: Label `marees' multiply defined.
-
-
-LaTeX Warning: Label `eq:solid_tides_geometry' multiply defined.
-
-) (chapters/glossary.aux) (chapters/bibliography.aux) (chapters/annexA.aux)
-(chapters/annexB.aux))
+(chapters/8-conclusion.aux) (chapters/glossary.aux) (chapters/bibliography.aux)
+(chapters/annexA.aux) (chapters/annexB.aux))
 \openout1 = `enac_project_fr.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 41.
@@ -1138,11 +1008,11 @@ LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 41.
 LaTeX Font Info:    ... okay on input line 41.
 LaTeX Info: Redefining \degres on input line 41.
 
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/latex/ucs\ucsencs.def
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/latex/ucs\ucsencs.def
 File: ucsencs.def 2011/01/21 Fixes to fontencodings LGR, T3
 )
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/context/base/mkii\supp-pd
-f.mkii
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/context/base/mkii\supp-pdf.mk
+ii
 [Loading MPS to PDF converter (version 2006.09.02).]
 \scratchcounter=\count409
 \scratchdimen=\dimen329
@@ -1156,14 +1026,14 @@ f.mkii
 \makeMPintoPDFobject=\count414
 \everyMPtoPDFconversion=\toks60
 )
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/latex/epstopdf-pkg\epstop
-df-base.sty
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/latex/epstopdf-pkg\epstopdf-b
+ase.sty
 Package: epstopdf-base 2020-01-24 v2.11 Base part for package epstopdf
 Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 4
 85.
 
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/latex/00miktex\epstopdf-s
-ys.cfg
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/latex/00miktex\epstopdf-sys.c
+fg
 File: epstopdf-sys.cfg 2021/03/18 v2.0 Configuration of epstopdf for MiKTeX
 ))
 Package caption Info: Begin \AtBeginDocument code.
@@ -1172,19 +1042,19 @@ Package caption Info: float package is loaded.
 Package caption Info: hyperref package is loaded.
 Package caption Info: longtable package is loaded.
 
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/latex/caption\ltcaption.s
-ty
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/latex/caption\ltcaption.sty
 Package: ltcaption 2021/01/08 v1.4c longtable captions (AR)
 )
 Package caption Info: supertabular package is loaded.
 Package caption Info: End \AtBeginDocument code.
 Package hyperref Info: Link coloring OFF on input line 41.
- (enac_project_fr.out) (enac_project_fr.out)
+
+(enac_project_fr.out) (enac_project_fr.out)
 \@outlinefile=\write4
 \openout4 = `enac_project_fr.out'.
 
 Package babel Info: Main language set to 'french'.
-<sources/logos/logo_enac_and_marianne.png, id=327, 267.94102pt x 121.4136pt>
+<sources/logos/logo_enac_and_marianne.png, id=283, 267.94102pt x 121.4136pt>
 File: sources/logos/logo_enac_and_marianne.png Graphic file (type png)
 <use sources/logos/logo_enac_and_marianne.png>
 Package pdftex.def Info: sources/logos/logo_enac_and_marianne.png  used on inpu
@@ -1193,19 +1063,19 @@ t line 42.
 LaTeX Font Info:    Trying to load font information for U+msa on input line 42.
 
 
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\umsa.fd
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
 LaTeX Font Info:    Trying to load font information for U+msb on input line 42.
 
 
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\umsb.fd
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
 LaTeX Font Info:    Trying to load font information for U+esint on input line 4
 2.
 
-(C:\Users\jbzemouli\AppData\Local\Programs\MiKTeX\tex/latex/esint\uesint.fd
+(C:\Users\jbzem\AppData\Local\Programs\MiKTeX\tex/latex/esint\uesint.fd
 File: uesint.fd 
 )
 [1
@@ -1226,8 +1096,8 @@ Non-PDF special ignored!
 <special> ps:tx@Dict begin  gsave STV CP T /ps@rot 0 def grestore  end
 Non-PDF special ignored!
 <special> ps:tx@Dict begin  gsave STV CP T /ps@refangle 0.  def grestore  e...
-{C:/Users/jbzemouli/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map} <./source
-s/logos/logo_enac_and_marianne.png>] [2]
+{C:/Users/jbzem/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map} <./sources/lo
+gos/logo_enac_and_marianne.png>] [2]
 \openout2 = `chapters/0-resume.aux'.
 
  (chapters/0-resume.tex)
@@ -1331,7 +1201,7 @@ t line 90.
 File: sources/logos/logo_enac_and_marianne.png Graphic file (type png)
 <use sources/logos/logo_enac_and_marianne.png>
 Package pdftex.def Info: sources/logos/logo_enac_and_marianne.png  used on inpu
-t line 48.
+t line 62.
 (pdftex.def)             Requested size: 125.58478pt x 56.9055pt.
  [17] [18]) [19]
 \openout2 = `chapters/1-chapter.aux'.
@@ -1344,290 +1214,215 @@ t line 48.
 
 ]
 Chapitre 1.
-[21] [22] [23] [24] [25] [26] [27] [28] [29]
-<images/pco_pcv.png, id=661, 389.455pt x 402.50375pt>
+[21] [22] [23]
+<images/itrf_frame.png, id=591, 444.66125pt x 361.35pt>
+File: images/itrf_frame.png Graphic file (type png)
+<use images/itrf_frame.png>
+Package pdftex.def Info: images/itrf_frame.png  used on input line 256.
+(pdftex.def)             Requested size: 227.62204pt x 184.97528pt.
+ [24 <./images/itrf_frame.png>]
+<images/ecef_frame.png, id=604, 501.875pt x 482.80376pt>
+File: images/ecef_frame.png Graphic file (type png)
+<use images/ecef_frame.png>
+Package pdftex.def Info: images/ecef_frame.png  used on input line 288.
+(pdftex.def)             Requested size: 227.62204pt x 218.97618pt.
+ [25 <./images/ecef_frame.png>]
+[26] [27] [28] [29] [30] [31]
+<images/pco_pcv.png, id=688, 389.455pt x 402.50375pt>
 File: images/pco_pcv.png Graphic file (type png)
 <use images/pco_pcv.png>
-Package pdftex.def Info: images/pco_pcv.png  used on input line 678.
+Package pdftex.def Info: images/pco_pcv.png  used on input line 801.
 (pdftex.def)             Requested size: 159.3382pt x 164.67139pt.
- [30 <./images/pco_pcv.png>]
-[31] [32] [33] [34] [35] [36] [37] [38]
-Underfull \hbox (badness 1478) in paragraph at lines 1475--1475
-[]|\T1/cmr/m/n/10 Retard hu-mide es-timé, gra-dients
- []
-
-) [39] [40]
+ [32 <./images/pco_pcv.png>] [33] [34] [35]
+[36] [37] [38] [39] [40]
+LaTeX Font Info:    Font shape `T1/cmtt/bx/n' in size <10.95> not available
+(Font)              Font shape `T1/cmtt/m/n' tried instead on input line 1580.
+ [41] [42] [43] [44] [45] [46] [47] [48]) [49] [50]
 \openout2 = `chapters/2-chapter.aux'.
 
- (chapters/2-chapter.tex)
-\openout2 = `chapters/3-chapter.aux'.
 
- (chapters/3-chapter.tex
+(chapters/2-chapter.tex
 Chapitre 2.
-File: sources/logos/logo_enac_and_marianne.png Graphic file (type png)
-<use sources/logos/logo_enac_and_marianne.png>
-Package pdftex.def Info: sources/logos/logo_enac_and_marianne.png  used on inpu
-t line 58.
-(pdftex.def)             Requested size: 125.58478pt x 56.9055pt.
-[41
+[51
 
 
 
 
-
-
-
-]
-File: sources/logos/logo_enac_and_marianne.png Graphic file (type png)
-<use sources/logos/logo_enac_and_marianne.png>
-Package pdftex.def Info: sources/logos/logo_enac_and_marianne.png  used on inpu
-t line 140.
-(pdftex.def)             Requested size: 125.58478pt x 56.9055pt.
- [42]
-File: sources/logos/logo_enac_and_marianne.png Graphic file (type png)
-<use sources/logos/logo_enac_and_marianne.png>
-Package pdftex.def Info: sources/logos/logo_enac_and_marianne.png  used on inpu
-t line 222.
-(pdftex.def)             Requested size: 125.58478pt x 56.9055pt.
- [43]
-File: sources/logos/logo_enac_and_marianne.png Graphic file (type png)
-<use sources/logos/logo_enac_and_marianne.png>
-Package pdftex.def Info: sources/logos/logo_enac_and_marianne.png  used on inpu
-t line 306.
-(pdftex.def)             Requested size: 125.58478pt x 56.9055pt.
- [44]
-File: sources/logos/logo_enac_and_marianne.png Graphic file (type png)
-<use sources/logos/logo_enac_and_marianne.png>
-Package pdftex.def Info: sources/logos/logo_enac_and_marianne.png  used on inpu
-t line 391.
-(pdftex.def)             Requested size: 125.58478pt x 56.9055pt.
- [45]
-File: sources/logos/logo_enac_and_marianne.png Graphic file (type png)
-<use sources/logos/logo_enac_and_marianne.png>
-Package pdftex.def Info: sources/logos/logo_enac_and_marianne.png  used on inpu
-t line 481.
-(pdftex.def)             Requested size: 125.58478pt x 56.9055pt.
- [46]
-File: sources/logos/logo_enac_and_marianne.png Graphic file (type png)
-<use sources/logos/logo_enac_and_marianne.png>
-Package pdftex.def Info: sources/logos/logo_enac_and_marianne.png  used on inpu
-t line 615.
-(pdftex.def)             Requested size: 125.58478pt x 56.9055pt.
- [47])
-File: sources/logos/logo_enac_and_marianne.png Graphic file (type png)
-<use sources/logos/logo_enac_and_marianne.png>
-Package pdftex.def Info: sources/logos/logo_enac_and_marianne.png  used on inpu
-t line 115.
-(pdftex.def)             Requested size: 125.58478pt x 56.9055pt.
- [48]
-\openout2 = `chapters/4-chapter.aux'.
-
- (chapters/4-chapter.tex
-Chapitre 3.
-[49
-
-
-
-
-]
-File: sources/logos/logo_enac_and_marianne.png Graphic file (type png)
-<use sources/logos/logo_enac_and_marianne.png>
-Package pdftex.def Info: sources/logos/logo_enac_and_marianne.png  used on inpu
-t line 89.
-(pdftex.def)             Requested size: 125.58478pt x 56.9055pt.
- [50]
-File: sources/logos/logo_enac_and_marianne.png Graphic file (type png)
-<use sources/logos/logo_enac_and_marianne.png>
-Package pdftex.def Info: sources/logos/logo_enac_and_marianne.png  used on inpu
-t line 132.
-(pdftex.def)             Requested size: 125.58478pt x 56.9055pt.
- [51]
-File: sources/logos/logo_enac_and_marianne.png Graphic file (type png)
-<use sources/logos/logo_enac_and_marianne.png>
-Package pdftex.def Info: sources/logos/logo_enac_and_marianne.png  used on inpu
-t line 201.
-(pdftex.def)             Requested size: 125.58478pt x 56.9055pt.
- [52]
-File: sources/logos/logo_enac_and_marianne.png Graphic file (type png)
-<use sources/logos/logo_enac_and_marianne.png>
-Package pdftex.def Info: sources/logos/logo_enac_and_marianne.png  used on inpu
-t line 265.
-(pdftex.def)             Requested size: 125.58478pt x 56.9055pt.
- [53]
-File: sources/logos/logo_enac_and_marianne.png Graphic file (type png)
-<use sources/logos/logo_enac_and_marianne.png>
-Package pdftex.def Info: sources/logos/logo_enac_and_marianne.png  used on inpu
-t line 327.
-(pdftex.def)             Requested size: 125.58478pt x 56.9055pt.
- [54]
-File: sources/logos/logo_enac_and_marianne.png Graphic file (type png)
-<use sources/logos/logo_enac_and_marianne.png>
-Package pdftex.def Info: sources/logos/logo_enac_and_marianne.png  used on inpu
-t line 415.
-(pdftex.def)             Requested size: 125.58478pt x 56.9055pt.
- [55]
-File: sources/logos/logo_enac_and_marianne.png Graphic file (type png)
-<use sources/logos/logo_enac_and_marianne.png>
-Package pdftex.def Info: sources/logos/logo_enac_and_marianne.png  used on inpu
-t line 500.
-(pdftex.def)             Requested size: 125.58478pt x 56.9055pt.
- [56]
-File: sources/logos/logo_enac_and_marianne.png Graphic file (type png)
-<use sources/logos/logo_enac_and_marianne.png>
-Package pdftex.def Info: sources/logos/logo_enac_and_marianne.png  used on inpu
-t line 599.
-(pdftex.def)             Requested size: 125.58478pt x 56.9055pt.
- [57]
-File: sources/logos/logo_enac_and_marianne.png Graphic file (type png)
-<use sources/logos/logo_enac_and_marianne.png>
-Package pdftex.def Info: sources/logos/logo_enac_and_marianne.png  used on inpu
-t line 673.
-(pdftex.def)             Requested size: 125.58478pt x 56.9055pt.
- [58]
-File: sources/logos/logo_enac_and_marianne.png Graphic file (type png)
-<use sources/logos/logo_enac_and_marianne.png>
-Package pdftex.def Info: sources/logos/logo_enac_and_marianne.png  used on inpu
-t line 767.
-(pdftex.def)             Requested size: 125.58478pt x 56.9055pt.
- [59]
-File: sources/logos/logo_enac_and_marianne.png Graphic file (type png)
-<use sources/logos/logo_enac_and_marianne.png>
-Package pdftex.def Info: sources/logos/logo_enac_and_marianne.png  used on inpu
-t line 834.
-(pdftex.def)             Requested size: 125.58478pt x 56.9055pt.
- [60]
-File: sources/logos/logo_enac_and_marianne.png Graphic file (type png)
-<use sources/logos/logo_enac_and_marianne.png>
-Package pdftex.def Info: sources/logos/logo_enac_and_marianne.png  used on inpu
-t line 912.
-(pdftex.def)             Requested size: 125.58478pt x 56.9055pt.
- [61]
-File: sources/logos/logo_enac_and_marianne.png Graphic file (type png)
-<use sources/logos/logo_enac_and_marianne.png>
-Package pdftex.def Info: sources/logos/logo_enac_and_marianne.png  used on inpu
-t line 991.
-(pdftex.def)             Requested size: 125.58478pt x 56.9055pt.
- [62]
-File: sources/logos/logo_enac_and_marianne.png Graphic file (type png)
-<use sources/logos/logo_enac_and_marianne.png>
-Package pdftex.def Info: sources/logos/logo_enac_and_marianne.png  used on inpu
-t line 1069.
-(pdftex.def)             Requested size: 125.58478pt x 56.9055pt.
- [63]
-File: sources/logos/logo_enac_and_marianne.png Graphic file (type png)
-<use sources/logos/logo_enac_and_marianne.png>
-Package pdftex.def Info: sources/logos/logo_enac_and_marianne.png  used on inpu
-t line 1162.
-(pdftex.def)             Requested size: 125.58478pt x 56.9055pt.
-
-[64]
-File: sources/logos/logo_enac_and_marianne.png Graphic file (type png)
-<use sources/logos/logo_enac_and_marianne.png>
-Package pdftex.def Info: sources/logos/logo_enac_and_marianne.png  used on inpu
-t line 1248.
-(pdftex.def)             Requested size: 125.58478pt x 56.9055pt.
- [65]
-File: sources/logos/logo_enac_and_marianne.png Graphic file (type png)
-<use sources/logos/logo_enac_and_marianne.png>
-Package pdftex.def Info: sources/logos/logo_enac_and_marianne.png  used on inpu
-t line 1317.
-(pdftex.def)             Requested size: 125.58478pt x 56.9055pt.
- [66]
-File: sources/logos/logo_enac_and_marianne.png Graphic file (type png)
-<use sources/logos/logo_enac_and_marianne.png>
-Package pdftex.def Info: sources/logos/logo_enac_and_marianne.png  used on inpu
-t line 1394.
-(pdftex.def)             Requested size: 125.58478pt x 56.9055pt.
- [67]
-File: sources/logos/logo_enac_and_marianne.png Graphic file (type png)
-<use sources/logos/logo_enac_and_marianne.png>
-Package pdftex.def Info: sources/logos/logo_enac_and_marianne.png  used on inpu
-t line 1484.
-(pdftex.def)             Requested size: 125.58478pt x 56.9055pt.
- [68]
-File: sources/logos/logo_enac_and_marianne.png Graphic file (type png)
-<use sources/logos/logo_enac_and_marianne.png>
-Package pdftex.def Info: sources/logos/logo_enac_and_marianne.png  used on inpu
-t line 1567.
-(pdftex.def)             Requested size: 125.58478pt x 56.9055pt.
- [69])
-File: sources/logos/logo_enac_and_marianne.png Graphic file (type png)
-<use sources/logos/logo_enac_and_marianne.png>
-Package pdftex.def Info: sources/logos/logo_enac_and_marianne.png  used on inpu
-t line 122.
-(pdftex.def)             Requested size: 125.58478pt x 56.9055pt.
- [70]
-\openout2 = `chapters/5-chapter.aux'.
-
- (chapters/5-chapter.tex
-Chapitre 4.
-
-LaTeX Warning: Reference `resultats_validation' on page 71 undefined on input l
-ine 22.
-
-[71
-
-
-
-
-]
-File: sources/logos/logo_enac_and_marianne.png Graphic file (type png)
-<use sources/logos/logo_enac_and_marianne.png>
-Package pdftex.def Info: sources/logos/logo_enac_and_marianne.png  used on inpu
-t line 161.
-(pdftex.def)             Requested size: 125.58478pt x 56.9055pt.
- [72]
-File: sources/logos/logo_enac_and_marianne.png Graphic file (type png)
-<use sources/logos/logo_enac_and_marianne.png>
-Package pdftex.def Info: sources/logos/logo_enac_and_marianne.png  used on inpu
-t line 240.
-(pdftex.def)             Requested size: 125.58478pt x 56.9055pt.
- [73]
-File: sources/logos/logo_enac_and_marianne.png Graphic file (type png)
-<use sources/logos/logo_enac_and_marianne.png>
-Package pdftex.def Info: sources/logos/logo_enac_and_marianne.png  used on inpu
-t line 317.
-(pdftex.def)             Requested size: 125.58478pt x 56.9055pt.
- [74]
-File: sources/logos/logo_enac_and_marianne.png Graphic file (type png)
-<use sources/logos/logo_enac_and_marianne.png>
-Package pdftex.def Info: sources/logos/logo_enac_and_marianne.png  used on inpu
-t line 381.
-(pdftex.def)             Requested size: 125.58478pt x 56.9055pt.
- [75]
-File: images/pco_pcv.png Graphic file (type png)
-<use images/pco_pcv.png>
-Package pdftex.def Info: images/pco_pcv.png  used on input line 390.
-(pdftex.def)             Requested size: 159.3382pt x 164.67139pt.
-File: sources/logos/logo_enac_and_marianne.png Graphic file (type png)
-<use sources/logos/logo_enac_and_marianne.png>
-Package pdftex.def Info: sources/logos/logo_enac_and_marianne.png  used on inpu
-t line 432.
-(pdftex.def)             Requested size: 125.58478pt x 56.9055pt.
- [76]
-File: sources/logos/logo_enac_and_marianne.png Graphic file (type png)
-<use sources/logos/logo_enac_and_marianne.png>
-Package pdftex.def Info: sources/logos/logo_enac_and_marianne.png  used on inpu
-t line 508.
-(pdftex.def)             Requested size: 125.58478pt x 56.9055pt.
- [77]
-File: sources/logos/logo_enac_and_marianne.png Graphic file (type png)
-<use sources/logos/logo_enac_and_marianne.png>
-Package pdftex.def Info: sources/logos/logo_enac_and_marianne.png  used on inpu
-t line 585.
-(pdftex.def)             Requested size: 125.58478pt x 56.9055pt.
- [78]
-Underfull \hbox (badness 4886) in paragraph at lines 606--607
-[]|\T1/cmr/m/n/10 Positions SP3 in-ter-po-lées à l'ins-tant
- []
-
+] [52] [53]
+<images/chapter2/spp_ref_enu.png, id=895, 1011.78pt x 650.43pt>
+File: images/chapter2/spp_ref_enu.png Graphic file (type png)
+<use images/chapter2/spp_ref_enu.png>
+Package pdftex.def Info: images/chapter2/spp_ref_enu.png  used on input line 51
+8.
+(pdftex.def)             Requested size: 455.24408pt x 292.66101pt.
+<images/chapter2/spp_ref_delta.png, id=897, 1011.78pt x 650.43pt>
+File: images/chapter2/spp_ref_delta.png Graphic file (type png)
+<use images/chapter2/spp_ref_delta.png>
+Package pdftex.def Info: images/chapter2/spp_ref_delta.png  used on input line 
+531.
+(pdftex.def)             Requested size: 455.24408pt x 292.66101pt.
+ [54 <./images/chapter2/spp_ref_enu.png>]
+<images/chapter2/spp_if_cdf.png, id=904, 1148.6112pt x 710.655pt>
+File: images/chapter2/spp_if_cdf.png Graphic file (type png)
+<use images/chapter2/spp_if_cdf.png>
+Package pdftex.def Info: images/chapter2/spp_if_cdf.png  used on input line 563
+.
+(pdftex.def)             Requested size: 291.35593pt x 180.2658pt.
+<images/chapter2/spp_klo_cdf.png, id=905, 1148.6112pt x 710.655pt>
+File: images/chapter2/spp_klo_cdf.png Graphic file (type png)
+<use images/chapter2/spp_klo_cdf.png>
+Package pdftex.def Info: images/chapter2/spp_klo_cdf.png  used on input line 56
+3.
+(pdftex.def)             Requested size: 291.35593pt x 180.2658pt.
+ [55 <./images/chapter2/spp_ref_delta.png>]
+<images/chapter2/spp_gpsgal_skyplot.png, id=914, 578.16pt x 578.16pt>
+File: images/chapter2/spp_gpsgal_skyplot.png Graphic file (type png)
+<use images/chapter2/spp_gpsgal_skyplot.png>
+Package pdftex.def Info: images/chapter2/spp_gpsgal_skyplot.png  used on input 
+line 608.
+(pdftex.def)             Requested size: 154.78131pt x 154.77316pt.
+<images/chapter2/spp_gps_vs_gpsgal_dop.png, id=915, 1084.05pt x 650.43pt>
+File: images/chapter2/spp_gps_vs_gpsgal_dop.png Graphic file (type png)
+<use images/chapter2/spp_gps_vs_gpsgal_dop.png>
+Package pdftex.def Info: images/chapter2/spp_gps_vs_gpsgal_dop.png  used on inp
+ut line 608.
+(pdftex.def)             Requested size: 291.35593pt x 174.81453pt.
+ [56 <./images/chapter2/spp_if_cdf.png> <./images/chapter2/spp_klo_cdf.png>]
+<images/chapter2/spp_gps_scatter.png, id=922, 505.89pt x 505.89pt>
+File: images/chapter2/spp_gps_scatter.png Graphic file (type png)
+<use images/chapter2/spp_gps_scatter.png>
+Package pdftex.def Info: images/chapter2/spp_gps_scatter.png  used on input lin
+e 624.
+(pdftex.def)             Requested size: 218.51521pt x 218.51651pt.
+<images/chapter2/spp_gpsgal_scatter.png, id=923, 505.89pt x 505.89pt>
+File: images/chapter2/spp_gpsgal_scatter.png Graphic file (type png)
+<use images/chapter2/spp_gpsgal_scatter.png>
+Package pdftex.def Info: images/chapter2/spp_gpsgal_scatter.png  used on input 
+line 630.
+(pdftex.def)             Requested size: 218.51521pt x 218.51651pt.
+File: images/chapter2/spp_gps_scatter.png Graphic file (type png)
+<use images/chapter2/spp_gps_scatter.png>
+Package pdftex.def Info: images/chapter2/spp_gps_scatter.png  used on input lin
+e 656.
+(pdftex.def)             Requested size: 218.51521pt x 218.51651pt.
+<images/chapter2/spp_yebe_scatter.png, id=925, 505.89pt x 505.89pt>
+File: images/chapter2/spp_yebe_scatter.png Graphic file (type png)
+<use images/chapter2/spp_yebe_scatter.png>
+Package pdftex.def Info: images/chapter2/spp_yebe_scatter.png  used on input li
+ne 662.
+(pdftex.def)             Requested size: 218.51521pt x 218.51651pt.
+ [57 <./images/chapter2/spp_gpsgal_skyplot.png> <./images/chapter2/spp_gps_vs_g
+psgal_dop.png> <./images/chapter2/spp_gps_scatter.png> <./images/chapter2/spp_g
+psgal_scatter.png>]
+<images/chapter2/spp_robustness_scatter_019_090.png, id=936, 1011.78pt x 469.75
+5pt>
+File: images/chapter2/spp_robustness_scatter_019_090.png Graphic file (type png
 )
-File: sources/logos/logo_enac_and_marianne.png Graphic file (type png)
-<use sources/logos/logo_enac_and_marianne.png>
-Package pdftex.def Info: sources/logos/logo_enac_and_marianne.png  used on inpu
-t line 129.
-(pdftex.def)             Requested size: 125.58478pt x 56.9055pt.
- [79]
+<use images/chapter2/spp_robustness_scatter_019_090.png>
+Package pdftex.def Info: images/chapter2/spp_robustness_scatter_019_090.png  us
+ed on input line 688.
+(pdftex.def)             Requested size: 455.24408pt x 211.36629pt.
+ [58 <./images/chapter2/spp_yebe_scatter.png>]
+<images/chapter2/spp_robustness_cdf_019_090.png, id=942, 1011.78pt x 397.485pt>
+
+File: images/chapter2/spp_robustness_cdf_019_090.png Graphic file (type png)
+<use images/chapter2/spp_robustness_cdf_019_090.png>
+Package pdftex.def Info: images/chapter2/spp_robustness_cdf_019_090.png  used o
+n input line 696.
+(pdftex.def)             Requested size: 455.24408pt x 178.84839pt.
+ [59 <./images/chapter2/spp_robustness_scatter_019_090.png> <./images/chapter2/
+spp_robustness_cdf_019_090.png>] [60]
+<images/chapter2/ppp_precise_gps_enu.png, id=955, 1011.78pt x 650.43pt>
+File: images/chapter2/ppp_precise_gps_enu.png Graphic file (type png)
+<use images/chapter2/ppp_precise_gps_enu.png>
+Package pdftex.def Info: images/chapter2/ppp_precise_gps_enu.png  used on input
+ line 783.
+(pdftex.def)             Requested size: 455.24408pt x 292.66101pt.
+<images/chapter2/ppp_precise_gps_last_hour.png, id=957, 505.89pt x 505.89pt>
+File: images/chapter2/ppp_precise_gps_last_hour.png Graphic file (type png)
+<use images/chapter2/ppp_precise_gps_last_hour.png>
+Package pdftex.def Info: images/chapter2/ppp_precise_gps_last_hour.png  used on
+ input line 783.
+(pdftex.def)             Requested size: 295.90587pt x 295.90971pt.
+ [61 <./images/chapter2/ppp_precise_gps_enu.png>]
+<images/chapter2/ppp_precise_gps_sigma.png, id=966, 1011.78pt x 650.43pt>
+File: images/chapter2/ppp_precise_gps_sigma.png Graphic file (type png)
+<use images/chapter2/ppp_precise_gps_sigma.png>
+Package pdftex.def Info: images/chapter2/ppp_precise_gps_sigma.png  used on inp
+ut line 783.
+(pdftex.def)             Requested size: 455.24408pt x 292.66101pt.
+ [62 <./images/chapter2/ppp_precise_gps_last_hour.png>]
+<images/chapter2/ppp_precise_gps_tropo.png, id=974, 1011.78pt x 910.602pt>
+File: images/chapter2/ppp_precise_gps_tropo.png Graphic file (type png)
+<use images/chapter2/ppp_precise_gps_tropo.png>
+Package pdftex.def Info: images/chapter2/ppp_precise_gps_tropo.png  used on inp
+ut line 783.
+(pdftex.def)             Requested size: 455.24408pt x 409.72543pt.
+ [63 <./images/chapter2/ppp_precise_gps_sigma.png>]
+<images/chapter2/ppp_broadcast_gps_scatter.png, id=981, 505.89pt x 505.89pt>
+File: images/chapter2/ppp_broadcast_gps_scatter.png Graphic file (type png)
+<use images/chapter2/ppp_broadcast_gps_scatter.png>
+Package pdftex.def Info: images/chapter2/ppp_broadcast_gps_scatter.png  used on
+ input line 783.
+(pdftex.def)             Requested size: 218.51521pt x 218.51651pt.
+<images/chapter2/ppp_precise_gps_scatter.png, id=982, 505.89pt x 505.89pt>
+File: images/chapter2/ppp_precise_gps_scatter.png Graphic file (type png)
+<use images/chapter2/ppp_precise_gps_scatter.png>
+Package pdftex.def Info: images/chapter2/ppp_precise_gps_scatter.png  used on i
+nput line 783.
+(pdftex.def)             Requested size: 218.51521pt x 218.51651pt.
+ [64 <./images/chapter2/ppp_precise_gps_tropo.png>]
+File: images/chapter2/ppp_precise_gps_last_hour.png Graphic file (type png)
+<use images/chapter2/ppp_precise_gps_last_hour.png>
+Package pdftex.def Info: images/chapter2/ppp_precise_gps_last_hour.png  used on
+ input line 783.
+(pdftex.def)             Requested size: 218.51521pt x 218.51651pt.
+<images/chapter2/ppp_precise_gpsgal_last_hour.png, id=989, 505.89pt x 505.89pt>
+
+File: images/chapter2/ppp_precise_gpsgal_last_hour.png Graphic file (type png)
+<use images/chapter2/ppp_precise_gpsgal_last_hour.png>
+Package pdftex.def Info: images/chapter2/ppp_precise_gpsgal_last_hour.png  used
+ on input line 783.
+(pdftex.def)             Requested size: 218.51521pt x 218.51651pt.
+ [65 <./images/chapter2/ppp_broadcast_gps_scatter.png> <./images/chapter2/ppp_p
+recise_gps_scatter.png>]
+<images/chapter2/ppp_precise_gpsgal_cdf.png, id=997, 1151.502pt x 710.655pt>
+File: images/chapter2/ppp_precise_gpsgal_cdf.png Graphic file (type png)
+<use images/chapter2/ppp_precise_gpsgal_cdf.png>
+Package pdftex.def Info: images/chapter2/ppp_precise_gpsgal_cdf.png  used on in
+put line 783.
+(pdftex.def)             Requested size: 386.96024pt x 238.81097pt.
+<images/chapter2/ppp_precise_gpsgal_clocks.png, id=999, 1011.78pt x 491.436pt>
+File: images/chapter2/ppp_precise_gpsgal_clocks.png Graphic file (type png)
+<use images/chapter2/ppp_precise_gpsgal_clocks.png>
+Package pdftex.def Info: images/chapter2/ppp_precise_gpsgal_clocks.png  used on
+ input line 783.
+(pdftex.def)             Requested size: 455.24408pt x 221.12166pt.
+ [66 <./images/chapter2/ppp_precise_gpsgal_last_hour.png> <./images/chapter2/pp
+p_precise_gpsgal_cdf.png>]
+File: images/chapter2/ppp_precise_gpsgal_last_hour.png Graphic file (type png)
+<use images/chapter2/ppp_precise_gpsgal_last_hour.png>
+Package pdftex.def Info: images/chapter2/ppp_precise_gpsgal_last_hour.png  used
+ on input line 783.
+(pdftex.def)             Requested size: 218.51521pt x 218.51651pt.
+<images/chapter2/ppp_yebe_gpsgal_last_hour.png, id=1007, 505.89pt x 505.89pt>
+File: images/chapter2/ppp_yebe_gpsgal_last_hour.png Graphic file (type png)
+<use images/chapter2/ppp_yebe_gpsgal_last_hour.png>
+Package pdftex.def Info: images/chapter2/ppp_yebe_gpsgal_last_hour.png  used on
+ input line 783.
+(pdftex.def)             Requested size: 218.51521pt x 218.51651pt.
+ [67 <./images/chapter2/ppp_precise_gpsgal_clocks.png> <./images/chapter2/ppp_y
+ebe_gpsgal_last_hour.png>]) [68]
+\openout2 = `chapters/8-conclusion.aux'.
+
+ (chapters/8-conclusion.tex
+Chapitre 3.
+[69
+
+
+
+
+] [70]) [71]
 \openout2 = `chapters/glossary.aux'.
 
  (chapters/glossary.tex
@@ -1635,17 +1430,12 @@ t line 129.
 Package glossaries Info: Preparing to sort glossary `main' (total number of
 (glossaries)             referenced entries: 1)
 
-File: sources/logos/logo_enac_and_marianne.png Graphic file (type png)
-<use sources/logos/logo_enac_and_marianne.png>
-Package pdftex.def Info: sources/logos/logo_enac_and_marianne.png  used on inpu
-t line 4.
-(pdftex.def)             Requested size: 125.58478pt x 56.9055pt.
-[80
+[72
 
 
 
 
-]) [81
+]) [73
 
 ]
 \openout2 = `chapters/bibliography.aux'.
@@ -1656,18 +1446,18 @@ File: sources/logos/logo_enac_and_marianne.png Graphic file (type png)
 Package pdftex.def Info: sources/logos/logo_enac_and_marianne.png  used on inpu
 t line 1.
 (pdftex.def)             Requested size: 125.58478pt x 56.9055pt.
- [82
+ [74
 
 
 
 
-] [83]))
+] [75]))
 File: sources/logos/logo_enac_and_marianne.png Graphic file (type png)
 <use sources/logos/logo_enac_and_marianne.png>
 Package pdftex.def Info: sources/logos/logo_enac_and_marianne.png  used on inpu
-t line 155.
+t line 157.
 (pdftex.def)             Requested size: 125.58478pt x 56.9055pt.
- [84]
+ [76]
 \openout2 = `chapters/annexA.aux'.
 
 
@@ -1678,178 +1468,98 @@ File: sources/logos/logo_enac_and_marianne.png Graphic file (type png)
 Package pdftex.def Info: sources/logos/logo_enac_and_marianne.png  used on inpu
 t line 67.
 (pdftex.def)             Requested size: 125.58478pt x 56.9055pt.
-[85
+[77
 
 
 
 
 ]
-<images/Niell_Mapping_Table_1.png, id=1230, 915.42pt x 406.51875pt>
+<images/Niell_Mapping_Table_1.png, id=1077, 915.42pt x 406.51875pt>
 File: images/Niell_Mapping_Table_1.png Graphic file (type png)
 <use images/Niell_Mapping_Table_1.png>
 Package pdftex.def Info: images/Niell_Mapping_Table_1.png  used on input line 1
 42.
 (pdftex.def)             Requested size: 341.43306pt x 151.61916pt.
-File: sources/logos/logo_enac_and_marianne.png Graphic file (type png)
-<use sources/logos/logo_enac_and_marianne.png>
-Package pdftex.def Info: sources/logos/logo_enac_and_marianne.png  used on inpu
-t line 149.
-(pdftex.def)             Requested size: 125.58478pt x 56.9055pt.
- [86]
-<images/Niell_Mapping_Table_2.png, id=1241, 914.41624pt x 146.5475pt>
+ [78]
+<images/Niell_Mapping_Table_2.png, id=1088, 914.41624pt x 146.5475pt>
 File: images/Niell_Mapping_Table_2.png Graphic file (type png)
 <use images/Niell_Mapping_Table_2.png>
 Package pdftex.def Info: images/Niell_Mapping_Table_2.png  used on input line 1
 54.
 (pdftex.def)             Requested size: 341.43306pt x 54.71814pt.
-File: sources/logos/logo_enac_and_marianne.png Graphic file (type png)
-<use sources/logos/logo_enac_and_marianne.png>
-Package pdftex.def Info: sources/logos/logo_enac_and_marianne.png  used on inpu
-t line 205.
-(pdftex.def)             Requested size: 125.58478pt x 56.9055pt.
- [87 <./images/Niell_Mapping_Table_1.png> <./images/Niell_Mapping_Table_2.png>]
-File: sources/logos/logo_enac_and_marianne.png Graphic file (type png)
-<use sources/logos/logo_enac_and_marianne.png>
-Package pdftex.def Info: sources/logos/logo_enac_and_marianne.png  used on inpu
-t line 287.
-(pdftex.def)             Requested size: 125.58478pt x 56.9055pt.
- [88])
-File: sources/logos/logo_enac_and_marianne.png Graphic file (type png)
-<use sources/logos/logo_enac_and_marianne.png>
-Package pdftex.def Info: sources/logos/logo_enac_and_marianne.png  used on inpu
-t line 163.
-(pdftex.def)             Requested size: 125.58478pt x 56.9055pt.
- [89]
+ [79 <./images/Niell_Mapping_Table_1.png> <./images/Niell_Mapping_Table_2.png>]
+ [80]) [81]
 \openout2 = `chapters/annexB.aux'.
 
- (chapters/annexB.tex
-File: sources/logos/logo_enac_and_marianne.png Graphic file (type png)
-<use sources/logos/logo_enac_and_marianne.png>
-Package pdftex.def Info: sources/logos/logo_enac_and_marianne.png  used on inpu
-t line 2.
-(pdftex.def)             Requested size: 125.58478pt x 56.9055pt.
- [90
+ (chapters/annexB.tex [82
 
 
 
 
 ]
 Annexe B.
-[91]
-File: sources/logos/logo_enac_and_marianne.png Graphic file (type png)
-<use sources/logos/logo_enac_and_marianne.png>
-Package pdftex.def Info: sources/logos/logo_enac_and_marianne.png  used on inpu
-t line 161.
-(pdftex.def)             Requested size: 125.58478pt x 56.9055pt.
- [92]
-File: sources/logos/logo_enac_and_marianne.png Graphic file (type png)
-<use sources/logos/logo_enac_and_marianne.png>
-Package pdftex.def Info: sources/logos/logo_enac_and_marianne.png  used on inpu
-t line 275.
-(pdftex.def)             Requested size: 125.58478pt x 56.9055pt.
- [93]
-File: sources/logos/logo_enac_and_marianne.png Graphic file (type png)
-<use sources/logos/logo_enac_and_marianne.png>
-Package pdftex.def Info: sources/logos/logo_enac_and_marianne.png  used on inpu
-t line 352.
-(pdftex.def)             Requested size: 125.58478pt x 56.9055pt.
- [94]
-File: sources/logos/logo_enac_and_marianne.png Graphic file (type png)
-<use sources/logos/logo_enac_and_marianne.png>
-Package pdftex.def Info: sources/logos/logo_enac_and_marianne.png  used on inpu
-t line 433.
-(pdftex.def)             Requested size: 125.58478pt x 56.9055pt.
- [95]
-File: sources/logos/logo_enac_and_marianne.png Graphic file (type png)
-<use sources/logos/logo_enac_and_marianne.png>
-Package pdftex.def Info: sources/logos/logo_enac_and_marianne.png  used on inpu
-t line 523.
-(pdftex.def)             Requested size: 125.58478pt x 56.9055pt.
- [96]
-File: sources/logos/logo_enac_and_marianne.png Graphic file (type png)
-<use sources/logos/logo_enac_and_marianne.png>
-Package pdftex.def Info: sources/logos/logo_enac_and_marianne.png  used on inpu
-t line 610.
-(pdftex.def)             Requested size: 125.58478pt x 56.9055pt.
- [97])
-File: sources/logos/logo_enac_and_marianne.png Graphic file (type png)
-<use sources/logos/logo_enac_and_marianne.png>
-Package pdftex.def Info: sources/logos/logo_enac_and_marianne.png  used on inpu
-t line 165.
-(pdftex.def)             Requested size: 125.58478pt x 56.9055pt.
- [98] (enac_project_fr.aux
+[83] [84] [85] [86] [87] [88] [89]) [90] (enac_project_fr.aux
 (chapters/0-resume.aux) (chapters/0-abstract.aux)
 (chapters/0-acknowledgement.aux) (chapters/acronyms.aux)
 (chapters/0-introduction.aux) (chapters/1-chapter.aux) (chapters/2-chapter.aux)
-(chapters/3-chapter.aux) (chapters/4-chapter.aux) (chapters/5-chapter.aux)
-(chapters/glossary.aux) (chapters/bibliography.aux) (chapters/annexA.aux)
-(chapters/annexB.aux))
+(chapters/8-conclusion.aux) (chapters/glossary.aux) (chapters/bibliography.aux)
+(chapters/annexA.aux) (chapters/annexB.aux))
  ***********
 LaTeX2e <2026-06-01>
-L3 programming layer <2026-06-18>
+L3 programming layer <2026-08-10>
  ***********
-
-
-LaTeX Warning: There were undefined references.
-
-
-LaTeX Warning: There were multiply-defined labels.
-
 Package rerunfilecheck Info: File `enac_project_fr.out' has not changed.
-(rerunfilecheck)             Checksum: 3C1F578F19A65A8CBCEB956C4E360B4B;16305.
+(rerunfilecheck)             Checksum: 5AF9708499BF91B74EFA433D74B4DC20;13336.
  ) 
 Here is how much of TeX's memory you used:
- 32586 strings out of 467510
- 623960 string characters out of 5406851
- 1188069 words of memory out of 5000000
- 60682 multiletter control sequences out of 15000+600000
- 658712 words of font info for 128 fonts, out of 8000000 for 9000
+ 32928 strings out of 467441
+ 634377 string characters out of 5407591
+ 1195850 words of memory out of 5000000
+ 61223 multiletter control sequences out of 15000+600000
+ 656799 words of font info for 120 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 90i,25n,112p,2532b,795s stack positions out of 10000i,1000n,20000p,200000b,200000s
- <C:\Users\jbzemouli\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\
-ecbx1000.pk> <C:\Users\jbzemouli\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/
-ec/dpi600\ectt1095.pk> <C:\Users\jbzemouli\AppData\Local\MiKTeX\fonts/pk/ljfour
-/jknappen/ec/dpi600\ecrm1000.pk> <C:\Users\jbzemouli\AppData\Local\MiKTeX\fonts
-/pk/ljfour/jknappen/ec/dpi600\eccc1095.pk> <C:\Users\jbzemouli\AppData\Local\Mi
-KTeX\fonts/pk/ljfour/jknappen/ec/dpi600\tcrm1095.pk> <C:\Users\jbzemouli\AppDat
-a\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecbi1095.pk> <C:\Users\jbzemo
-uli\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecbi1200.pk> <C:\Us
-ers\jbzemouli\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecti1095.
-pk> <C:\Users\jbzemouli\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600
-\ecbx1095.pk> <C:\Users\jbzemouli\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen
-/ec/dpi600\tcrm0800.pk> <C:\Users\jbzemouli\AppData\Local\MiKTeX\fonts/pk/ljfou
-r/jknappen/ec/dpi600\ecrm0800.pk> <C:\Users\jbzemouli\AppData\Local\MiKTeX\font
-s/pk/ljfour/jknappen/ec/dpi600\ecbx2488.pk> <C:\Users\jbzemouli\AppData\Local\M
-iKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecrm1095.pk> <C:\Users\jbzemouli\AppDa
-ta\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecbx1200.pk> <C:\Users\jbzem
-ouli\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecbx1440.pk> <C:\U
-sers\jbzemouli\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecrm1200
-.pk> <C:\Users\jbzemouli\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi60
-0\ecbx2074.pk><C:/Users/jbzemouli/AppData/Local/Programs/MiKTeX/fonts/type1/pub
-lic/amsfonts/cm/cmbx10.pfb><C:/Users/jbzemouli/AppData/Local/Programs/MiKTeX/fo
-nts/type1/public/amsfonts/cm/cmbx8.pfb><C:/Users/jbzemouli/AppData/Local/Progra
-ms/MiKTeX/fonts/type1/public/amsfonts/cm/cmex10.pfb><C:/Users/jbzemouli/AppData
-/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cmextra/cmex8.pfb><C:/Users/
-jbzemouli/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi10.p
-fb><C:/Users/jbzemouli/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfont
-s/cm/cmmi12.pfb><C:/Users/jbzemouli/AppData/Local/Programs/MiKTeX/fonts/type1/p
-ublic/amsfonts/cm/cmmi6.pfb><C:/Users/jbzemouli/AppData/Local/Programs/MiKTeX/f
-onts/type1/public/amsfonts/cm/cmmi8.pfb><C:/Users/jbzemouli/AppData/Local/Progr
-ams/MiKTeX/fonts/type1/public/amsfonts/cm/cmmib10.pfb><C:/Users/jbzemouli/AppDa
-ta/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Users/jbz
-emouli/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr12.pfb><
-C:/Users/jbzemouli/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm
-/cmr6.pfb><C:/Users/jbzemouli/AppData/Local/Programs/MiKTeX/fonts/type1/public/
-amsfonts/cm/cmr8.pfb><C:/Users/jbzemouli/AppData/Local/Programs/MiKTeX/fonts/ty
-pe1/public/amsfonts/cm/cmss8.pfb><C:/Users/jbzemouli/AppData/Local/Programs/MiK
-TeX/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Users/jbzemouli/AppData/Local
-/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy6.pfb><C:/Users/jbzemouli/A
-ppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy8.pfb><C:/Users
-/jbzemouli/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/symbols/ms
-bm10.pfb>
-Output written on enac_project_fr.pdf (98 pages, 1055546 bytes).
+ 94i,25n,112p,2507b,815s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ <C:\Users\jbzem\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ectt
+1000.pk> <C:\Users\jbzem\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi60
+0\ecbx1000.pk> <C:\Users\jbzem\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec
+/dpi600\ecrm1000.pk> <C:\Users\jbzem\AppData\Local\MiKTeX\fonts/pk/ljfour/jknap
+pen/ec/dpi600\eccc1095.pk> <C:\Users\jbzem\AppData\Local\MiKTeX\fonts/pk/ljfour
+/jknappen/ec/dpi600\tcrm1095.pk> <C:\Users\jbzem\AppData\Local\MiKTeX\fonts/pk/
+ljfour/jknappen/ec/dpi600\ecbi1095.pk> <C:\Users\jbzem\AppData\Local\MiKTeX\fon
+ts/pk/ljfour/jknappen/ec/dpi600\ecbi1200.pk> <C:\Users\jbzem\AppData\Local\MiKT
+eX\fonts/pk/ljfour/jknappen/ec/dpi600\ectt1095.pk> <C:\Users\jbzem\AppData\Loca
+l\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecti1095.pk> <C:\Users\jbzem\AppDat
+a\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecbx1095.pk> <C:\Users\jbzem\
+AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\tcrm0800.pk> <C:\Users\
+jbzem\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecrm0800.pk> <C:\
+Users\jbzem\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecbx2488.pk
+> <C:\Users\jbzem\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecrm1
+095.pk> <C:\Users\jbzem\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600
+\ecbx1200.pk> <C:\Users\jbzem\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/
+dpi600\ecbx1440.pk> <C:\Users\jbzem\AppData\Local\MiKTeX\fonts/pk/ljfour/jknapp
+en/ec/dpi600\ecrm1200.pk> <C:\Users\jbzem\AppData\Local\MiKTeX\fonts/pk/ljfour/
+jknappen/ec/dpi600\ecbx2074.pk><C:/Users/jbzem/AppData/Local/Programs/MiKTeX/fo
+nts/type1/public/amsfonts/cm/cmbx10.pfb><C:/Users/jbzem/AppData/Local/Programs/
+MiKTeX/fonts/type1/public/amsfonts/cm/cmbx8.pfb><C:/Users/jbzem/AppData/Local/P
+rograms/MiKTeX/fonts/type1/public/amsfonts/cm/cmex10.pfb><C:/Users/jbzem/AppDat
+a/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cmextra/cmex8.pfb><C:/Users
+/jbzem/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi10.pfb>
+<C:/Users/jbzem/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cm
+mi6.pfb><C:/Users/jbzem/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfon
+ts/cm/cmmi8.pfb><C:/Users/jbzem/AppData/Local/Programs/MiKTeX/fonts/type1/publi
+c/amsfonts/cm/cmmib10.pfb><C:/Users/jbzem/AppData/Local/Programs/MiKTeX/fonts/t
+ype1/public/amsfonts/cm/cmr10.pfb><C:/Users/jbzem/AppData/Local/Programs/MiKTeX
+/fonts/type1/public/amsfonts/cm/cmr6.pfb><C:/Users/jbzem/AppData/Local/Programs
+/MiKTeX/fonts/type1/public/amsfonts/cm/cmr8.pfb><C:/Users/jbzem/AppData/Local/P
+rograms/MiKTeX/fonts/type1/public/amsfonts/cm/cmss8.pfb><C:/Users/jbzem/AppData
+/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Users/jbze
+m/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy6.pfb><C:/Us
+ers/jbzem/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy8.pf
+b><C:/Users/jbzem/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/sym
+bols/msbm10.pfb>
+Output written on enac_project_fr.pdf (90 pages, 5196794 bytes).
 PDF statistics:
- 2197 PDF objects out of 2487 (max. 8388607)
- 520 named destinations out of 1000 (max. 500000)
- 669 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 2147 PDF objects out of 2487 (max. 8388607)
+ 406 named destinations out of 1000 (max. 500000)
+ 696 words of extra memory for PDF output out of 10000 (max. 10000000)
 
